@@ -5,6 +5,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import style from './style.module.css';
+import { InstagramOutlined, TikTokOutlined } from '@ant-design/icons';
 
 const logoSrc = '/logo/logo.png';
 const instaSrc = '/logo/instagram.png';
@@ -53,8 +54,8 @@ const Footer: React.FC = () => {
         <div className={style.down}>
           <div className={style.socialPages}>
             <ul>
-              <li><a href={socialLinks.instagram || '#'}><Image src={instaSrc} alt="Instagram" width={24} height={24} /></a></li>
-              <li><a href={socialLinks.tiktok || '#'}><Image src={tiktokSrc} alt="TikTok" width={24} height={24} /></a></li>
+              <li><a href={socialLinks.instagram || '#'}><InstagramOutlined/> </a></li>
+              <li><a href={socialLinks.tiktok || '#'}><TikTokOutlined/></a></li>
             </ul>
           </div>
         </div>
