@@ -10,7 +10,7 @@ const HomeC: React.FC = () => {
     return <>
         <div className={style.main}>
         <Nav/>
-        <Banner/>
+        {/* <Banner/> */}
         <AboutC/>
         <Partners/>
         <ContactUs/>
