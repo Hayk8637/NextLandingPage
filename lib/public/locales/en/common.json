@@ -1,0 +1,19 @@
+{
+  "About": "About1",
+  "BECOMEAPartner ": "BECOME A Partner",
+  "Enteryouremail": "Enter your email...",
+  "GOTOMENU": "GO TO MENU",
+  "MostPopularItems": "Most Popular Items",
+  "PARTNERS": "PARTNERS",
+  "Pleasewriteyouremail": "Please write your email.",
+  "Send": "Send",
+  "Showmore": "Show more",
+  "Support": "Support",
+  "about": [
+    "Our menu service includes a whole range of functions for the restaurant, cafe or bar.",
+    "For your guests - this is a modern, easy to use QR code menu.",
+    "For you - this is an digital platform built around your QR code menu for improving a quality of customer service and increasing sales.",
+    "No purchasing expensive terminals for you and no application installation on your guests phones needed for our digital menu to work."
+  ],
+  "aboutTitle": "Digital QR menu"
+}

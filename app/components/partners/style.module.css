@@ -1,0 +1,89 @@
+.partners {
+    text-align: center;
+    padding-top: 50px;
+}
+.partners > h1 {
+    color: #EB0029;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 22.84px;
+    margin-bottom: 0;
+}
+.partners > h2 {
+    color: #010F1C;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 45px;
+    line-height: 60px;
+}
+.partnerCard {
+    width: 20%;
+    height: 20%;
+    min-width: 132px;
+    border-radius: 27.82px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adjust the values as needed */
+    display: inline-block; 
+    margin: 20px;
+    padding-bottom: 10px;
+
+}
+
+.partnerImage > .img {
+    width: 100%;
+    border-top-left-radius: 27.82px;
+    border-top-right-radius: 27.82px;
+}
+.partnerName > h2 {
+    font-size: 20.67px;
+    font-weight: 700;
+}
+.partnerName > button {
+    height: 35.3px;
+    width: 60%;
+    border-radius: 27.82px;
+    border: none;
+    color: #FFFFFF;
+    font-size: 10.33px;
+    background-color: #FF7800;
+    cursor: pointer;
+}
+.showMore {
+    display: block;
+    margin: 40px auto;
+    width: 235px;
+    height: 59px;
+    color: #FFFFFF;
+    font-size: 14.31px;
+    background-color: #FF7800;
+    border-radius:29.41px ;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+
+ 
+
+  @media only screen and (max-width: 340px) {
+    .partnerCard {
+        min-width: 100px;
+        width: 50px;
+        margin: 5px;
+    }
+    .partnerName > h2  {
+        margin: 5px auto;
+    }
+  }
+
+  @media only screen and (max-width: 400px) {
+    .partnerCard {
+        min-width: 100px;
+        width: 100px;
+        margin: 5px;
+    }
+    .partnerName > h2  {
+        margin: 5px auto;
+    }
+  }

@@ -1,0 +1,63 @@
+.footer {
+    width: 100%;
+    margin: 0;
+    background-color: #FAFAFF;
+    justify-content: center;
+    padding: 40px 0;
+}
+.footer > .footer0 {
+    width: 80%;
+    margin: auto;
+}
+.footer > .footer0 >.up > div{
+    display: inline-block;
+    width: 50%;
+}
+.footer >.footer0 > .up > .left > img {
+    width: 100px;
+}
+.footer >.footer0 > .up {
+    display: flex;
+    justify-content: center;
+}
+.footer >.footer0 > .up > .right {
+    text-align: right;
+}
+.footer >.footer0 > .up > .right > ul{
+    margin: 0;
+    padding: 0;  
+}
+.footer > .footer0 > .up > .right > ul > li{
+    display: inline-block;    
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 22.4px;
+}
+.footer > .footer0 > .up > .right > ul > li > a{
+    text-decoration: none;
+    color: #000000;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.down {
+    text-align: center;
+    padding-top: 20px;
+}
+.down > .socialPages > ul {
+    margin: 0;
+    padding: 0;
+}
+
+.down > .socialPages > ul > li{
+    display: inline-block;    
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: 60px;
+    line-height: 22.4px;
+}
+.down > .socialPages > ul > li >a> img {
+    width: 20px;
+}
+

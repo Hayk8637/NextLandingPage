@@ -3,22 +3,33 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"npm run update-translations\"",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "update-translations": "node ./lib/updateTranslations.js"
   },
   "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.5"
+    "axios": "^1.7.2",
+    "emailjs-com": "^3.2.0",
+    "firebase": "^10.12.5",
+    "i18next": "^23.12.2",
+    "i18next-fs-backend": "^2.3.2",
+    "i18next-http-backend": "^2.5.2",
+    "next": "^14.2.5",
+    "next-i18next": "^15.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^15.0.0",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "concurrently": "^8.2.2",
     "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "eslint-config-next": "14.2.5",
+    "typescript": "^5"
   }
 }
