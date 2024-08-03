@@ -5,16 +5,15 @@
 .partners > h1 {
     color: #EB0029;
     font-weight: 600;
-    font-size: 18px;
-    line-height: 22.84px;
-    margin-bottom: 0;
+    font-size: 36px;
+    margin-bottom: 20px;
 }
 .partners > h2 {
     color: #010F1C;
     margin-top: 0;
     margin-bottom: 10px;
     font-weight: 700;
-    font-size: 45px;
+    font-size: 30px;
     line-height: 60px;
 }
 .partnerCard {
@@ -67,6 +66,9 @@
  
 
   @media only screen and (max-width: 340px) {
+    .partners > h2 {
+        font-size: 36px;
+    }
     .partnerCard {
         min-width: 100px;
         width: 50px;

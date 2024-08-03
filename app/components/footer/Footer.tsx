@@ -54,8 +54,8 @@ const Footer: React.FC = () => {
         <div className={style.down}>
           <div className={style.socialPages}>
             <ul>
-              <li><a href={socialLinks.instagram || '#'}><InstagramOutlined/> </a></li>
-              <li><a href={socialLinks.tiktok || '#'}><TikTokOutlined/></a></li>
+              <li><a href={socialLinks.instagram || '#'}><InstagramOutlined style={{color: 'black'}}/> </a></li>
+              <li><a href={socialLinks.tiktok || '#'}><TikTokOutlined style={{color: 'black'}}/></a></li>
             </ul>
           </div>
         </div>

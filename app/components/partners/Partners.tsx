@@ -8,7 +8,7 @@ const Partners: React.FC = () => {
   return (
     <div className={style.partners}>
       <h1>{t("PARTNERS")}</h1>
-      <h2>{t("MostPopularItems")}</h2>
+      {/* <h2>{t("MostPopularItems")}</h2> */}
       <div className={style.partnerCards}>
         {[...Array(8)].map((_, index) => (
           <div className={style.partnerCard} key={index}>

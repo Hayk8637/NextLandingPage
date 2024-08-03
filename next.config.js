@@ -1,7 +1,13 @@
+// next.config.js
+
 module.exports = {
   output: 'export',
   images: {
     unoptimized: true,
   },
-  // Other Next.js configurations can go here
+  reactStrictMode: true,
+  env: {
+    CUSTOM_ENV_VARIABLE: 'value',
+  },
+  // Добавьте другие настройки здесь
 };

@@ -68,7 +68,7 @@
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    width: 20%;
+    /* width: 20%; */
 }
 .contactUs > .right > .input > input:focus {
     outline: none; /* Remove default focus outline */
@@ -111,9 +111,9 @@
 
 @media only screen and (max-width: 450px) {
     .contactUs > .right > .input > button {
-        width: 35%;
+        width: 50%;
     }
     .contactUs > .right > .input > input {
-        width: 65%;
+        width: 50%;
     }
 }

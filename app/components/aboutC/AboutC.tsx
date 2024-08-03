@@ -19,7 +19,7 @@ const AboutC: React.FC = () => {
     return<>
     <div className={style.about}>
     <div className={style.left}>
-        <Image className={style.img} src="/img/photo_2024-07-28_21-33-23.jpg" width={10000} height={10000} alt='img'/>
+        <Image className={style.img} src="/img/photo_2024-07-28_21-33-23.jpg" width={500} height={500} alt='img'/>
     </div>
     <div className={style.right}>
         <div className={style.aboutData}>
