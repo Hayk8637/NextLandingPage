@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import style from './style.module.css';
 
-const logoSrc = '/logo/logo.png';
 
 const Nav: React.FC = () => {
   const { i18n } = useTranslation();
@@ -31,7 +30,7 @@ const Nav: React.FC = () => {
   return (
     <nav className={style.nav}>
       <div className={style.left}>
-        <a href='#'><Image src={logoSrc} alt='logo' width={150} height={50} /></a>
+        <a href='#'><Image src="/logo/logo.png" alt='logo' width={150} height={50} /></a>
       </div>
       <div className={style.right}>
         <select onChange={(e) => changeLanguage(e.target.value)} value={i18n.language}>

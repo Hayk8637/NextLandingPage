@@ -6,6 +6,7 @@ import Partners from '@/app/components/partners/Partners';
 
 import style from './style.module.css'
 import AboutC from '../components/aboutC/AboutC';
+import Faq from '../components/faq/Faq';
 const HomeC: React.FC = () => {
     return <>
         <div className={style.main}>
@@ -13,6 +14,7 @@ const HomeC: React.FC = () => {
         <Banner/>
         <AboutC/>
         <Partners/>
+        <Faq/>
         <ContactUs/>
         </div>
         <Footer/>

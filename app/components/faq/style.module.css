@@ -1,0 +1,22 @@
+/* Style the Collapse component container */
+.collapse {
+    margin: auto;
+    width: 800px;
+    max-width: 90%;
+    font-size: 20px;
+    border: none;
+    /* background-color: none;  */
+}
+.faqLabel {
+    font-weight: 500;
+    font-size: 20px;
+    color: #333;
+    background-color: none;
+  }
+
+  .faqContent {
+    font-size: 16px;
+    color: #666;
+    margin: 8px 0;
+    padding-left: 22px;
+  }
