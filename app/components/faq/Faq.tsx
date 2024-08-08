@@ -42,7 +42,7 @@ const Faq: React.FC = () => {
 
   return <div>
     <h1 style={{margin: 'auto' ,  maxWidth: "400px" , width: "90%"}}>{t(('faq'))}</h1>
-    <Collapse items={items} bordered={false} ghost className={style.collapse} />;
+    <Collapse items={items} bordered={false} ghost className={style.collapse} />
   </div>
   
 };

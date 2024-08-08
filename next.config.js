@@ -1,5 +1,3 @@
-// next.config.js
-
 module.exports = {
   output: 'export',
   images: {
@@ -8,6 +6,5 @@ module.exports = {
   reactStrictMode: true,
   env: {
     CUSTOM_ENV_VARIABLE: 'value',
-  },
-  // Добавьте другие настройки здесь
+  }
 };
