@@ -29,7 +29,7 @@
 
 .about > .right > .aboutData > .aboutTitle {
     font-weight: 600;
-    font-size: 32px;
+    font-size: 40px;
     color: #ff7700;
 }
 
@@ -37,10 +37,10 @@
     width: 70%;
 }
 
-.about > .right > .aboutData > .aboutParagraph {
+.about > .right > .aboutData> div > .aboutParagraph {
     padding-top: 10px;
     text-align: left;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 @media only screen and (max-width: 1000px) {

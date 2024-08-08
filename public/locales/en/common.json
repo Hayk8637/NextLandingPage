@@ -1,5 +1,19 @@
 {
   "About": "About",
+  "AboutApp": {
+    "-O3l76GzZ_MNiqdXVHD8": {
+      "description": "Our menu service includes a whole range of functions for the restaurant, cafe or bar."
+    },
+    "-O3l7FQzDJuBm5wNOrfE": {
+      "description": "For your guests - this is a modern, easy to use QR code menu."
+    },
+    "-O3l7UcdVBfXl1udU-3d": {
+      "description": "For you - this is an digital platform built around your QR code menu for improving a quality of customer service and increasing sales."
+    },
+    "-O3l7dpGDXhvkrx-rwbP": {
+      "description": "No purchasing expensive terminals for you and no application installation on your guests phones needed for our digital menu to work."
+    }
+  },
   "BECOMEAPartner ": "BECOME A Partner",
   "Enteryouremail": "Enter your email...",
   "Faq": {
@@ -33,14 +47,58 @@
   "PARTNERS": "PARTNERS",
   "Pleasewriteyouremail": "Please write your email.",
   "Send": "Send",
+  "ServiceInclude": {
+    "-O3klunOknbjWb7OIEPH": {
+      "include": "An access to your menu by the link (for social networks, your website or google maps)\n"
+    },
+    "-O3ko4XArSQD6IGDHCFX": {
+      "include": "QR code menu with unlimited amount of categories and items"
+    },
+    "-O3koDTLxghvQa9UQQwJ": {
+      "include": "Unlimited amount of viewings for your menu\n"
+    },
+    "-O3koJnY-TzQukJMNWeP": {
+      "include": "An ability to add employees to manage your menu\n"
+    },
+    "-O3koUSCojLyh1fvTJG0": {
+      "include": "An ability to hide menu positions with one click\n"
+    },
+    "-O3kovmjdJS1vDY6Ve38": {
+      "include": "\"Old price/New Price\" feature\n"
+    },
+    "-O3kp2fEWvjaq2NtdYaR": {
+      "include": "Unlimited photos and description loading for your QR code menu\n"
+    },
+    "-O3kp9QZqaWT_KInMzL9": {
+      "include": "QR code generator for your menu\n"
+    },
+    "-O3kpwmOLQOoLxmU2HqS": {
+      "include": "An access to your menu by QR code (for placement on tables, windows, showcases, doors etc.)\n"
+    },
+    "-O3kqMpKWAqUa5Rzbhc6": {
+      "include": "Both a mobile and a desktop version of the menu\n"
+    },
+    "-O3kqa2cwPO8vsxmwc3-": {
+      "include": "An ability to remotely edit your menu\n"
+    },
+    "-O3kqiKuiSdVJpKQ8S-C": {
+      "include": "An ability to add several places into your profile, to easily manage a chain of restaurants\n"
+    },
+    "-O3kqq5WnojryrJDPEDL": {
+      "include": "\"Temporary unavailable\" feature\n"
+    },
+    "-O3kr0nG8hVzoCPz2Ijm": {
+      "include": "An ability to create a multi language QR code menu\n"
+    },
+    "-O3kr8T6bNYBFdDyZfmX": {
+      "include": "Additional restaurant information feature (Address, Phone number, Map, Wi-Fi password)\n"
+    },
+    "-O3krEL0RbR9P6Rap8r3": {
+      "include": "Unlimited number of QR code scans\n"
+    }
+  },
   "Showmore": "Show more",
   "Support": "Support",
-  "about": [
-    "Our menu service includes a whole range of functions for the restaurant, cafe or bar.",
-    "For your guests - this is a modern, easy to use QR code menu.",
-    "For you - this is an digital platform built around your QR code menu for improving a quality of customer service and increasing sales.",
-    "No purchasing expensive terminals for you and no application installation on your guests phones needed for our digital menu to work."
-  ],
   "aboutTitle": "Digital QR menu",
   "faq": "Frequently asked questions"
 }
