@@ -40,8 +40,8 @@ const Faq: React.FC = () => {
     }
   }, [t, i18n.isInitialized]); // Ensure dependencies are set correctly
 
-  return <div>
-    <h1 style={{margin: 'auto' ,  maxWidth: "400px" , width: "90%"}}>{t(('faq'))}</h1>
+  return <div className={style.faq}>
+    <h1 style={{margin: 'auto' ,  maxWidth: "400px" , width: "90%", padding: '30px 0'}}>{t(('faq'))}</h1>
     <Collapse items={items} bordered={false} ghost className={style.collapse} />
   </div>
   
