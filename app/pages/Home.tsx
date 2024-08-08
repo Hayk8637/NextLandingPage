@@ -5,9 +5,9 @@ import Nav from '@/app/components/nav/nav';
 import Partners from '@/app/components/partners/Partners';
 
 import style from './style.module.css'
-import AboutC from '../components/aboutC/AboutC';
+import AboutC from '../components/aboutApp/AboutApp';
 import Faq from '../components/faq/Faq';
-const HomeC: React.FC = () => {
+const Home: React.FC = () => {
     return <>
         <div className={style.main}>
         <Nav/>
@@ -21,4 +21,4 @@ const HomeC: React.FC = () => {
         </>
 }
 
-export default HomeC;
+export default Home;

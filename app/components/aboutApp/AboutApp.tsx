@@ -5,7 +5,7 @@ import style from './style.module.css';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 
-const AboutC: React.FC = () => {
+const AboutApp: React.FC = () => {
     const { i18n } = useTranslation("global");
     const { t } = useTranslation("global");
 
@@ -49,4 +49,4 @@ const AboutC: React.FC = () => {
     );
 }
 
-export default AboutC;
+export default AboutApp;
