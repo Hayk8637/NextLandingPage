@@ -6,22 +6,16 @@ import { StarFilled, StarTwoTone } from '@ant-design/icons';
 const ServiceInclude: React.FC = () => {
   const { t } = useTranslation("global");
 
-  // Retrieve the "ServiceInclude" object
   const serviceIncludeObj = t('ServiceInclude', { returnObjects: true });
 
-  // Convert the object to an array
   const serviceIncludeArray = Object.values(serviceIncludeObj);
-
-  // Calculate the middle index to split the array into two halves
   const middleIndex = Math.ceil(serviceIncludeArray.length / 2);
-
-  // Split the array into two halves
   const leftArray = serviceIncludeArray.slice(0, middleIndex);
   const rightArray = serviceIncludeArray.slice(middleIndex);
 
   return (
     <div className={style.serviceInclude}>
-        <h1>Service Include</h1>
+        <h1>{t('serviceInclude')}</h1>
         <div className={style.serviceIncludeItems}>
             <div className={style.left}>
                 {leftArray.map((item, index) => (
