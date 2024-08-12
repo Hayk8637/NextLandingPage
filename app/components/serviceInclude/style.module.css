@@ -17,6 +17,7 @@
     height: 800px;
     display: inline-block;
     margin: auto;
+    max-width: 100%;
 }
 
 .serviceIncludeItems > div > .item {

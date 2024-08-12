@@ -1,5 +1,4 @@
 import Banner from '@/app/components/banner/Banner';
-import ContactUs from '@/app/components/contactUs/ContactUs';
 import Footer from '@/app/components/footer/Footer';
 import Nav from '@/app/components/nav/nav';
 import Partners from '@/app/components/partners/Partners';
@@ -17,7 +16,6 @@ const Home: React.FC = () => {
         <Partners/>
         <ServiceInclude/>
         <Faq/>
-        <ContactUs/>
         </div>
         <Footer/>
         </>

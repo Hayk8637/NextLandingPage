@@ -2,7 +2,9 @@
   "About": "About",
   "AboutApp": {
     "-O3l76GzZ_MNiqdXVHD8": {
-      "description": "Our menu service includes a whole range of functions for the restaurant, cafe or bar."
+      "description": "Our menu service includes a whole range of functions for the restaurant, cafe or bar.",
+      "key": "-O3l76GzZ_MNiqdXVHD8",
+      "order": 1
     },
     "-O3l7FQzDJuBm5wNOrfE": {
       "description": "For your guests - this is a modern, easy to use QR code menu."
@@ -14,11 +16,12 @@
       "description": "No purchasing expensive terminals for you and no application installation on your guests phones needed for our digital menu to work."
     }
   },
-  "BECOMEAPartner ": "BECOME A Partner",
+  "BECOMEAPartner": "Became A Partner",
   "Enteryouremail": "Enter your email...",
   "Faq": {
     "-O3S8D-ic90na1ULHtiK": {
       "answer": "Our digital QR code menu is contactless and it’s always \"on the table\". Guests don’t have to wait for the waiter to bring them a menu or search for the menu on their own. The less waiting time and actions needed to make an order, the more orders will be made.\n\nPaper menus can’t be edited, there is no way to create promotions and discounts quickly.\n\nTo maintain the relevance and presentable look of a paper menu, it has to be reprinted from time to time.",
+      "order": 1,
       "question": " I already have menus made of paper, why is your digital menu better? "
     },
     "-O3SN80hcSwKp8IDvdCY": {
@@ -49,7 +52,8 @@
   "Send": "Send",
   "ServiceInclude": {
     "-O3klunOknbjWb7OIEPH": {
-      "include": "An access to your menu by the link (for social networks, your website or google maps)\n"
+      "include": "An access to your menu by the link (for social networks, your website or google maps)\n",
+      "order": 1
     },
     "-O3ko4XArSQD6IGDHCFX": {
       "include": "QR code menu with unlimited amount of categories and items"
@@ -100,6 +104,5 @@
   "Showmore": "Show more",
   "Support": "Support",
   "aboutTitle": "Digital QR menu",
-  "faq": "Frequently asked questions",
-  "serviceInclude": "Service Include"
+  "faq": "Frequently asked questions"
 }
