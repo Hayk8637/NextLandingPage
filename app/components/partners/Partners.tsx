@@ -4,6 +4,7 @@ import Image from 'next/image';
 import style from './style.module.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { useTranslation } from 'react-i18next';
 
 const logos = [
   '/img/image 54.png',
@@ -27,10 +28,11 @@ const Partners: React.FC = () => {
     cssEase: 'linear',
     pauseOnHover: true,
   };
+  const { i18n, t } = useTranslation("global");
 
   return (
     <div className={style.carouselContainer}>
-        <h1>partners</h1>
+        <h1 >{t("PARTNERS")}</h1>
       <Slider {...settings}>
         {logos.map((logo, index) => (
           <div key={index} className={style.logoContainer}>

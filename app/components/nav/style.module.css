@@ -2,25 +2,62 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    padding: 10px;
 }
+
 .nav > .left {
     width: 50%;
     display: inline-block;
 }
-.nav > .left> a > img {
+
+.nav > .left > a > img {
     width: 100px;
 }
+
 .nav > .right {
     width: 50%;
-    display: inline-block;
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
+
 .nav > .right > select {
     border: none;
-    font-weight: 600px;
+    font-weight: 600;
+    font-size: 16px;
+    margin-right: 20px;
+}
+
+.nav > .right > select > option {
+    font-weight: 600;
     font-size: 16px;
 }
-.nav > .right > select > option {
-    font-weight: 600px;
+
+.nav > .right > .authButtons {
+    display: flex;
+    gap: 15px;
+}
+
+.nav > .right > .authButtons > a {
+    text-decoration: none;
+    font-weight: 600;
     font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+    background-color: #007bff;
+    transition: background-color 0.3s;
+}
+
+.nav > .right > .authButtons > a:hover {
+    background-color: #0056b3;
+}
+
+.nav > .right > .authButtons > .signUp {
+    background-color: #28a745;
+}
+
+.nav > .right > .authButtons > .signUp:hover {
+    background-color: #218838;
 }

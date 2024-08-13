@@ -1,10 +1,11 @@
 .carouselContainer {
-  background-color: transparent; /* Set background color to transparent */
+  background-color: transparent; 
   padding: 20px 0;
   overflow: hidden;
-  max-width: 90%; /* Maximum width of 90% */
-  width: 1000px; /* Maximum width of 800px */
-  margin: 0 auto; /* Center the carousel horizontally */
+  max-width: 90%;
+  width: 1000px;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .logoContainer {
