@@ -1,21 +1,24 @@
-/* style.module.css */
-.partnersContainer {
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .logoSlide img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain; /* Adjust if needed */
-  }
-  
-  /* Optional: add styling for responsiveness */
-  @media (max-width: 768px) {
-    .logoSlide img {
-      height: 80px; /* Adjust as needed */
-    }
-  }
-  
+.carouselContainer {
+  background-color: transparent; /* Set background color to transparent */
+  padding: 20px 0;
+  overflow: hidden;
+  max-width: 90%; /* Maximum width of 90% */
+  width: 1000px; /* Maximum width of 800px */
+  margin: 0 auto; /* Center the carousel horizontally */
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.logo {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.logoContainer:hover .logo {
+  transform: scale(1.1);
+  filter: grayscale(0%);
+}

@@ -11,11 +11,11 @@ const Home: React.FC = () => {
     return <>
         <div className={style.main}>
         <Nav/>
-        <Banner/>
+        {/* <Banner/> */}
         <AboutC/>
-        <Partners/>
         <ServiceInclude/>
         <Faq/>
+        <Partners/>
         </div>
         <Footer/>
         </>
