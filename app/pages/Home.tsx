@@ -1,16 +1,16 @@
-import Footer from '@/app/components/footer/Footer';
-import Partners from '@/app/components/partners/Partners';
+import Footer from '@/app/components/landingPage/footer/Footer';
+import Partners from '@/app/components/landingPage/partners/Partners';
 
 import style from './style.module.css'
-import AboutC from '../components/aboutApp/AboutApp';
-import Faq from '../components/faq/Faq';
-import ServiceInclude from '../components/serviceInclude/ServiceInclude';
-import Nav from '../components/nav/Nav';
+import AboutApp from '../components/landingPage/aboutApp/AboutApp';
+import Faq from '../components/landingPage/faq/Faq';
+import ServiceInclude from '../components/landingPage/serviceInclude/ServiceInclude';
+import Nav from '../components/landingPage/nav/Nav';
 const Home: React.FC = () => {
     return <>
         <div className={style.main}>
         <Nav/>
-        <AboutC/>
+        <AboutApp/>
         <ServiceInclude/>
         <Faq/>
         <Partners/>

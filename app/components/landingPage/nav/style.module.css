@@ -24,13 +24,13 @@
 
 .nav > .right > select {
     border: none;
-    font-weight: 600;
+    font-weight: 400;
     font-size: 16px;
     margin-right: 20px;
 }
 
 .nav > .right > select > option {
-    font-weight: 600;
+    font-weight: 400;
     font-size: 16px;
 }
 
@@ -39,25 +39,32 @@
     gap: 15px;
 }
 
-.nav > .right > .authButtons > a {
-    text-decoration: none;
+.nav > .right > .authButtons > .signIn {
+    color: #ff7700; 
+    border: none; 
+    background: transparent; 
     font-weight: 600;
     font-size: 16px;
     padding: 5px 10px;
     border-radius: 5px;
-    color: #fff;
-    background-color: #007bff;
-    transition: background-color 0.3s;
+    transition: color 0.3s;
 }
 
-.nav > .right > .authButtons > a:hover {
-    background-color: #0056b3;
+.nav > .right > .authButtons > .signIn:hover {
+    color: #e65c00; 
 }
 
 .nav > .right > .authButtons > .signUp {
-    background-color: #28a745;
+    background-color: #ff7700; 
+    border-color: #ff7700; 
+    color: #fff; 
+    font-weight: 600;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
 .nav > .right > .authButtons > .signUp:hover {
-    background-color: #218838;
+    background-color: #e65c00; 
 }

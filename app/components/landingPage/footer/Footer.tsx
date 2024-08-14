@@ -1,4 +1,3 @@
-"use client"; // Ensure this is at the top
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -8,8 +7,6 @@ import style from './style.module.css';
 import { InstagramOutlined, TikTokOutlined } from '@ant-design/icons';
 
 const logoSrc = '/logo/logo.png';
-const instaSrc = '/logo/instagram.png';
-const tiktokSrc = '/logo/tiktok.png';
 
 const Footer: React.FC = () => {
   const { i18n, t } = useTranslation("global");
@@ -25,10 +22,11 @@ const Footer: React.FC = () => {
       }
     }
   }, [i18n]);
+
   useEffect(() => {
     const fetchSocialLinks = async () => {
       try {
-        const response = await axios.get('https://menubyqr-default-rtdb.firebaseio.com/social.json');
+        const response = await axios.get('https://menubyqr-default-rtdb.firebaseio.com/LANDING/socialPages.json');
         setSocialLinks(response.data);
       } catch (error) {
         console.error('Error fetching social links:', error);
@@ -47,15 +45,19 @@ const Footer: React.FC = () => {
           <div className={style.right}>
             <ul>
               <li><a href='#'>{t("About")}</a></li>
-              <li><a href='mailto:sargsyan1998hayk@gmail.com?subject=For Support team.&body=Please write your text !!!'>{t("Support")}</a></li>
+              <li><a href={`mailto:${socialLinks['support email']}?subject=For Support team.&body=Please write your text !!!`}> {socialLinks['support email']}</a></li>
             </ul>
           </div>
         </div>
         <div className={style.down}>
           <div className={style.socialPages}>
             <ul>
-              <li><a href={socialLinks.instagram || '#'}><InstagramOutlined style={{color: 'black'}}/> </a></li>
-              <li><a href={socialLinks.tiktok || '#'}><TikTokOutlined style={{color: 'black'}}/></a></li>
+              {socialLinks.instagram && (
+                <li><a href={socialLinks.instagram}><InstagramOutlined style={{color: 'black'}}/></a></li>
+              )}
+              {socialLinks['tik-tok'] && (
+                <li><a href={socialLinks['tik-tok']}><TikTokOutlined style={{color: 'black'}}/></a></li>
+              )}
             </ul>
           </div>
         </div>

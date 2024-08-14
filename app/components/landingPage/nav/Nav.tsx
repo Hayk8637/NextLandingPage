@@ -54,8 +54,12 @@ const Nav: React.FC = () => {
         </div>
         <div className={style.right}>
           <div className={style.authButtons}>
-            <Button type="link" onClick={showSignInModal} className={style.signIn}>Sign In</Button>
-            <Button type="link" onClick={showSignUpModal} className={style.signUp}>Sign Up</Button>
+            <Button type="link" onClick={showSignInModal} className={style.signIn}>
+              Sign In
+            </Button>
+            <Button type="primary" onClick={showSignUpModal} className={style.signUp}>
+              Sign Up
+            </Button>
           </div>
           <select onChange={(e) => changeLanguage(e.target.value)} value={i18n.language}>
             <option value="en">EN</option>
