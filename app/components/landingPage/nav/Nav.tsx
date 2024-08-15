@@ -124,12 +124,13 @@ const Nav: React.FC = () => {
           </>
           ) : (
             <div className={style.authButtons}>
-              <Button type="link" onClick={showSignInModal} className={style.signIn}>
-                Sign In
-              </Button>
-              <Button type="primary" onClick={showSignUpModal} className={style.signUp}>
+              <Button type="link" onClick={showSignUpModal} className={style.signUp}>
                 Sign Up
               </Button>
+              <Button type="primary" onClick={showSignInModal} className={style.signIn}>
+                Sign In
+              </Button>
+              
             </div>
           )}
           <select onChange={(e) => changeLanguage(e.target.value)} value={i18n.language}>

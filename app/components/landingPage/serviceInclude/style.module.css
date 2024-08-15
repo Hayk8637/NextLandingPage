@@ -1,3 +1,7 @@
+
+.serviceInclude {
+    height: auto;
+}
 .serviceIncludeItems {
     margin: 0;
     padding: 0;
@@ -15,7 +19,7 @@
 
 .serviceIncludeItems > .left, .right {
     width: 500px;
-    height: 900px;
+    /* height: 900px; */
     display: inline-block;
     margin: auto;
     max-width: 100%;

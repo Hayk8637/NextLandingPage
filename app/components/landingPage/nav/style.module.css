@@ -40,7 +40,7 @@
     gap: 15px;
 }
 
-.nav > .right > .authButtons > .signIn {
+.nav > .right > .authButtons > .signUp {
     color: #ff7700; 
     border: none; 
     background: transparent; 
@@ -51,11 +51,11 @@
     transition: color 0.3s;
 }
 
-.nav > .right > .authButtons > .signIn:hover {
+.nav > .right > .authButtons > .signUp:hover {
     color: #e65c00; 
 }
 
-.nav > .right > .authButtons > .signUp {
+.nav > .right > .authButtons > .signIn {
     background-color: #ff7700; 
     border-color: #ff7700; 
     color: #fff; 
@@ -66,7 +66,7 @@
     transition: background-color 0.3s;
 }
 
-.nav > .right > .authButtons > .signUp:hover {
+.nav > .right > .authButtons > .signIn:hover {
     background-color: #e65c00; 
 }
 
