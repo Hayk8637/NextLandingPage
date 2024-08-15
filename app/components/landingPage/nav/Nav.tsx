@@ -1,16 +1,17 @@
-// Nav.tsx
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
 import SignIn from './signIn/SignIn';
 import SignUp from './signUp/SignUp';
+import ForgotPassword from './forgotPassword/ForgotPassword';
 import style from './style.module.css';
 
 const Nav: React.FC = () => {
   const { i18n } = useTranslation();
   const [isSignInModalVisible, setIsSignInModalVisible] = useState(false);
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
+  const [isForgotPasswordModalVisible, setIsForgotPasswordModalVisible] = useState(false);
 
   const changeLanguage = (language: string) => {
     if (i18n && i18n.changeLanguage) {
@@ -46,6 +47,14 @@ const Nav: React.FC = () => {
     setIsSignUpModalVisible(false);
   };
 
+  const showForgotPasswordModal = () => {
+    setIsForgotPasswordModalVisible(true);
+  };
+
+  const handleForgotPasswordModalClose = () => {
+    setIsForgotPasswordModalVisible(false);
+  };
+
   return (
     <>
       <nav className={style.nav}>
@@ -68,8 +77,13 @@ const Nav: React.FC = () => {
           </select>
         </div>
       </nav>
-      <SignIn isModalVisible={isSignInModalVisible} onClose={handleSignInModalClose} />
+      <SignIn
+        isModalVisible={isSignInModalVisible}
+        onClose={handleSignInModalClose}
+        onForgotPassword={showForgotPasswordModal} 
+      />
       <SignUp isModalVisible={isSignUpModalVisible} onClose={handleSignUpModalClose} />
+      <ForgotPassword isModalVisible={isForgotPasswordModalVisible} onClose={handleForgotPasswordModalClose} />
     </>
   );
 };

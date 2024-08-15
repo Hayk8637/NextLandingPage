@@ -7,9 +7,10 @@ import Image from 'next/image';
 interface SignInProps {
   isModalVisible: boolean;
   onClose: () => void;
+  onForgotPassword: () => void;  // New prop to handle forgot password
 }
 
-const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose }) => {
+const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPassword }) => {
   const handleOk = () => {
     // Handle form submission or login here
     onClose();
@@ -69,7 +70,7 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose }) => {
         </Button>
       </div>
       <div className={style.forgotPassword}>
-        <a href="/forgot-password">Forgot password?</a>
+        <a onClick={() => { onClose(); onForgotPassword(); }}>Forgot password?</a>
       </div>
     </Modal>
   );
