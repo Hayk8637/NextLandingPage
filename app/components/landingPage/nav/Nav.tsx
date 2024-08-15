@@ -1,4 +1,4 @@
-"use client";
+// Nav.tsx
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';

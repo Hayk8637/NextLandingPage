@@ -15,6 +15,7 @@
     "axios": "^1.7.2",
     "emailjs-com": "^3.2.0",
     "firebase": "^10.12.5",
+    "firebaseui": "^6.1.0",
     "i18next": "^23.12.2",
     "i18next-fs-backend": "^2.3.2",
     "i18next-http-backend": "^2.5.2",
