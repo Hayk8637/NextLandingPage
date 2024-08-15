@@ -41,6 +41,9 @@
     font-weight: 500;
     margin: 0;
 }
+.serviceIncludeItems > div > .item > .text > p {
+    margin: 10px 0;
+}
 
 @media (max-width: 1000px) {
     .serviceIncludeItems {
