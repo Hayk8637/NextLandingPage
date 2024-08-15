@@ -10,11 +10,12 @@
 .serviceInclude > h1 {
     text-align: center;
     display: block;
+    color: #FF7800;
 }
 
 .serviceIncludeItems > .left, .right {
     width: 500px;
-    height: 800px;
+    height: 900px;
     display: inline-block;
     margin: auto;
     max-width: 100%;

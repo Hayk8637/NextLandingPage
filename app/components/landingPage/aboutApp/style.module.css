@@ -60,6 +60,7 @@
     .about > .right > .aboutTitle {
         padding-right: 0;
         text-align: center;
+        font-size: 14px;
     }
 
     .about > .right > .aboutData {
@@ -72,5 +73,13 @@
     .about > .right > .aboutData > .aboutParagraph {
         text-align: left; 
         /* margin: auto; */
+    }
+}
+@media only screen and (max-width: 600px) {
+    .about > .right > .aboutData > .aboutTitle {
+        font-size: 24px;
+    }
+    .about > .right > .aboutData > .aboutParagraph {
+        font-size: 16px;
     }
 }

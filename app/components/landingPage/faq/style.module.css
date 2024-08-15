@@ -2,6 +2,9 @@
   padding-top: 20px;
 
 } */
+.faq > h1 {
+  color: #ff7700;
+}
 .collapse {
     margin: auto;
     width: 700px;
@@ -23,3 +26,11 @@
     margin: 8px 0;
     padding-left: 22px;
   }
+
+  
+@media (max-width: 600px) {
+  .faq > h1 {
+    text-align: center;
+    color: #ff7700;
+  }
+}
