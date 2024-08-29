@@ -9,6 +9,7 @@ import style from './style.module.css';
 import { onAuthStateChanged, User, signOut } from 'firebase/auth';
 import { auth } from '../../../../firebaseConfig';
 import { UserOutlined } from '@ant-design/icons';
+import Link from 'next/link';
 
 const Nav: React.FC = () => {
   const { i18n } = useTranslation();
@@ -86,10 +87,10 @@ const Nav: React.FC = () => {
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="personal-account">
-        Personal Account
+        <Link href="/profile/institutions">Institutions</Link>
       </Menu.Item>
-      <Menu.Item key="account-settings">
-        Account Settings
+      <Menu.Item key="settings">
+        <Link href="/profile/settings">Settings</Link>
       </Menu.Item>
       <Menu.Item key="logout">
         Log Out
@@ -101,27 +102,24 @@ const Nav: React.FC = () => {
     <>
       <nav className={style.nav}>
         <div className={style.left}>
-          <a href='#'><Image src="/logo/logo.png" alt='logo' width={150} height={50} /></a>
+          <Link href='/'>
+            <Image src="/logo/logo.png" alt='logo' width={150} height={50} />
+          </Link>
         </div>
         <div className={style.right}>
-          {user ? (<>
-            <Dropdown
-              overlay={menu}
-              trigger={['click']}
-            >
-              <Button type="primary" color='#ff7700' className={style.userEmail}>
-                {user.email}
-              </Button>
-            </Dropdown>
-            <Dropdown
-            overlay={menu}
-            trigger={['click']}
-          >
-            <Button type="link" color='#ff7700' className={style.userIcon}>
-            <UserOutlined color='#ff7700' />
-            </Button>
-          </Dropdown>
-          </>
+          {user ? (
+            <>
+              <Dropdown overlay={menu} trigger={['click']}>
+                <Button type="primary" className={style.userEmail}>
+                  {user.email}
+                </Button>
+              </Dropdown>
+              <Dropdown overlay={menu} trigger={['click']}>
+                <Button type="link" className={style.userIcon}>
+                  <UserOutlined />
+                </Button>
+              </Dropdown>
+            </>
           ) : (
             <div className={style.authButtons}>
               <Button type="link" onClick={showSignUpModal} className={style.signUp}>
@@ -130,7 +128,6 @@ const Nav: React.FC = () => {
               <Button type="primary" onClick={showSignInModal} className={style.signIn}>
                 Sign In
               </Button>
-              
             </div>
           )}
           <select onChange={(e) => changeLanguage(e.target.value)} value={i18n.language}>

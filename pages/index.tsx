@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-import HomeC from '@/app/pages/Home';
+import HomeC from '@/app/pages/Home/Home';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Home: NextPage = () => {

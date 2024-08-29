@@ -1,0 +1,17 @@
+.accountSettings {
+    height: calc(100vh - 288px);
+    width: 900px;
+    margin: auto;
+}
+.accountSettings > div {
+    display: inline-block;
+    width: 45%;
+    border: 1px solid black;
+    border-radius: 10px;
+    height: 400px;
+    margin: auto;
+}
+.accountSettings > .left {
+}
+.accountSettings > .right {
+}

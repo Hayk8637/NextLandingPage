@@ -4,7 +4,8 @@ import { GoogleOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import style from './style.module.css';
 import { auth, googleProvider } from '../../../../../firebaseConfig';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth'; // Import from firebase/auth
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { useRouter } from 'next/router';
 
 interface SignInProps {
   isModalVisible: boolean;
@@ -13,12 +14,15 @@ interface SignInProps {
 }
 
 const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPassword }) => {
+  const router = useRouter();
+
   const handleSignIn = async (values: any) => {
     const { email, password } = values;
     try {
       await signInWithEmailAndPassword(auth, email, password);
       message.success('Sign in successful');
       onClose();
+      router.push('/profile');
     } catch (error) {
       console.error('Sign in error:', error);
       message.error('Sign in failed: ' + error);
@@ -27,8 +31,10 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
 
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithPopup(auth, googleProvider); // Ensure this is correctly imported
+      await signInWithPopup(auth, googleProvider);
       message.success('Signed in with Google');
+      onClose();
+      router.push('/profile');
     } catch (error) {
       console.error('Google sign-in error:', error);
       message.error('Google sign-in failed: ' + error);
