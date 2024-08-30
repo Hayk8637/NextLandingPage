@@ -12,12 +12,11 @@ import { UserOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
 const Nav: React.FC = () => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation("global");
   const [isSignInModalVisible, setIsSignInModalVisible] = useState(false);
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
   const [isForgotPasswordModalVisible, setIsForgotPasswordModalVisible] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-
   const changeLanguage = (language: string) => {
     if (i18n && i18n.changeLanguage) {
       i18n.changeLanguage(language);
@@ -29,20 +28,17 @@ const Nav: React.FC = () => {
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-      if (i18n && i18n.changeLanguage) {
-        i18n.changeLanguage(savedLanguage);
-      }
+    if (savedLanguage && i18n.changeLanguage) {
+      i18n.changeLanguage(savedLanguage);
     }
   }, [i18n]);
 
   useEffect(() => {
-    // Listen for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // Update state with the current user
+      setUser(currentUser); 
     });
 
-    return () => unsubscribe(); // Cleanup subscription on component unmount
+    return () => unsubscribe(); 
   }, []);
 
   const showSignInModal = () => {
@@ -72,7 +68,7 @@ const Nav: React.FC = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      setUser(null); // Clear user state after sign out
+      setUser(null); 
     } catch (error) {
       console.error('Sign out error:', error);
     }
@@ -87,13 +83,13 @@ const Nav: React.FC = () => {
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="personal-account">
-        <Link href="/profile/institutions">Institutions</Link>
+        <Link href="/profile/institutions">{t('institutions')}</Link>
       </Menu.Item>
       <Menu.Item key="settings">
-        <Link href="/profile/settings">Settings</Link>
+        <Link href="/profile/settings">{t('settings')}</Link>
       </Menu.Item>
       <Menu.Item key="logout">
-        <Link href="/">Log Out</Link>
+        {t('logOut')}
       </Menu.Item>
     </Menu>
   );
@@ -103,7 +99,7 @@ const Nav: React.FC = () => {
       <nav className={style.nav}>
         <div className={style.left}>
           <Link href='/'>
-            <Image src="/logo/logo.png" alt='logo' width={150} height={50} />
+            <Image src="/logo/logo.png" alt={t('logo')} width={150} height={50} />
           </Link>
         </div>
         <div className={style.right}>
@@ -123,10 +119,10 @@ const Nav: React.FC = () => {
           ) : (
             <div className={style.authButtons}>
               <Button type="link" onClick={showSignUpModal} className={style.signUp}>
-                Sign Up
+                {t(('signup'))}
               </Button>
               <Button type="primary" onClick={showSignInModal} className={style.signIn}>
-                Sign In
+                {t(('signin'))}
               </Button>
             </div>
           )}

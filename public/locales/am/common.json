@@ -99,6 +99,14 @@
   "Showmore": "Ավելին",
   "Support": "Օգնություն",
   "aboutTitle": "Էլեկտրոնային QR մենյու",
+  "comfirmPassword": "Հաստատեք Գաղտաբառը",
   "faq": "Հաճախ  տրվող հարցեր",
-  "serviceInclude": "Սերվիսը Ներառում է"
+  "forgotPassword": "Մոռացել ե՞ք գաղտնաբառը։",
+  "or": "կամ",
+  "password ": "Գաղտնաբառ",
+  "serviceInclude": "Սերվիսը Ներառում է",
+  "signInWithGoogle": "Մուտք Google-ով",
+  "signUpWithGoogle": "Գրանցում Google-ով",
+  "signin": "Մուտք",
+  "signup": "\tԳրանցվել"
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Input, Button, Form, message } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
 import Image from 'next/image';
@@ -6,6 +6,7 @@ import style from './style.module.css';
 import { auth, googleProvider } from '../../../../../firebaseConfig';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 
 interface SignInProps {
   isModalVisible: boolean;
@@ -15,7 +16,14 @@ interface SignInProps {
 
 const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPassword }) => {
   const router = useRouter();
+  const { t, i18n } = useTranslation("global");
 
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage && i18n.changeLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  }, [i18n]);
   const handleSignIn = async (values: any) => {
     const { email, password } = values;
     try {
@@ -71,7 +79,7 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
           rules={[{ required: true, message: 'Please input your password!' }]}
           className={style.formItem}
         >
-          <Input.Password placeholder="Password" className={style.input} />
+          <Input.Password placeholder={t(('password'))} className={style.input} />
         </Form.Item>
         <Form.Item className={style.formItem}>
           <Button
@@ -80,22 +88,22 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
             className={style.submitButton}
             block
           >
-            Log In
+            {t(('signin'))}
           </Button>
         </Form.Item>
       </Form>
       <div className={style.orDivider}>
         <div className={style.line}></div>
-        <span className={style.orText}>OR</span>
+        <span className={style.orText}>{t(('or'))}</span>
         <div className={style.line}></div>
       </div>
       <div className={style.googleLogin}>
         <Button type="link" icon={<GoogleOutlined />} className={style.googleButton} onClick={handleGoogleSignIn}>
-          Log in with Google
+          {t(('signInWithGoogle'))}
         </Button>
       </div>
       <div className={style.forgotPassword}>
-        <a onClick={() => { onClose(); onForgotPassword(); }}>Forgot password?</a>
+        <a onClick={() => { onClose(); onForgotPassword(); }}>{t(('forgotPassword'))}</a>
       </div>
     </Modal>
   );

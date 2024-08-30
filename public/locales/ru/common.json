@@ -99,6 +99,14 @@
   "Showmore": "Показать больше",
   "Support": "Поддержка",
   "aboutTitle": "Электронное QR меню",
+  "comfirmPassword": "Подтвердите Пароль",
   "faq": "Часто задаваемые  вопросы",
-  "serviceInclude": "Сервис  Включает"
+  "forgotPassword": "Забыли пароль ?",
+  "or": "или",
+  "password ": "Пароль",
+  "serviceInclude": "Сервис  Включает",
+  "signInWithGoogle": "Вход с помощью Google",
+  "signUpWithGoogle": "Регистрация через Google",
+  "signin": "Вход",
+  "signup": "Регистрация "
 }

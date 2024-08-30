@@ -99,6 +99,14 @@
   "Showmore": "Show more",
   "Support": "Support",
   "aboutTitle": "Digital QR menu",
+  "comfirmPassword": "Comfirm Password",
   "faq": "Frequently asked questions",
-  "serviceInclude": "Servise Include"
+  "forgotPassword": "Forgot Password ?",
+  "or": "or",
+  "password ": "Password",
+  "serviceInclude": "Servise Include",
+  "signInWithGoogle": "Sign Up With Google",
+  "signUpWithGoogle": "Sign Up With Google",
+  "signin": "Sign In",
+  "signup": "Sign Up"
 }
