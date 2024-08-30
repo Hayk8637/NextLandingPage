@@ -20,6 +20,10 @@
   
   .input {
     border-radius: 5px;
+    border-color: #ff7700;
+  }
+  .input:focus, .input:active, .input:hover {
+    border-color: #e65c00;
   }
   
   .submitButton {
@@ -28,6 +32,10 @@
     border-radius: 5px;
     font-weight: bold;
     color: white;
+  }
+  .submitButton:active, .submitButton:hover{
+    background-color: #e65c00 !important;
+    border-color: #e65c00 !important;
   }
   
   .orDivider {
@@ -59,13 +67,17 @@
     color: #ff7700;
     font-weight: bold;
   }
+
+  .googleButton:active, .googleButton:hover{
+    color: #e65c00 !important;
+  }
   
   .forgotPassword {
     text-align: center;
     margin-bottom: 10px;
   }
   
-  .forgotPassword a {
+  .forgotPassword > a {
     color: #00376b;
     font-size: 12px;
     text-decoration: none;

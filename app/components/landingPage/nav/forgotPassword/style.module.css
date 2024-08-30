@@ -26,7 +26,10 @@
     background-color: #ff7700; /* Ant Design primary color */
     border-color: #ff7700;
   }
-  
+  .submitButton:active, .submitButton:hover{
+    background-color: #e65c00 !important;
+    border-color: #e65c00 !important;
+  }
   .orDivider {
     display: flex;
     align-items: center;

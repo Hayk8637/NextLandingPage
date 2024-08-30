@@ -21,18 +21,48 @@ const Partners: React.FC = () => {
   const settings = {
     infinite: true,
     speed: 5000,
-    slidesToShow: 5,
+    slidesToShow: 6,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 0,
     cssEase: 'linear',
     pauseOnHover: true,
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 1,
+          infinite: true,
+          autoplay: true,
+        },
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+          autoplay: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true,
+          autoplay: true,
+        },
+      },
+    ],
   };
-  const { i18n, t } = useTranslation("global");
+
+  const { t } = useTranslation("global");
 
   return (
     <div className={style.carouselContainer}>
-        <h1 >{t("PARTNERS")}</h1>
+      <h1>{t("PARTNERS")}</h1>
       <Slider {...settings}>
         {logos.map((logo, index) => (
           <div key={index} className={style.logoContainer}>

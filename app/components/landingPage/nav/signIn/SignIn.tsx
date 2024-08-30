@@ -22,7 +22,7 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
       await signInWithEmailAndPassword(auth, email, password);
       message.success('Sign in successful');
       onClose();
-      router.push('/profile');
+      router.push('/profile/institutions');
     } catch (error) {
       console.error('Sign in error:', error);
       message.error('Sign in failed: ' + error);
@@ -34,7 +34,7 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
       await signInWithPopup(auth, googleProvider);
       message.success('Signed in with Google');
       onClose();
-      router.push('/profile');
+      router.push('/profile/institutions');
     } catch (error) {
       console.error('Google sign-in error:', error);
       message.error('Google sign-in failed: ' + error);

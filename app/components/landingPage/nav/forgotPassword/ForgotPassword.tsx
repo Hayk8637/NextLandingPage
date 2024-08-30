@@ -62,7 +62,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isModalVisible, onClose
             htmlType="submit"
             className={style.submitButton}
             block
-            loading={isLoading} // Show loading indicator on button
+            loading={isLoading} 
           >
             Send Reset Link
           </Button>

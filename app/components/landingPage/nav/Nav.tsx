@@ -93,7 +93,7 @@ const Nav: React.FC = () => {
         <Link href="/profile/settings">Settings</Link>
       </Menu.Item>
       <Menu.Item key="logout">
-        Log Out
+        <Link href="/">Log Out</Link>
       </Menu.Item>
     </Menu>
   );
