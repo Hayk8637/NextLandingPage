@@ -43,24 +43,22 @@ const AccountSettings: React.FC = () => {
       if (user) {
         await sendEmailVerification(user);
         notification.success({
-          message: 'Verification Email Sent',
-          description: 'Please check your email for the verification link.',
+          message: `${t(('VerificationEmailSent'))}`, 
+          description: `${t(('Pleasecheckyouremailfortheverificationlink'))}`,
         });
-
         setTimeout(async () => {
           await reloadUser();
           if (user && user.emailVerified) {
             notification.success({
-              message: 'Email Verified',
-              description: 'Your email has been successfully verified.',
+              message: `${t(('EmailVerified'))}`,
+              description: `${t(('Youremailhasbeensuccessfullyverified'))}`,
             });
           }
         }, 3000);
       }
     } catch (error: any) {
       notification.error({
-        message: 'Error Sending Email',
-        description: error.message || 'An unexpected error occurred.',
+        message: `${t(('ErrorSendingEmail'))}`,
       });
     } finally {
       setLoading(false);
@@ -73,16 +71,16 @@ const AccountSettings: React.FC = () => {
       if (user) {
         await updatePassword(user, values.newPassword);
         notification.success({
-          message: 'Password Updated',
-          description: 'Your password has been successfully updated.',
+          message: `${t(('PasswordUpdated'))}`,
+          description: `${t(('Yourpasswordhasbeensuccessfullyupdated'))}`,
         });
 
         form.resetFields();
       }
     } catch (error: any) {
       notification.error({
-        message: 'Error Updating Password',
-        description: error.message || 'An unexpected error occurred.',
+        message: `${t(('ErrorUpdatingPassword'))}`,
+        description: error.message || `${t(('Anunexpectederroroccurred'))}`,
       });
     } finally {
       setLoading(false);
@@ -94,21 +92,21 @@ const AccountSettings: React.FC = () => {
       <Row gutter={16}>
         <Col xs={24} md={12}>
           <div className={style.left}>
-            <h3 className={style.h3}>Данные пользователя</h3>
+            <h3 className={style.h3}>{t(('Userdata'))}</h3>
             <Form layout="vertical">
-              <Form.Item label="Почта">
+              <Form.Item label={t(('Email'))}>
                 <Input value={email} disabled />
               </Form.Item>
               <Form.Item>
                 {emailVerified ? (
                   <Text type="success">
                     <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                    Почта подтверждена
+                    {t(('Mailconfirmed'))}
                   </Text>
                 ) : (
                   <Button className={style.primaryButton} onClick={handleVerifyEmail} loading={loading}>
                     <ExclamationCircleOutlined style={{ marginRight: 8 }} />
-                    Подтвердить почту
+                    {t(('Confirmemail'))}
                   </Button>
                 )}
               </Form.Item>
@@ -117,36 +115,36 @@ const AccountSettings: React.FC = () => {
         </Col>
         <Col xs={24} md={12}>
           <div className={style.right}>
-            <h3 className={style.h3}>Изменить пароль</h3>
+            <h3 className={style.h3}>{t(('Changepassword'))}</h3>
             <Form form={form} onFinish={handleChangePassword} layout="vertical">
               <Form.Item
-                label="Новый пароль"
+                label={t(('NewPassword'))}
                 name="newPassword"
-                rules={[{ required: true, message: 'Введите новый пароль' }]}
+                rules={[{ required: true, message: `${t(('Enternewpassword'))}` }]}
               >
-                <Input.Password placeholder="6+ символов" className={style.input} />
+                <Input.Password placeholder={`6+ ${t(('symbols'))}`} className={style.input} />
               </Form.Item>
               <Form.Item
-                label="Новый пароль повторно"
+                label={t(('comfirmPassword'))}
                 name="confirmPassword"
                 dependencies={['newPassword']}
                 rules={[
-                  { required: true, message: 'Введите пароль повторно' },
+                  { required: true, message: `${t(('Pleasere-enteryourpassword'))}` },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
                       if (!value || getFieldValue('newPassword') === value) {
                         return Promise.resolve();
                       }
-                      return Promise.reject(new Error('Пароли не совпадают!'));
+                      return Promise.reject(new Error(`${t(('Passwordsdonotmatch'))}`));
                     },
                   }),
                 ]}
               >
-                <Input.Password placeholder="6+ символов" className={style.input} />
+                <Input.Password placeholder={`6+ ${t(('symbols'))}`} className={style.input} />
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit" loading={loading} className={style.changeButton}>
-                  Изменить пароль
+                  {t(('Changepassword'))}
                 </Button>
               </Form.Item>
             </Form>
