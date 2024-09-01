@@ -15,6 +15,7 @@
   "Email": "Электронная почта",
   "Enteryouremail": "Введите адрес электронной почты...",
   "Errorcreatinguser:": "Ошибка создания пользователя:",
+  "Errorsendingpasswordresetemail:": "Error sending password reset email:",
   "ErrorsigningupwithGoogle:": "Ошибка регистрации в Google:",
   "Faq": {
     "-O3S8D-ic90na1ULHtiK": {
@@ -44,6 +45,7 @@
     }
   },
   "GOTOMENU": "ПЕРЕЙТИ К МЕНЮ",
+  "Googlesign-infailed:": "Не удалось войти в Google.",
   "MostPopularItems": "Самые популярные партнеры",
   "PARTNERS": "ПАРТНЕРЫ",
   "Pleaseconfirmyourpassword!": "Пожалуйста, подтвердите свой пароль!",
@@ -52,6 +54,7 @@
   "Pleasewriteyouremail": "Напишите свой адрес электронной почты.",
   "Registrationsuccessful!": "Регистрация прошла успешно! Проверьте свою электронную почту, чтобы подтвердить свой аккаунт.",
   "Send": "Отправить",
+  "SendResetLink": "Отправить ссылку сброса",
   "ServiceInclude": {
     "-O3klunOknbjWb7OIEPH": {
       "include": "Доступ к вашему меню по ссылке (для соц сетей, сайта или гугл карт)",
@@ -104,7 +107,10 @@
     }
   },
   "Showmore": "Показать больше",
+  "SignedinwithGoogle": "Вы вошли через Google",
   "SignedupsuccessfullywithGoogle!": "Регистрация в Google прошла успешно!",
+  "Signinfailed:": "Не удалось войти:",
+  "Signinsuccessful": "Вход выполнен успешно",
   "Support": "Поддержка",
   "Thetwopasswordsdonotmatch!": "Два пароля не совпадают!",
   "aboutTitle": "Электронное QR меню",
@@ -113,6 +119,7 @@
   "forgotPassword": "Забыли пароль ?",
   "or": "или",
   "password ": "Пароль",
+  "resetemailsent": "Письмо для сброса пароля отправлено! Проверьте свой почтовый ящик.",
   "serviceInclude": "Сервис  Включает",
   "signInWithGoogle": "Вход с помощью Google",
   "signUpWithGoogle": "Регистрация через Google",

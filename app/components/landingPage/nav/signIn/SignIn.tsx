@@ -28,24 +28,22 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
     const { email, password } = values;
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      message.success('Sign in successful');
+      message.success(`${t(('Signinsuccessful'))}`);
       onClose();
       router.push('/profile/institutions');
     } catch (error) {
-      console.error('Sign in error:', error);
-      message.error('Sign in failed: ' + error);
+      message.error(`${t(('Signinfailed:'))} ` + error);
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
-      message.success('Signed in with Google');
+      message.success(`${t(('SignedinwithGoogle'))}`);
       onClose();
       router.push('/profile/institutions');
     } catch (error) {
-      console.error('Google sign-in error:', error);
-      message.error('Google sign-in failed: ' + error);
+      message.error(`${t(('Googlesign-infailed:'))}` + error);
     }
   };
 
@@ -69,17 +67,17 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
       >
         <Form.Item
           name="email"
-          rules={[{ required: true, message: 'Please input your email or username!' }]}
+          rules={[{ required: true, message: `${t(('Pleaseinputyouremail!'))}` }]}
           className={style.formItem}
         >
-          <Input placeholder="Phone number, username, or email" className={style.input} />
+          <Input placeholder={t(('Email'))} className={style.input} />
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: `${t(('Pleaseinputyourpassword!'))}` }]}
           className={style.formItem}
         >
-          <Input.Password placeholder={t(('password'))} className={style.input} />
+          <Input.Password placeholder={t(('password '))} className={style.input} />
         </Form.Item>
         <Form.Item className={style.formItem}>
           <Button

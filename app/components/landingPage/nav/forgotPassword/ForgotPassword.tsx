@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Input, Button, Form, message } from 'antd';
 import Image from 'next/image';
 import style from './style.module.css';
 import { auth } from '../../../../../firebaseConfig'; 
 import { sendPasswordResetEmail } from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
 
 interface ForgotPasswordProps {
   isModalVisible: boolean;
@@ -12,18 +13,23 @@ interface ForgotPasswordProps {
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isModalVisible, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const { t, i18n } = useTranslation("global");
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage && i18n.changeLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  }, [i18n]);
   const handleResetPassword = async (values: any) => {
     const { email } = values;
     setIsLoading(true); 
 
     try {
       await sendPasswordResetEmail(auth, email);
-      message.success('Password reset email sent! Please check your inbox.');
-      console.log('Password reset email sent to:', email);
+      message.success(`${t(('resetemailsent'))}`);
       onClose(); 
     } catch (error) {
-      console.error('Error sending password reset email:', error);
-      message.error('Error sending password reset email: ' + error);
+      message.error(`${t(('Errorsendingpasswordresetemail:'))} ` + error);
     } finally {
       setIsLoading(false); 
     }
@@ -49,10 +55,10 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isModalVisible, onClose
       >
         <Form.Item
           name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
+          rules={[{ required: true, message: `${t(('Pleaseinputyouremail!'))}` }]}
           className={style.formItem}
         >
-          <Input placeholder="Email" className={style.input} />
+          <Input placeholder={t(('Email'))} className={style.input} />
         </Form.Item>
         <Form.Item className={style.formItem}>
           <Button
@@ -62,7 +68,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isModalVisible, onClose
             block
             loading={isLoading} 
           >
-            Send Reset Link
+            {t(('SendResetLink'))}
           </Button>
         </Form.Item>
       </Form>

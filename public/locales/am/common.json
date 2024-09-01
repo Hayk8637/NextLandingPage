@@ -15,6 +15,7 @@
   "Email": "էլ. հասցեն",
   "Enteryouremail": "Մուտքագրեք ձեր էլ.-հասցեն ․․․",
   "Errorcreatinguser:": "Օգտատիրոջ ստեղծման սխալ՝",
+  "Errorsendingpasswordresetemail:": "Գաղտնաբառի վերակայման էլ.փոստ ուղարկելիս սխալ առաջացավ.",
   "ErrorsigningupwithGoogle:": "Սխալ՝ Google-ով գրանցվելիս.",
   "Faq": {
     "-O3S8D-ic90na1ULHtiK": {
@@ -44,6 +45,7 @@
     }
   },
   "GOTOMENU": "Անցնել Մենյու",
+  "Googlesign-infailed:": "Google-ի մուտքը ձախողվեց՝",
   "MostPopularItems": "Մեր Լավագույն Գործընկերները",
   "PARTNERS": "Մեր Գործընկերները",
   "Pleaseconfirmyourpassword!": "Խնդրում ենք հաստատել ձեր գաղտնաբառը:",
@@ -52,6 +54,7 @@
   "Pleasewriteyouremail": "Խնդրում ենք գրեք ձեր էլ․-հասցեն",
   "Registrationsuccessful!": "Գրանցումը հաջողվեց: Խնդրում ենք ստուգել ձեր էլ․ հասցեն՝ ձեր հաշիվը հաստատելու համար։",
   "Send": "Ուղղարկել",
+  "SendResetLink": "Ուղարկեք Վերակայման հղումը",
   "ServiceInclude": {
     "-O3klunOknbjWb7OIEPH": {
       "include": "Մուտք դեպի ձեր ընտրացանկը հղումով (սոցիալական ցանցերի, ձեր կայքի կամ Google քարտեզների համար)",
@@ -104,7 +107,10 @@
     }
   },
   "Showmore": "Ավելին",
+  "SignedinwithGoogle": "Մուտք եք գործել Google-ով",
   "SignedupsuccessfullywithGoogle!": "Հաջողությամբ գրանցվեց Google-ի միջոցով:",
+  "Signinfailed:": "Մուտքը ձախողվեց՝",
+  "Signinsuccessful": "Մուտքը հաջողվեց",
   "Support": "Օգնություն",
   "Thetwopasswordsdonotmatch!": "Երկու գաղտնաբառերը չեն համընկնում:",
   "aboutTitle": "Էլեկտրոնային QR մենյու",
@@ -113,6 +119,7 @@
   "forgotPassword": "Մոռացել ե՞ք գաղտնաբառը։",
   "or": "կամ",
   "password ": "Գաղտնաբառ",
+  "resetemailsent": "Գաղտնաբառի վերակայման նամակն ուղարկվեց: Խնդրում ենք ստուգել ձեր մուտքի արկղը:",
   "serviceInclude": "Սերվիսը Ներառում է",
   "signInWithGoogle": "Մուտք Google-ով",
   "signUpWithGoogle": "Գրանցում Google-ով",
