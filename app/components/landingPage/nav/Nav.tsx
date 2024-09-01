@@ -80,7 +80,7 @@ const Nav: React.FC = () => {
         <Link href="/profile/settings">{t('settings')}</Link>
       </Menu.Item>
       <Menu.Item key="logout">
-        {t('logOut')}
+        {t('logout')}
       </Menu.Item>
     </Menu>
   );

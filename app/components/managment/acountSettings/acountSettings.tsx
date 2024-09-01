@@ -3,6 +3,7 @@ import { Form, Input, Button, Col, Row, Typography, notification } from 'antd';
 import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { getAuth, sendEmailVerification, updatePassword } from 'firebase/auth';
 import style from './style.module.css';
+import { useTranslation } from 'react-i18next';
 
 const { Text } = Typography;
 
@@ -14,7 +15,14 @@ const AccountSettings: React.FC = () => {
 
   const auth = getAuth();
   const user = auth.currentUser;
+  const { t, i18n } = useTranslation("global");
 
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage && i18n.changeLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  }, [i18n]);
   useEffect(() => {
     if (user) {
       setEmail(user.email || '');
