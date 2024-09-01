@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Input, Button, Form, message } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import style from './style.module.css';
 import { auth } from '../../../../../firebaseConfig'; 
 import { createUserWithEmailAndPassword, sendEmailVerification, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
 
 interface SignUpProps {
   isModalVisible: boolean;
@@ -12,26 +13,30 @@ interface SignUpProps {
 }
 
 const SignUp: React.FC<SignUpProps> = ({ isModalVisible, onClose }) => {
-  const [isLoading, setIsLoading] = useState(false); // Состояние для индикатора загрузки
+  const [isLoading, setIsLoading] = useState(false); 
+  const { t, i18n } = useTranslation("global");
 
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage && i18n.changeLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  }, [i18n]);
   const handleEmailSignUp = async (values: any) => {
     const { email, password } = values;
-    setIsLoading(true); // Показать индикатор загрузки
+    setIsLoading(true); 
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log('User created:', user);
 
-      await sendEmailVerification(user); // Отправить письмо для подтверждения
-      message.success('Registration successful! Please check your email to verify your account.');
-      console.log('Verification email sent to:', user.email);
-      onClose(); // Закрыть модальное окно
+      await sendEmailVerification(user);
+      message.success(`${t(('Registrationsuccessful!'))}`);
+      onClose(); 
     } catch (error) {
-      console.error('Error creating user:', error);
-      message.error('Error creating user: ' + error);
+      message.error(`${t(('Errorcreatinguser:'))} ` + error);
     } finally {
-      setIsLoading(false); // Скрыть индикатор загрузки
+      setIsLoading(false);
     }
   };
 
@@ -40,12 +45,10 @@ const SignUp: React.FC<SignUpProps> = ({ isModalVisible, onClose }) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log('User signed up with Google:', user);
-      message.success('Signed up successfully with Google!');
+      message.success(`${t(('SignedupsuccessfullywithGoogle!'))}`);
       onClose();
     } catch (error) {
-      console.error('Error signing up with Google:', error);
-      message.error('Error signing up with Google: ' + error);
+      message.error(`${t(('ErrorsigningupwithGoogle:'))} ` + error);
     }
   };
 
@@ -69,35 +72,35 @@ const SignUp: React.FC<SignUpProps> = ({ isModalVisible, onClose }) => {
       >
         <Form.Item
           name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
+          rules={[{ required: true, message: `${t(('Pleaseinputyouremail!'))}` }]}
           className={style.formItem}
         >
-          <Input placeholder="Email" className={style.input} />
+          <Input placeholder={t(('Email'))} className={style.input} />
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: `${t(('Pleaseinputyourpassword!'))}` }]}
           className={style.formItem}
         >
-          <Input.Password placeholder="Password" className={style.input} />
+          <Input.Password placeholder={t(('password '))} className={style.input} />
         </Form.Item>
         <Form.Item
           name="confirmPassword"
           dependencies={['password']}
           rules={[
-            { required: true, message: 'Please confirm your password!' },
+            { required: true, message: `${t(('Pleaseconfirmyourpassword!'))}` },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue('password') === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error('The two passwords do not match!'));
+                return Promise.reject(new Error(`${t(('Thetwopasswordsdonotmatch!'))}`));
               },
             }),
           ]}
           className={style.formItem}
         >
-          <Input.Password placeholder="Confirm Password" className={style.input} />
+          <Input.Password placeholder={t(('comfirmPassword'))} className={style.input} />
         </Form.Item>
         <Form.Item className={style.formItem}>
           <Button
@@ -105,15 +108,15 @@ const SignUp: React.FC<SignUpProps> = ({ isModalVisible, onClose }) => {
             htmlType="submit"
             className={style.submitButton}
             block
-            loading={isLoading} // Показать индикатор загрузки на кнопке
+            loading={isLoading}
           >
-            Sign Up
+            {t(('signup'))}
           </Button>
         </Form.Item>
       </Form>
       <div className={style.orDivider}>
         <div className={style.line}></div>
-        <span className={style.orText}>OR</span>
+        <span className={style.orText}>{t(('or'))}</span>
         <div className={style.line}></div>
       </div>
       <div className={style.googleLogin}>
@@ -123,7 +126,7 @@ const SignUp: React.FC<SignUpProps> = ({ isModalVisible, onClose }) => {
           className={style.googleButton}
           onClick={handleGoogleSignUp}
         >
-          Sign up with Google
+          {t(('signUpWithGoogle'))}
         </Button>
       </div>
     </Modal>

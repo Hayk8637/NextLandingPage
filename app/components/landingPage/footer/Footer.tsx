@@ -11,7 +11,14 @@ const logoSrc = '/logo/logo.png';
 const Footer: React.FC = () => {
   const { i18n, t } = useTranslation("global");
   const [socialLinks, setSocialLinks] = useState<{ [key: string]: string }>({});
-
+  const changeLanguage = (language: string) => {
+    if (i18n && i18n.changeLanguage) {
+      i18n.changeLanguage(language);
+      localStorage.setItem('language', language);
+    } else {
+      console.error('i18n.changeLanguage is not available');
+    }
+  };
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language'); 
     if (savedLanguage) {
@@ -44,7 +51,14 @@ const Footer: React.FC = () => {
           </div>
           <div className={style.right}>
             <ul>
-              <li><a href='#'>{t("About")}</a></li>
+              <li>
+                <select onChange={(e) => changeLanguage(e.target.value)} value={i18n.language} className={style.lang}>
+                  <option value="en">EN</option>
+                  <option value="ru">RU</option>
+                  <option value="am">AM</option>
+                </select>
+              </li>
+              {/* <li><a href='#'>{t("About")}</a></li> */}
               <li><a href={`mailto:${socialLinks['support email']}?subject=For Support team.&body=Please write your text !!!`}> {socialLinks['support email']}</a></li>
             </ul>
           </div>

@@ -17,15 +17,6 @@ const Nav: React.FC = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
   const [isForgotPasswordModalVisible, setIsForgotPasswordModalVisible] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const changeLanguage = (language: string) => {
-    if (i18n && i18n.changeLanguage) {
-      i18n.changeLanguage(language);
-      localStorage.setItem('language', language);
-    } else {
-      console.error('i18n.changeLanguage is not available');
-    }
-  };
-
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage && i18n.changeLanguage) {
@@ -126,11 +117,6 @@ const Nav: React.FC = () => {
               </Button>
             </div>
           )}
-          <select onChange={(e) => changeLanguage(e.target.value)} value={i18n.language}>
-            <option value="en">EN</option>
-            <option value="ru">RU</option>
-            <option value="am">AM</option>
-          </select>
         </div>
       </nav>
       <SignIn

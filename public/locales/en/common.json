@@ -12,7 +12,10 @@
     }
   },
   "BECOMEAPartner": "Became A Partner",
+  "Email": "Email",
   "Enteryouremail": "Enter your email...",
+  "Errorcreatinguser:": "Error creating user:",
+  "ErrorsigningupwithGoogle:": "Error signing up with Google:",
   "Faq": {
     "-O3S8D-ic90na1ULHtiK": {
       "answer": "Our digital QR code menu is contactless and it’s always \"on the table\". Guests don’t have to wait for the waiter to bring them a menu or search for the menu on their own. The less waiting time and actions needed to make an order, the more orders will be made.\n\nPaper menus can’t be edited, there is no way to create promotions and discounts quickly.\n\nTo maintain the relevance and presentable look of a paper menu, it has to be reprinted from time to time.",
@@ -43,7 +46,11 @@
   "GOTOMENU": "GO TO MENU",
   "MostPopularItems": "Most Popular Items",
   "PARTNERS": "PARTNERS",
+  "Pleaseconfirmyourpassword!": "Please confirm your password!",
+  "Pleaseinputyouremail!": "Please input your email!",
+  "Pleaseinputyourpassword!": "Please input your password!",
   "Pleasewriteyouremail": "Please write your email.",
+  "Registrationsuccessful!": "Registration successful! Please check your email to verify your account.",
   "Send": "Send",
   "ServiceInclude": {
     "-O3klunOknbjWb7OIEPH": {
@@ -97,7 +104,9 @@
     }
   },
   "Showmore": "Show more",
+  "SignedupsuccessfullywithGoogle!": "Signed up successfully with Google!",
   "Support": "Support",
+  "Thetwopasswordsdonotmatch!": "The two passwords do not match!",
   "aboutTitle": "Digital QR menu",
   "comfirmPassword": "Comfirm Password",
   "faq": "Frequently asked questions",

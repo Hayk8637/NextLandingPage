@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Modal, Input, Button, Form, message } from 'antd';
-import { GoogleOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import style from './style.module.css';
 import { auth } from '../../../../../firebaseConfig'; 
@@ -12,22 +11,21 @@ interface ForgotPasswordProps {
 }
 
 const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isModalVisible, onClose }) => {
-  const [isLoading, setIsLoading] = useState(false); // State for loading indicator
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleResetPassword = async (values: any) => {
     const { email } = values;
-    setIsLoading(true); // Show loading indicator
+    setIsLoading(true); 
 
     try {
-      await sendPasswordResetEmail(auth, email); // Send password reset email
+      await sendPasswordResetEmail(auth, email);
       message.success('Password reset email sent! Please check your inbox.');
       console.log('Password reset email sent to:', email);
-      onClose(); // Close the modal
+      onClose(); 
     } catch (error) {
       console.error('Error sending password reset email:', error);
       message.error('Error sending password reset email: ' + error);
     } finally {
-      setIsLoading(false); // Hide loading indicator
+      setIsLoading(false); 
     }
   };
 

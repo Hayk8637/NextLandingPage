@@ -7,7 +7,7 @@ import style from './style.module.css';
 interface TextItem {
   id: string;
   text: string;
-  uid: string; // Add UID to identify the owner of the text
+  uid: string; 
 }
 
 const Institutions: React.FC = () => {
@@ -20,7 +20,6 @@ const Institutions: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      // Query to fetch only the texts created by the current user
       const q = query(collection(db, 'texts'), where('uid', '==', user.uid));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const items: TextItem[] = [];
@@ -110,8 +109,7 @@ const Institutions: React.FC = () => {
       <Form form={form} onFinish={handleAddText}>
         <Form.Item
           name="text"
-          rules={[{ required: true, message: 'Please enter some text' }]}
-        >
+          rules={[{ required: true, message: 'Please enter some text' }]}>
           <Input placeholder="Enter text here" />
         </Form.Item>
         <Form.Item>
