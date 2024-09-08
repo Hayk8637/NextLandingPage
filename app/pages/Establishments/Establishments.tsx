@@ -1,18 +1,18 @@
 import Nav from '@/app/components/landingPage/nav/Nav'
-import Institutions from '@/app/components/managment/institutions/Institutions'
+import Establishments from '@/app/components/managment/establishments/establishments'
 import React from 'react'
 import style from './style.module.css'
 import Footer from '@/app/components/landingPage/footer/Footer'
-const institutions:React.FC = () => {
+const establishments:React.FC = () => {
   return (
     <>
     <div className={style.main}>
       <Nav/>
-      <Institutions/>
+      <Establishments/>
     </div>
     <Footer/>
     </>
   )
 }
 
-export default institutions
+export default establishments

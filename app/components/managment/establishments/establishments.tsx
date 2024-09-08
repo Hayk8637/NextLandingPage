@@ -10,7 +10,7 @@ interface TextItem {
   uid: string; 
 }
 
-const Institutions: React.FC = () => {
+const Establishments: React.FC = () => {
   const [form] = Form.useForm();
   const [texts, setTexts] = useState<TextItem[]>([]);
   const auth = getAuth();
@@ -145,4 +145,4 @@ const Institutions: React.FC = () => {
   );
 };
 
-export default Institutions;
+export default Establishments;

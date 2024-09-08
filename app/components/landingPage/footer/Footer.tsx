@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
@@ -11,22 +10,18 @@ const logoSrc = '/logo/logo.png';
 const Footer: React.FC = () => {
   const { i18n, t } = useTranslation("global");
   const [socialLinks, setSocialLinks] = useState<{ [key: string]: string }>({});
+  
   const changeLanguage = (language: string) => {
     if (i18n && i18n.changeLanguage) {
       i18n.changeLanguage(language);
       localStorage.setItem('language', language);
-    } else {
-      console.error('i18n.changeLanguage is not available');
     }
   };
+
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language'); 
-    if (savedLanguage) {
-      if (i18n && i18n.changeLanguage) {
-        i18n.changeLanguage(savedLanguage); 
-      } else {
-        console.error('i18n.changeLanguage is not available');
-      }
+    if (savedLanguage && i18n && i18n.changeLanguage) {
+      i18n.changeLanguage(savedLanguage); 
     }
   }, [i18n]);
 
@@ -34,7 +29,7 @@ const Footer: React.FC = () => {
     const fetchSocialLinks = async () => {
       try {
         const response = await axios.get('https://menubyqr-default-rtdb.firebaseio.com/LANDING/socialPages.json');
-        setSocialLinks(response.data);
+        setSocialLinks(response.data || {});
       } catch (error) {
         console.error('Error fetching social links:', error);
       }
@@ -58,19 +53,24 @@ const Footer: React.FC = () => {
                   <option value="am">AM</option>
                 </select>
               </li>
-              {/* <li><a href='#'>{t("About")}</a></li> */}
-              <li><a href={`mailto:${socialLinks['support email']}?subject=For Support team.&body=Please write your text !!!`}> {socialLinks['support email']}</a></li>
+              {socialLinks['support email'] && socialLinks['support email'].trim() && (
+                <li>
+                  <a href={`mailto:${socialLinks['support email']}?subject=For Support team.&body=Please write your text !!!`}>
+                    {socialLinks['support email']}
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>
         <div className={style.down}>
           <div className={style.socialPages}>
             <ul>
-              {socialLinks.instagram && (
-                <li><a href={socialLinks.instagram}><InstagramOutlined style={{color: 'black'}}/></a></li>
+              {socialLinks.instagram && socialLinks.instagram.trim() && (
+                <li><a href={socialLinks.instagram}><InstagramOutlined style={{ color: 'black' }} /></a></li>
               )}
-              {socialLinks['tik-tok'] && (
-                <li><a href={socialLinks['tik-tok']}><TikTokOutlined style={{color: 'black'}}/></a></li>
+              {socialLinks['tik-tok'] && socialLinks['tik-tok'].trim() && (
+                <li><a href={socialLinks['tik-tok']}><TikTokOutlined style={{ color: 'black' }} /></a></li>
               )}
             </ul>
           </div>

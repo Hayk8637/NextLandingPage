@@ -1,9 +1,9 @@
 import React from 'react';
-import Institutions from '@/app/pages/institutions/institutions';
+import Establishments from '@/app/pages/Establishments/Establishments';
 const index = () => {
   return (
     <div>
-        <Institutions/>
+        <Establishments/>
     </div>
   )
 }
