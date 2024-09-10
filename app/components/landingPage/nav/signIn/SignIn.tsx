@@ -30,7 +30,7 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
       await signInWithEmailAndPassword(auth, email, password);
       message.success(`${t(('Signinsuccessful'))}`);
       onClose();
-      router.push('/profile/institutions');
+      router.push('/profile/establishments');
     } catch (error) {
       message.error(`${t(('Signinfailed:'))} ` + error);
     }
@@ -41,7 +41,7 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
       await signInWithPopup(auth, googleProvider);
       message.success(`${t(('SignedinwithGoogle'))}`);
       onClose();
-      router.push('/profile/institutions');
+      router.push('/profile/establishments');
     } catch (error) {
       message.error(`${t(('Googlesign-infailed:'))}` + error);
     }

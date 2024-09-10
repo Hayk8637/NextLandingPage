@@ -74,7 +74,7 @@ const Nav: React.FC = () => {
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="personal-account">
-        <Link href="/profile/institutions">{t('institutions')}</Link>
+        <Link href="/profile/establishments">{t('institutions')}</Link>
       </Menu.Item>
       <Menu.Item key="settings">
         <Link href="/profile/settings">{t('settings')}</Link>
