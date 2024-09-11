@@ -69,54 +69,32 @@
   "Send": "Send",
   "SendResetLink": "Send Reset Link",
   "ServiceInclude": {
-    "-O3klunOknbjWb7OIEPH": {
-      "include": "An access to your menu by the link (for social networks, your website or google maps)\n",
-      "order": 1
+    "-O6R_C14dZ1jmA5BpCzH": {
+      "include": "QR Menu which is accessible by the link in mobile and desktop."
     },
-    "-O3ko4XArSQD6IGDHCFX": {
-      "include": "QR code menu with unlimited amount of categories and items"
+    "-O6Ra3cG_wsI8FY_5r3L": {
+      "include": "Access by scanning QR code, generated inside the service"
     },
-    "-O3koDTLxghvQa9UQQwJ": {
-      "include": "Unlimited amount of viewings for your menu\n"
+    "-O6S83tNRKOUzuy1dtin": {
+      "include": "Unlimited amount of menu categories and items in it"
     },
-    "-O3koJnY-TzQukJMNWeP": {
-      "include": "An ability to add employees to manage your menu\n"
+    "-O6S8Ch3ht0lZm6QORQu": {
+      "include": "Unlimited count of photos and description text for items in the menus"
     },
-    "-O3koUSCojLyh1fvTJG0": {
-      "include": "An ability to hide menu positions with one click\n"
+    "-O6S8PLC7D_xgduv6QG_": {
+      "include": "Up to 10 banners to show Hot Offers and most important information"
     },
-    "-O3kovmjdJS1vDY6Ve38": {
-      "include": "\"Old price/New Price\" feature\n"
+    "-O6S8aWC45K2o7Wp57Hp": {
+      "include": "QR Scans and count of views are unlimited"
     },
-    "-O3kp2fEWvjaq2NtdYaR": {
-      "include": "Unlimited photos and description loading for your QR code menu\n"
+    "-O6S9Y-OBTc6UY2csFrm": {
+      "include": "More than one Branch to manage chain of restaurants"
     },
-    "-O3kp9QZqaWT_KInMzL9": {
-      "include": "QR code generator for your menu\n"
+    "-O6SAcb212Ue-Tpb01JT": {
+      "include": "Multilanguage content for large segment of users"
     },
-    "-O3kpwmOLQOoLxmU2HqS": {
-      "include": "An access to your menu by QR code (for placement on tables, windows, showcases, doors etc.)\n"
-    },
-    "-O3kqMpKWAqUa5Rzbhc6": {
-      "include": "Both a mobile and a desktop version of the menu\n"
-    },
-    "-O3kqa2cwPO8vsxmwc3-": {
-      "include": "An ability to remotely edit your menu\n"
-    },
-    "-O3kqiKuiSdVJpKQ8S-C": {
-      "include": "An ability to add several places into your profile, to easily manage a chain of restaurants\n"
-    },
-    "-O3kqq5WnojryrJDPEDL": {
-      "include": "\"Temporary unavailable\" feature\n"
-    },
-    "-O3kr0nG8hVzoCPz2Ijm": {
-      "include": "An ability to create a multi language QR code menu\n"
-    },
-    "-O3kr8T6bNYBFdDyZfmX": {
-      "include": "Additional restaurant information feature (Address, Phone number, Map, Wi-Fi password)\n"
-    },
-    "-O3krEL0RbR9P6Rap8r3": {
-      "include": "Unlimited number of QR code scans\n"
+    "-O6SBvDiaIjHPfD_UYa2": {
+      "include": "\"Standard\"/\"Discount\" price and \"Hide\" menu items for flexible policy of menu content"
     }
   },
   "Showmore": "Show more",
