@@ -1,0 +1,85 @@
+.header {
+    width: 100%;  
+    padding-bottom: 20px;
+    max-width: 400px;
+    border-bottom: 1px solid #F2F2F2;
+    position: fixed;
+    background-color: white;
+    top: 0;
+    z-index: 1;
+}
+
+.header > .leftRight {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+}
+
+.header > .leftRight > .left {
+    display: inline-block;
+    width: 50%;    
+}
+.header > .leftRight > .right {
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+    font-size: 24px;
+}
+
+.header > .leftRight > .right > a > ShoppingCartOutlined {
+    width: 30px;
+    color: black;
+}
+.header > .leftRight > .right > .edit {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: 20px;
+    color: #ff7700;
+}
+
+.header > .leftRight > .right > .heart {
+    border-right: 2px solid #F2F2F2 ;
+    padding-right: 20px;
+}
+.header > .leftRight > .right > .info {
+    padding-left: 20px;
+    font-size: 24px;
+    color: black;
+}
+
+.header > .search {
+    padding: 10px 0;
+    border-bottom: 2px solid #F2F2F2;
+    width: 100%;
+    text-align: center;
+}
+
+.header > .search {
+    width: 90%;
+    border-radius: 10px;
+    border: 1px solid #F2F2F2;
+    margin: auto;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+}
+
+.header > .search > input {
+    border: none;
+    font-size: 24px;
+    width: 80%;
+    padding-left: 20px;
+}
+
+.header > .search > button{
+    width: 20%;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    font-size: 24px;
+}
+.header > .search > input:focus {
+    outline: none; /* Remove default outline */
+    font-size: 24px;
+}
