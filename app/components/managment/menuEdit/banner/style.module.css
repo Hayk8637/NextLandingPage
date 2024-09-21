@@ -1,0 +1,32 @@
+.banner {
+    padding-top: 105px; /* Adjust the padding as needed */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bannerCarousel {
+    padding: 15px;
+    width: 100%; /* Ensure carousel takes full width */
+}
+
+.carouselItem {
+    height: 184px; /* Match the height used in contentStyle */
+    border-radius: 22px; /* Match the border radius */
+    display: flex; /* Center any potential content */
+  
+    color: #fff; /* Optional: color for any text you might add later */
+}
+
+.editButton {
+    float: right;
+    margin: 13px;
+    z-index: 10; /* Ensure it's on top of other elements */
+    color: white;
+    font-size: 22px;
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+.editButton:hover, .editButton:active, .editButton:focus {
+    color: #e65c00 !important; /* Force the color change on hover, active, and focus */
+}

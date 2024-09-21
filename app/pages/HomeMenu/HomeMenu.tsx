@@ -8,7 +8,7 @@ const HomeMenu:React.FC = () => {
         <div className='home'>
                 <Header/>
                 <Banner/>
-                <AllMenu/>
+                {/* <AllMenu/> */}
         </div>
     </>
 }

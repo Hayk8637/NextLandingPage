@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { InfoCircleOutlined, EditOutlined, UploadOutlined, CopyOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, EditOutlined, UploadOutlined, CopyOutlined, WifiOutlined, PhoneOutlined, LockOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { Button, Modal, Form, Input, Upload, notification, Popover } from 'antd';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import styles from './style.module.css';
-import { usePathname } from 'next/dist/client/components/navigation';
+import { usePathname } from 'next/navigation';
 
 interface FormValues {
   wifiname: string;
@@ -42,7 +42,6 @@ const Header: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
-  const [establishment, setEstablishment] = useState<Establishment | null>(null);
   const [popoverData, setPopoverData] = useState({
     wifiname: '',
     wifipass: '',
@@ -56,7 +55,7 @@ const Header: React.FC = () => {
       return;
     }
 
-    const fetchLogo = async () => {
+    const fetchEstablishmentData = async () => {
       try {
         const auth = getAuth();
         const user = auth.currentUser;
@@ -68,13 +67,12 @@ const Header: React.FC = () => {
 
         const db = getFirestore();
         const docRef = doc(db, 'users', user.uid, 'establishments', establishmentId);
-
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          const data = docSnap.data();
+          const data = docSnap.data() as Establishment;
 
-          setLogoUrl(data.info?.logoUrl || '/pngwing-1.png');
+          setLogoUrl(data.info?.logoUrl || './MBQR Label-03.png');
           setPopoverData({
             wifiname: data.info?.wifiname || '',
             wifipass: data.info?.wifipass || '',
@@ -92,15 +90,14 @@ const Header: React.FC = () => {
           notification.error({ message: 'Error', description: 'Document does not exist' });
         }
       } catch (error) {
-        notification.error({ message: 'Error', description: 'Failed to fetch logo' });
+        notification.error({ message: 'Error', description: 'Failed to fetch establishment data' });
       }
     };
 
-    fetchLogo();
+    fetchEstablishmentData();
   }, [establishmentId, form]);
 
   const openModal = () => setIsModalOpen(true);
-
   const closeModal = () => {
     setIsModalOpen(false);
     form.resetFields();
@@ -149,13 +146,12 @@ const Header: React.FC = () => {
     setUploading(true);
 
     const storage = getStorage();
-    const storageRef = ref(storage, `${establishmentId}/logo/${file.name}`);
+    const storageRef = ref(storage, `establishments/${establishmentId}/logo/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
       'state_changed',
-      (snapshot) => {
-      },
+      (snapshot) => {},
       (error) => {
         notification.error({ message: 'Upload Failed', description: error.message });
         setUploading(false);
@@ -163,6 +159,24 @@ const Header: React.FC = () => {
       async () => {
         try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          if (logoUrl && logoUrl !== './MBQR Label-03.png') {
+            const oldLogoRef = ref(storage, logoUrl);
+            try {
+              await deleteObject(oldLogoRef);
+            } catch (error) {
+              if (error === 'storage/object-not-found') {
+              } else {
+                notification.error({
+                  message: 'Deletion Failed',
+                  description: 'Failed to delete old logo.',
+                });
+              }
+            }
+          }
+
+          setLogoUrl(downloadURL);
+
           const auth = getAuth();
           const db = getFirestore();
           const user = auth.currentUser;
@@ -173,8 +187,6 @@ const Header: React.FC = () => {
             await updateDoc(docRef, {
               'info.logoUrl': downloadURL,
             });
-
-            setLogoUrl(downloadURL);
 
             notification.success({
               message: 'Logo Uploaded',
@@ -202,26 +214,36 @@ const Header: React.FC = () => {
   };
 
   const popoverContent = (
-    <div>
-      <p><strong>WiFi Name:</strong> {popoverData.wifiname} <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(popoverData.wifiname)}>Copy</Button></p>
-      <p><strong>WiFi Password:</strong> {popoverData.wifipass} <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(popoverData.wifipass)}>Copy</Button></p>
-      <p><strong>Address:</strong> {popoverData.address} <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(popoverData.address)}>Copy</Button></p>
-      <p><strong>Phone:</strong> {popoverData.phone} <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(popoverData.phone)}>Copy</Button></p>
+    <div style={{width:'100%'}}>
+      {[
+        { icon: <WifiOutlined size={32} />, label: 'WiFi Name', value: popoverData.wifiname },
+        { icon: <LockOutlined />, label: 'WiFi Password', value: popoverData.wifipass },
+        { icon: <EnvironmentOutlined />, label: 'Address', value: popoverData.address },
+        { icon: <PhoneOutlined />, label: 'Phone', value: popoverData.phone }
+      ].map(({ icon, label, value }) => (
+        <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <p><strong>{icon}: </strong> {value}</p>
+          <Button icon={<CopyOutlined />} onClick={() => copyToClipboard(value)}>Copy</Button>
+        </div>
+      ))}
     </div>
   );
+  
 
   return (
     <>
       <div className={styles.header}>
         <div className={styles.leftRight}>
           <div className={styles.left}>
-            <Image
-              src={logoUrl || '/pngwing-1.png'}
-              alt="logo"
-              width={150}
-              height={50}
-              priority
-            />
+            <div className={styles.logoWrapper}>
+                <Image
+                  src={logoUrl || './MBQR Label-03.png'}
+                  alt="logo"
+                  layout="fill"
+                  objectFit="contain"
+                  priority
+                />              
+            </div>
           </div>
           <div className={styles.right}>
             <Popover placement="bottomRight" title="Establishment Info" content={popoverContent} arrow>
@@ -238,62 +260,35 @@ const Header: React.FC = () => {
 
       <Modal
         title="Edit Establishment Details"
-        visible={isModalOpen}
+        open={isModalOpen}
         onCancel={closeModal}
-        onOk={form.submit}
-        okText="Save"
-        confirmLoading={uploading}
+        footer={null}
       >
-        <Form form={form} layout="vertical" onFinish={handleFormSubmit}>
-          <Form.Item
-            label="WiFi Name"
-            name="wifiname"
-            rules={[{ required: true, message: 'Please enter WiFi name' }]}
-          >
-            <Input placeholder="Enter WiFi name" />
+        <Form form={form} onFinish={handleFormSubmit} layout="vertical">
+          <Form.Item name="wifiname" label="WiFi Name" rules={[{ required: true, message: 'Please enter WiFi name' }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item
-            label="WiFi Password"
-            name="wifipass"
-            rules={[{ required: true, message: 'Please enter WiFi password' }]}
-          >
-            <Input placeholder="Enter WiFi password" />
+          <Form.Item name="wifipass" label="WiFi Password" rules={[{ required: true, message: 'Please enter WiFi password' }]}>
+            <Input />
           </Form.Item>
-
-          <Form.Item
-            label="Address"
-            name="address"
-            rules={[{ required: true, message: 'Please enter address' }]}
-          >
-            <Input placeholder="Enter address" />
+          <Form.Item name="address" label="Address">
+            <Input />
           </Form.Item>
-
-          <Form.Item
-            label="Phone"
-            name="phone"
-            rules={[{ required: true, message: 'Please enter phone number' }]}
-          >
-            <Input placeholder="Enter phone number" />
+          <Form.Item name="currency" label="Currency">
+            <Input />
           </Form.Item>
-
-          <Form.Item
-            label="Currency"
-            name="currency"
-          >
-            <Input placeholder="Enter currency" />
+          <Form.Item name="phone" label="Phone">
+            <Input />
           </Form.Item>
-
-          <Form.Item label="Upload Logo" name="logo">
-            <Upload
-              beforeUpload={file => {
-                handleLogoUpload(file);
-                return false;
-              }}
-              showUploadList={false}
-            >
-              <Button icon={<UploadOutlined />} loading={uploading}>Upload Logo</Button>
+          <Form.Item label="Logo Upload">
+            <Upload beforeUpload={handleLogoUpload} showUploadList={false}>
+              <Button icon={<UploadOutlined />}>Upload Logo</Button>
             </Upload>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" loading={uploading}>
+              Save
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
