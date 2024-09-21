@@ -5,7 +5,7 @@ import { EditOutlined, UploadOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { RcFile } from 'antd/lib/upload/interface';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 import { usePathname } from 'next/navigation';
 
@@ -25,7 +25,6 @@ const Banner: React.FC = () => {
   const [bannerImages, setBannerImages] = useState<BannerImage[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingImage, setEditingImage] = useState<BannerImage | null>(null);
-  const [fileList, setFileList] = useState<RcFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
@@ -41,7 +40,6 @@ const Banner: React.FC = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
     setEditingImage(null);
-    setFileList([]);
   };
 
   useEffect(() => {
@@ -75,7 +73,7 @@ const Banner: React.FC = () => {
     fetchBanners();
   }, [userId, establishmentId]);
 
-  const handleUpload = (file: RcFile) => {
+  const handleUpload = async (file: RcFile) => {
     if (!file) {
       notification.error({ message: 'Error', description: 'No file selected for upload' });
       return;
@@ -84,17 +82,12 @@ const Banner: React.FC = () => {
     setUploading(true);
     const storage = getStorage();
     const storageRef = ref(storage, `establishments/${establishmentId}/banners/${file.name}`);
-    const metadata = {
-      customMetadata: {
-        userId: userId || '', 
-      },
-    };
-    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
       'state_changed',
       (snapshot) => {
-        // Handle upload progress if needed
+        // Handle progress if needed
       },
       (error) => {
         notification.error({ message: 'Upload Failed', description: error.message });
@@ -104,20 +97,15 @@ const Banner: React.FC = () => {
         try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-          if (editingImage) {
-            const oldBannerRef = ref(storage, `establishments/${establishmentId}/banners/${editingImage.id}`);
-            await deleteObject(oldBannerRef);
-          }
-
           if (userId) {
             const docRef = doc(getFirestore(), 'users', userId, 'establishments', establishmentId);
             await updateDoc(docRef, {
-              [`info.bannerUrls.${editingImage ? editingImage.id : file.name}`]: downloadURL,
+              [`info.bannerUrls.${file.name}`]: downloadURL,
             });
 
             setBannerImages((prev) => [
-              ...prev.filter(banner => banner.id !== (editingImage ? editingImage.id : '')),
-              { id: editingImage ? editingImage.id : file.name, url: downloadURL },
+              ...prev.filter(banner => banner.id !== file.name),
+              { id: file.name, url: downloadURL },
             ]);
 
             notification.success({ message: 'Success', description: 'Banner uploaded successfully.' });
@@ -133,34 +121,9 @@ const Banner: React.FC = () => {
         }
       }
     );
-  };
 
-  const handleDelete = async (id: string) => {
-    const user = auth.currentUser;
-
-    if (!user || !establishmentId) {
-      notification.error({ message: 'Error', description: 'User is not authenticated or Establishment ID is missing.' });
-      return;
-    }
-
-    try {
-      const bannerRef = ref(getStorage(), `establishments/${establishmentId}/banners/${id}`);
-      await deleteObject(bannerRef);
-
-      const docRef = doc(getFirestore(), 'users', user.uid, 'establishments', establishmentId);
-      await updateDoc(docRef, {
-        [`info.bannerUrls.${id}`]: null,
-      });
-
-      setBannerImages((prev) => prev.filter((banner) => banner.id !== id));
-
-      notification.success({ message: 'Success', description: 'Banner deleted successfully.' });
-    } catch (error) {
-      notification.error({
-        message: 'Error',
-        description: `Failed to delete banner: ${error}`,
-      });
-    }
+    // Prevent default behavior
+    return false;
   };
 
   return (
@@ -180,7 +143,6 @@ const Banner: React.FC = () => {
                 <Button type="primary" onClick={() => showModal(image)} className={styles.editButton}>
                   Edit
                 </Button>
-                <Button type="link" danger onClick={() => handleDelete(image.id)}>Delete</Button>
               </div>
             </div>
           ))}
@@ -188,12 +150,9 @@ const Banner: React.FC = () => {
       )}
 
       <Modal title={editingImage ? "Edit Banner" : "Upload New Banner"} visible={isModalVisible} onCancel={handleCancel} footer={null}>
-        <Upload beforeUpload={(file) => { setFileList([file]); return false; }} fileList={fileList} showUploadList={false}>
+        <Upload beforeUpload={handleUpload} showUploadList={false}>
           <Button icon={<UploadOutlined />}>Select File</Button>
         </Upload>
-        <Button type="primary" onClick={() => handleUpload(fileList[0])} loading={uploading} disabled={fileList.length === 0}>
-          {editingImage ? "Update" : "Upload"}
-        </Button>
       </Modal>
     </div>
   );
