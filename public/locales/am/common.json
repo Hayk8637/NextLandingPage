@@ -9,7 +9,7 @@
     },
     "undefined": {
       "description": "Բարձրացրեք ձեր բիզնեսը. \nՓոխակերպեք ձեր բիզնեսը խելացի QR տեխնոլոգիայով:\n",
-      "order": 1
+      "order": 3
     }
   },
   "Anunexpectederroroccurred": "Անսպասելի սխալ տեղի ունեցավ:",
@@ -22,7 +22,7 @@
   "Enteryouremail": "Մուտքագրեք ձեր էլ.-հասցեն ․․․",
   "ErrorSendingEmail": "Սխալ՝ էլ նամալկ ուղարկելիս",
   "ErrorUpdatingPassword": "Գաղտնաբառի թարմացման սխալ",
-  "Errorcreatinguser:": "Օգտատեր ստեղծելիս սխալ՝",
+  "Errorcreatinguser:": "Սխալ՝ օգտատեր ստեղծելիս",
   "Errorsendingpasswordresetemail:": "Գաղտնաբառի վերակայման էլ.փոստ ուղարկելիս սխալ առաջացավ.",
   "ErrorsigningupwithGoogle:": "Սխալ՝ Google-ով գրանցվելիս.",
   "Faq": {

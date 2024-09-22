@@ -1,27 +1,28 @@
 {
-  "About": "О Нас",
+  "About": "О нас",
   "AboutApp": {
-    "-O3l7FQzDJuBm5wNOrfE": {
-      "description": "Для ваших гостей - это современное меню по QR коду, которым удобно пользоваться.\n\n"
+    "-O7It_g59ClNl3VMsBqw": {
+      "description": "Легкое управление: \nГибкое и динамичное управление прямо с вашего телефона"
     },
-    "-O3l7UcdVBfXl1udU-3d": {
-      "description": "Для вас - это онлайн платформа по улучшению качества работы с клиентами и повышению продаж, выстроенная вокруг вашего QR код меню."
+    "-O7Ity8Gc8CfE6dXB5CC": {
+      "description": "Постоянные обновления: \nРегулярные обновления, чтобы вы всегда были впереди"
     },
-    "-O3l7dpGDXhvkrx-rwbP": {
-      "description": "Наше цифровое меню работает без установки приложения на телефоны гостей и не требует покупки дорогостоящих терминалов для вас."
+    "undefined": {
+      "description": "Улучшите свой бизнес: \nПреобразуйте свой бизнес с помощью умной QR-технологии.",
+      "order": 3
     }
   },
   "Anunexpectederroroccurred": "Произошла непредвиденная ошибка.",
-  "BECOMEAPartner": "Стань партнером",
+  "BECOMEAPartner": "Стать Партнером",
   "Changepassword": "Изменить пароль",
   "Confirmemail": "Подтвердить почту",
   "Email": "Электронная почта",
-  "EmailVerified": "Электронная почта проверена",
+  "EmailVerified": "Электронная почта подтверждена",
   "Enternewpassword": "Введите новый пароль",
   "Enteryouremail": "Введите адрес электронной почты...",
   "ErrorSendingEmail": "Ошибка отправки электронного письма",
   "ErrorUpdatingPassword": "Ошибка обновления пароля",
-  "Errorcreatinguser:": "Ошибка создания пользователя:",
+  "Errorcreatinguser:": "Ошибка при создании пользователя:",
   "Errorsendingpasswordresetemail:": "Error sending password reset email:",
   "ErrorsigningupwithGoogle:": "Ошибка регистрации в Google:",
   "Faq": {

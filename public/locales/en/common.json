@@ -8,8 +8,8 @@
       "description": "Always Upgrading: \nRegular updates to keep you on top"
     },
     "undefined": {
-      "description": "Take Your Business Higher: \nUpgrade to smart QR menus for a modern touch",
-      "order": 1
+      "description": "Take Your Business Higher: \nUpgrade to smart QR menus for a modern touch.",
+      "order": 3
     }
   },
   "Anunexpectederroroccurred": "An unexpected error occurred.",

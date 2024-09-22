@@ -4,9 +4,9 @@ import { Carousel, Button, Modal, Upload, notification } from 'antd';
 import { EditOutlined, UploadOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { RcFile } from 'antd/lib/upload/interface';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { getAuth } from 'firebase/auth';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { auth, db, storage } from '../../../../../firebaseConfig'; // Import initialized services
 import { usePathname } from 'next/navigation';
 
 interface BannerImage {
@@ -15,7 +15,8 @@ interface BannerImage {
 }
 
 const contentStyle: React.CSSProperties = {
-  height: '184px',
+  height: '200px',
+  width: '100%',
   color: '#fff',
   textAlign: 'center',
   borderRadius: '22px',
@@ -29,7 +30,6 @@ const Banner: React.FC = () => {
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
 
-  const auth = getAuth();
   const userId = auth.currentUser?.uid;
 
   const showModal = (image: BannerImage | null = null) => {
@@ -50,7 +50,7 @@ const Banner: React.FC = () => {
       }
 
       try {
-        const docRef = doc(getFirestore(), 'users', userId, 'establishments', establishmentId);
+        const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -58,7 +58,7 @@ const Banner: React.FC = () => {
           if (data?.info?.bannerUrls) {
             const parsedItems = Object.keys(data.info.bannerUrls).map((key) => ({
               id: key,
-              url: data.info.bannerUrls[key],
+              url: data.info.bannerUrls[key] as string, // Ensure URL is a string
             }));
             setBannerImages(parsedItems);
           }
@@ -80,32 +80,32 @@ const Banner: React.FC = () => {
     }
 
     setUploading(true);
-    const storage = getStorage();
     const storageRef = ref(storage, `establishments/${establishmentId}/banners/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
       'state_changed',
-      (snapshot) => {
-        // Handle progress if needed
-      },
+      (snapshot) => {},
       (error) => {
         notification.error({ message: 'Upload Failed', description: error.message });
         setUploading(false);
       },
       async () => {
         try {
+          // Get the download URL from Firebase storage after upload
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
           if (userId) {
-            const docRef = doc(getFirestore(), 'users', userId, 'establishments', establishmentId);
+            // Update Firestore with the format "id: url"
+            const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
             await updateDoc(docRef, {
               [`info.bannerUrls.${file.name}`]: downloadURL,
             });
 
+            // Update the local state with the new image
             setBannerImages((prev) => [
-              ...prev.filter(banner => banner.id !== file.name),
-              { id: file.name, url: downloadURL },
+              ...prev.filter(banner => banner.id !== file.name), // Remove the old entry if it exists
+              { id: file.name, url: downloadURL }, // Add the new entry with id: url format
             ]);
 
             notification.success({ message: 'Success', description: 'Banner uploaded successfully.' });
@@ -122,23 +122,23 @@ const Banner: React.FC = () => {
       }
     );
 
-    // Prevent default behavior
+    // Prevent default upload behavior
     return false;
   };
 
   return (
     <div className={styles.banner}>
       {bannerImages.length === 0 ? (
-        <div style={{ backgroundColor: '#ffbf87', height: '184px', width: '100%', borderRadius: '22px', margin: 'auto' }}>
+        <div style={{ backgroundColor: '#ffbf87', height: '200px', width: '100%', borderRadius: '22px', margin: 'auto' }}>
           <Button type="link" onClick={() => showModal(null)} className={styles.editButton}>
             <EditOutlined />
           </Button>
         </div>
       ) : (
         <Carousel autoplay autoplaySpeed={4000} speed={1000} className={styles.bannerCarousel}>
-          {bannerImages.map((image) => (
+          { bannerImages.map((image) => (
             <div key={image.id}>
-              <div style={{ ...contentStyle, backgroundSize: 'cover', backgroundPosition: 'center' }} className={styles.carouselItem}>
+              <div style={{ ...contentStyle, backgroundImage: `url(${image.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} className={styles.carouselItem}>
                 <Image src={image.url} alt={`Banner image ${image.id}`} layout="fill" objectFit="cover" className={styles.carouselImage} />
                 <Button type="primary" onClick={() => showModal(image)} className={styles.editButton}>
                   Edit

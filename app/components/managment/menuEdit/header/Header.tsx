@@ -147,6 +147,7 @@ const Header: React.FC = () => {
 
     const storage = getStorage();
     const storageRef = ref(storage, `establishments/${establishmentId}/logo/${file.name}`);
+    console.log(storageRef)
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
