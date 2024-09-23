@@ -42,11 +42,12 @@ const Header: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
-  const [popoverData, setPopoverData] = useState({
+  const [popoverData, setPopoverData] = useState<FormValues>({
     wifiname: '',
     wifipass: '',
     address: '',
     phone: '',
+    currency: '',
   });
 
   useEffect(() => {
@@ -77,14 +78,15 @@ const Header: React.FC = () => {
             wifiname: data.info?.wifiname || '',
             wifipass: data.info?.wifipass || '',
             address: data.info?.address || '',
-            phone: data.info?.phone || ''
+            phone: data.info?.phone || '',
+            currency: data.info?.currency || '',
           });
           form.setFieldsValue({
             wifiname: data.info?.wifiname || '',
             wifipass: data.info?.wifipass || '',
             address: data.info?.address || '',
             currency: data.info?.currency || '',
-            phone: data.info?.phone || ''
+            phone: data.info?.phone || '',
           });
         } else {
           notification.error({ message: 'Error', description: 'Document does not exist' });
@@ -147,7 +149,6 @@ const Header: React.FC = () => {
 
     const storage = getStorage();
     const storageRef = ref(storage, `establishments/${establishmentId}/logo/${file.name}`);
-    console.log(storageRef)
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -215,7 +216,7 @@ const Header: React.FC = () => {
   };
 
   const popoverContent = (
-    <div style={{width:'100%'}}>
+    <div style={{ width: '100%' }}>
       {[
         { icon: <WifiOutlined size={32} />, label: 'WiFi Name', value: popoverData.wifiname },
         { icon: <LockOutlined />, label: 'WiFi Password', value: popoverData.wifipass },
@@ -229,7 +230,6 @@ const Header: React.FC = () => {
       ))}
     </div>
   );
-  
 
   return (
     <>
@@ -237,13 +237,13 @@ const Header: React.FC = () => {
         <div className={styles.leftRight}>
           <div className={styles.left}>
             <div className={styles.logoWrapper}>
-                <Image
-                  src={logoUrl || './MBQR Label-03.png'}
-                  alt="logo"
-                  layout="fill"
-                  objectFit="contain"
-                  priority
-                />              
+              <Image
+                src={logoUrl || './MBQR Label-03.png'}
+                alt="logo"
+                layout="fill"
+                objectFit="contain"
+                priority
+              />
             </div>
           </div>
           <div className={styles.right}>
@@ -265,31 +265,29 @@ const Header: React.FC = () => {
         onCancel={closeModal}
         footer={null}
       >
-        <Form form={form} onFinish={handleFormSubmit} layout="vertical">
-          <Form.Item name="wifiname" label="WiFi Name" rules={[{ required: true, message: 'Please enter WiFi name' }]}>
+        <Form form={form} onFinish={handleFormSubmit} layout="vertical" initialValues={popoverData}>
+          <Form.Item name="wifiname" label="WiFi Name" rules={[{ required: true, message: 'Please input the WiFi name!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="wifipass" label="WiFi Password" rules={[{ required: true, message: 'Please enter WiFi password' }]}>
+          <Form.Item name="wifipass" label="WiFi Password" rules={[{ required: true, message: 'Please input the WiFi password!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="address" label="Address">
+          <Form.Item name="address" label="Address" rules={[{ required: true, message: 'Please input the address!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="currency" label="Currency">
+          <Form.Item name="currency" label="Currency" rules={[{ required: true, message: 'Please select a currency!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="phone" label="Phone">
+          <Form.Item name="phone" label="Phone" rules={[{ required: true, message: 'Please input the phone number!' }]}>
             <Input />
           </Form.Item>
           <Form.Item label="Logo Upload">
             <Upload beforeUpload={handleLogoUpload} showUploadList={false}>
-              <Button icon={<UploadOutlined />}>Upload Logo</Button>
+              <Button icon={<UploadOutlined />} loading={uploading}>Upload Logo</Button>
             </Upload>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={uploading}>
-              Save
-            </Button>
+            <Button type="primary" htmlType="submit">Submit</Button>
           </Form.Item>
         </Form>
       </Modal>

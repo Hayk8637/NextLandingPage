@@ -1,45 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import styles from './style.module.css';
-import { Carousel, Button, Modal, Upload, notification } from 'antd';
-import { EditOutlined, UploadOutlined } from '@ant-design/icons';
+import { Carousel, Button, Modal, Upload, notification, List } from 'antd';
+import { EditOutlined, UploadOutlined, DeleteOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { RcFile } from 'antd/lib/upload/interface';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { auth, db, storage } from '../../../../../firebaseConfig'; // Import initialized services
+import { auth, db, storage } from '../../../../../firebaseConfig';
 import { usePathname } from 'next/navigation';
 
 interface BannerImage {
-  id: string;
+  id: string; // Unique ID
   url: string;
 }
 
 const contentStyle: React.CSSProperties = {
   height: '200px',
   width: '100%',
-  color: '#fff',
-  textAlign: 'center',
+  position: 'relative',
+  overflow: 'hidden',
   borderRadius: '22px',
 };
 
 const Banner: React.FC = () => {
   const [bannerImages, setBannerImages] = useState<BannerImage[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingImage, setEditingImage] = useState<BannerImage | null>(null);
   const [uploading, setUploading] = useState(false);
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
-
   const userId = auth.currentUser?.uid;
 
-  const showModal = (image: BannerImage | null = null) => {
-    setEditingImage(image);
+  const showModal = () => {
     setIsModalVisible(true);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setEditingImage(null);
   };
 
   useEffect(() => {
@@ -58,7 +54,7 @@ const Banner: React.FC = () => {
           if (data?.info?.bannerUrls) {
             const parsedItems = Object.keys(data.info.bannerUrls).map((key) => ({
               id: key,
-              url: data.info.bannerUrls[key] as string, // Ensure URL is a string
+              url: data.info.bannerUrls[key] as string,
             }));
             setBannerImages(parsedItems);
           }
@@ -80,7 +76,9 @@ const Banner: React.FC = () => {
     }
 
     setUploading(true);
-    const storageRef = ref(storage, `establishments/${establishmentId}/banners/${file.name}`);
+    
+    const uniqueId = Date.now().toString();
+    const storageRef = ref(storage, `establishments/${establishmentId}/banners/${uniqueId}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
@@ -92,22 +90,14 @@ const Banner: React.FC = () => {
       },
       async () => {
         try {
-          // Get the download URL from Firebase storage after upload
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
           if (userId) {
-            // Update Firestore with the format "id: url"
             const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
             await updateDoc(docRef, {
-              [`info.bannerUrls.${file.name}`]: downloadURL,
+              [`info.bannerUrls.${uniqueId}`]: downloadURL,
             });
-
-            // Update the local state with the new image
-            setBannerImages((prev) => [
-              ...prev.filter(banner => banner.id !== file.name), // Remove the old entry if it exists
-              { id: file.name, url: downloadURL }, // Add the new entry with id: url format
-            ]);
-
+            const newBannerImage: BannerImage = { id: uniqueId, url: downloadURL };
+            setBannerImages((prev) => [...prev, newBannerImage]);
             notification.success({ message: 'Success', description: 'Banner uploaded successfully.' });
           }
         } catch (error) {
@@ -122,36 +112,82 @@ const Banner: React.FC = () => {
       }
     );
 
-    // Prevent default upload behavior
     return false;
   };
+
+
+  const handleDelete = async (id: string) => {
+    if (userId && establishmentId) {
+      try {
+        const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
+        const docSnap = await getDoc(docRef);
+  
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          const updatedBannerUrls = { ...data.info.bannerUrls };
+          delete updatedBannerUrls[id]; // Remove the banner using its ID
+  
+          await updateDoc(docRef, {
+            'info.bannerUrls': updatedBannerUrls, // Update the entire object
+          });
+  
+          setBannerImages((prev) => prev.filter((image) => image.id !== id));
+          notification.success({ message: 'Success', description: 'Banner deleted successfully.' });
+        } else {
+          notification.error({ message: 'Error', description: 'Document does not exist.' });
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Delete Failed',
+          description: `Failed to delete banner image: ${error}`,
+        });
+      }
+    }
+  };
+  
+  
 
   return (
     <div className={styles.banner}>
       {bannerImages.length === 0 ? (
         <div style={{ backgroundColor: '#ffbf87', height: '200px', width: '100%', borderRadius: '22px', margin: 'auto' }}>
-          <Button type="link" onClick={() => showModal(null)} className={styles.editButton}>
+          <Button type="link" onClick={showModal} className={styles.editButton}>
             <EditOutlined />
           </Button>
         </div>
       ) : (
-        <Carousel autoplay autoplaySpeed={4000} speed={1000} className={styles.bannerCarousel}>
-          { bannerImages.map((image) => (
-            <div key={image.id}>
-              <div style={{ ...contentStyle, backgroundImage: `url(${image.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} className={styles.carouselItem}>
-                <Image src={image.url} alt={`Banner image ${image.id}`} layout="fill" objectFit="cover" className={styles.carouselImage} />
-                <Button type="primary" onClick={() => showModal(image)} className={styles.editButton}>
-                  Edit
-                </Button>
+        <div style={{ position: 'relative' }}>
+          <Carousel autoplay autoplaySpeed={4000} speed={1000} className={styles.bannerCarousel} dots={false}>
+            {bannerImages.map((image) => (
+              <div key={image.id}>
+                <div style={contentStyle}>
+                  <Image src={image.url} alt={`Banner image ${image.id}`} layout="fill" objectFit="cover" className={styles.carouselImage} />
+                </div>
               </div>
-            </div>
-          ))}
-        </Carousel>
+            ))}
+          </Carousel>
+          <Button type="link" onClick={showModal} className={styles.editButtonA}>
+            <EditOutlined />
+          </Button>
+        </div>
       )}
 
-      <Modal title={editingImage ? "Edit Banner" : "Upload New Banner"} visible={isModalVisible} onCancel={handleCancel} footer={null}>
+      <Modal title="Manage Banners" visible={isModalVisible} onCancel={handleCancel} footer={null}>
+        <List
+          itemLayout="horizontal"
+          dataSource={bannerImages}
+          renderItem={(item) => (
+            <List.Item key={item.id} actions={[
+              <Button type="link" key={item.id} icon={<DeleteOutlined />} onClick={() => handleDelete(item.id)} />
+            ]}>
+              <List.Item.Meta
+                avatar={<Image src={item.url} alt={`Banner image ${item.id}`} width={200} height={100} />}
+              />
+            </List.Item>
+          )}
+        />
         <Upload beforeUpload={handleUpload} showUploadList={false}>
-          <Button icon={<UploadOutlined />}>Select File</Button>
+          <Button icon={<UploadOutlined />}>Upload New Banner</Button>
         </Upload>
       </Modal>
     </div>

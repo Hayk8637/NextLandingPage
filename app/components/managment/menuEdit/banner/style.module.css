@@ -1,11 +1,9 @@
 .banner {
     padding-top: 105px;
     width: 100%;
-    /* display: flex; */
     justify-content: center;
     align-items: center;
     border-radius: 22px;
-
 }
 
 .bannerCarousel {
@@ -14,7 +12,7 @@
 }
 
 .carouselItem {
-    height: 200px; /* Set height to 200px */
+    height: 200px;
     border-radius: 22px;
     display: flex;
     justify-content: center;
@@ -24,21 +22,32 @@
 }
 
 .carouselImage {
-    height: 200px; /* Ensure image height is 200px */
-    width: 100%;   /* Ensure image width is 100% */
-    object-fit: cover; /* Make sure image covers the container */
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
     border-radius: 22px;
 }
 
 .editButton {
     float: right;
     margin: 13px;
-    z-index: 10;
+    z-index: 1;
     color: white;
     font-size: 22px;
     transition: color 0.3s ease;
 }
 
-.editButton:hover, .editButton:active, .editButton:focus {
+.editButtonA {
+    position: absolute; 
+    top: 20px; 
+    right: 15px; 
+    z-index: 1;
+    color: #ff7700;
+    font-size: 22px;
+    transition: color 0.3s ease;
+}
+
+
+.editButton:hover, .editButton:active, .editButton:focus, .editButtonA:hover, .editButtonA:active, .editButtonA:focus {
     color: #e65c00 !important;
 }

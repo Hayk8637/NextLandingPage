@@ -11,7 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [user, loading] = useAuthState(auth);
 
   if (loading) {
-    return <Spin size="large" style={{ marginTop: '50vh', textAlign: 'center' }} />; 
+    return <></>; 
   }
 
   return (
