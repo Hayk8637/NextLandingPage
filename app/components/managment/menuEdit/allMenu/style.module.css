@@ -35,7 +35,23 @@
     background-repeat: no-repeat;
     background-position: center;
 }
-
+.allMenu > .menuCategories > .menuCategoryItem > .functions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 10px;
+    margin-top: 0;
+    color: white;
+    border: none;
+    background:none;
+    z-index: 5;
+    font-size: 24px;
+    cursor: pointer;
+}
+.allMenu > .menuCategories > .menuCategoryItem > .functions:hover {
+    /* background-color: black; */
+    color:#ff7700 ;
+}   
 .allMenu > .menuCategories > .menuCategoryItem::before {
     content: "";
     position: absolute;
