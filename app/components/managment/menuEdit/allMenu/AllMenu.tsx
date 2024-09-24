@@ -243,7 +243,7 @@ const AllMenu: React.FC = () => {
         onClick={(e) => {
           // Check if the click event originated from this button
           if (e.currentTarget === e.target) {
-            window.location.href = `/MENUBYQR/menu/${item.name}`;
+            window.location.href = `/profile/establishments/${establishmentId}/${item.name}`;
           }
         }}
       >

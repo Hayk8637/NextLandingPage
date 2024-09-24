@@ -22,6 +22,11 @@
     color: #B3B3B3;
 }
 .menuCategoryNavigation > .activeTab {
+    padding: 9px 22px 9px 22px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-right: 10px;
+    margin-left: 10px;
     color: #FFFFFF;
     background-color: #FF8E25;
     border: none;

@@ -18,8 +18,6 @@ const HeaderMenu: React.FC = () => {
                 <h1>{centerText}</h1>
             </div>
             <div className="right">
-                {/* <a className='heart' href="/heart"><img src={heart} alt="" /></a> */}
-                <a className='cart' href="/MENUBYQR/cart"><ShoppingCartOutlined  style={{ color: 'black' }} /></a>
             </div>
         </div>
     );
