@@ -6,6 +6,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { auth, db, storage } from '../../../../../firebaseConfig';
 import style from './style.module.css';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 interface MenuCategoryItem {
   id: string;
@@ -24,6 +25,7 @@ const AllMenu: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [currentEditingId, setCurrentEditingId] = useState<string | null>(null);
+  const router = useRouter(); // Initialize useRouter
 
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
@@ -241,9 +243,8 @@ const AllMenu: React.FC = () => {
         className={style.menuCategoryItem}
         style={{ backgroundImage: `url(${item.imgUrl || ''})` }}
         onClick={(e) => {
-          // Check if the click event originated from this button
           if (e.currentTarget === e.target) {
-            window.location.href = `/profile/establishments/${establishmentId}/${item.name}`;
+            router.push(`/profile/establishments/${establishmentId}/${item.name}`); 
           }
         }}
       >
