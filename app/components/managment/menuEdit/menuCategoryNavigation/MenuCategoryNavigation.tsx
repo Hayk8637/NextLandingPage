@@ -47,7 +47,6 @@ const MenuCategoryNavigation: React.FC = () => {
               };
             });
             
-            console.log(parsedCategories);
             if (parsedCategories.length > 0) {
               setCategories(parsedCategories);
             } else {

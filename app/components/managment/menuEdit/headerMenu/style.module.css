@@ -19,17 +19,18 @@
 
 .headerMenu > .left {
     text-align: left;
+    position: absolute;
+    left: 0;
     width: 44px;
     padding: 10px;
 }
 .headerMenu > .left > a {
     text-decoration: none;
     font-size: 24px;
+    width: 32px;
 }
-.headerMenu > .center {
-    text-align: right;
-    width: 50%;
-}
+/* .headerMenu > .center {
+} */
 .headerMenu > .center > h1 {
     margin: auto;
     font-size: 24px;
@@ -40,9 +41,16 @@
     width: 160px;
     padding: 10px 0;
     padding-right: 10px;
+    position: absolute;
+    right: 0;
 }
 .headerMenu > .right > a{
+    width: 32px;
     font-size: 24px;
+}
+.info {
+    font-size: 24px;
+    color: #ff7700;
 }
 .headerMenu >.right > .heart {
     border-right: 2px solid #F2F2F2 ;
