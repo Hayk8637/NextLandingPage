@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import heart from '../../assets/icons/heart.png';
-import burgerImage from '../../assets/images/burger.png'; // Update this to match your project structure
 import styles from './style.module.css'; // Assuming you're using CSS Modules
 
 interface MenuCategoryItem {
@@ -20,7 +18,7 @@ const MenuCategoryItems: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const { category } = router.query; // Access category from URL
+  const { category } = router.query; 
 
   useEffect(() => {
     if (!category) return; // Wait until the category is available from the router
@@ -80,11 +78,11 @@ const MenuCategoryItems: React.FC = () => {
                   <a href={`/MENUBYQR/menu/${category}/${item.id}`}>
                     <div className={styles.itemImg}>
                       <Image
-                        src={item.img || burgerImage}
+                        src={item.img}
                         alt={item.name}
                         width={300}
                         height={300}
-                        placeholder="blur" // Adds blur-up placeholder for faster loading
+                        placeholder="blur"
                       />
                     </div>
                     <div className={styles.itemName}>
@@ -94,19 +92,6 @@ const MenuCategoryItems: React.FC = () => {
                       <span>{item.currency}{item.price}</span>
                     </div>
                   </a>
-                </div>
-                <div className={styles.down}>
-                  <button
-                    className={styles.cart}
-                    onClick={() => {
-                      ;
-                    }}
-                  >
-                    Add to Cart
-                  </button>
-                  <button className={styles.heart}>
-                    <Image src={heart} alt="Heart" width={24} height={24} />
-                  </button>
                 </div>
               </div>
             </div>

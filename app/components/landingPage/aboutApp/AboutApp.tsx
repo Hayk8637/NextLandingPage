@@ -37,7 +37,7 @@ const AboutApp: React.FC = () => {
                         ) : (
                             <div key={index}>
                                 {Object.entries(text).map(([key, value]) => (
-                                    <p className={style.aboutParagraph} key={key}>{value} </p>
+                                    <p className={style.aboutParagraph} key={key}> {value} </p>
                                 ))}
                             </div>
                         )
