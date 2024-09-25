@@ -33,7 +33,7 @@ if (typeof window === 'undefined') {
         fallbackLng: 'en',
         lng: 'en',
         backend: {
-          loadPath: '/locales/{{lng}}/common.json',
+          loadPath: './locales/{{lng}}/common.json',
         },
         ns: ['common'],
         defaultNS: 'common',
