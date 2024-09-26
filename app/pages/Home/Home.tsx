@@ -9,11 +9,11 @@ import Nav from '../../components/landingPage/nav/Nav';
 const Home: React.FC = () => {
     return <>
         <div className={style.main}>
-        <Nav/>
-        <AboutApp/>
-        <ServiceInclude/>
-        <Faq/>
-        <Partners/>
+            <Nav/>
+            <AboutApp/>
+            <ServiceInclude/>
+            <Faq/>
+            <Partners/>
         </div>
         <Footer/>
         </>

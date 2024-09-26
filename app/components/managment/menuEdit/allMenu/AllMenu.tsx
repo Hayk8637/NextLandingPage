@@ -244,7 +244,7 @@ const AllMenu: React.FC = () => {
         style={{ backgroundImage: `url(${item.imgUrl || ''})` }}
         onClick={(e) => {
           if (e.currentTarget === e.target) {
-            router.push(`/profile/establishments/${establishmentId}/${item.name}`); 
+            router.push(`/profile/establishments/${establishmentId}/${item.id}`); 
           }
         }}
       >

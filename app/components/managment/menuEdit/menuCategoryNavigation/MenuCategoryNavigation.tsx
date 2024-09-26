@@ -80,9 +80,9 @@ const MenuCategoryNavigation: React.FC = () => {
       {categories.map((category) => (
         <Link
           key={category.id}
-          href={`/profile/establishments/${establishmentId}/${category.name}`} 
+          href={`/profile/establishments/${establishmentId}/${category.id}`} 
           passHref
-          className={currentCategoryName === category.name ? styles.activeTab : styles.a}
+          className={currentCategoryName === category.id ? styles.activeTab : styles.a}
         >
           {category.name}
         </Link>

@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/router';
 import Image from 'next/image';
-import styles from './style.module.css'; // Assuming you're using CSS Modules
+import styles from './style.module.css';
+import { usePathname } from 'next/navigation';
+import { getDoc, doc, setDoc } from 'firebase/firestore'; // Added setDoc for creating new items
+import { db, auth } from '../../../../../firebaseConfig';
+import { Modal, Button, Input, message } from 'antd'; // Ant Design components
 
 interface MenuCategoryItem {
-  id: number;
+  id: string;
   name: string;
   img: string;
   price: number;
+  order: number;
   currency: string;
   category: string;
 }
@@ -17,55 +20,78 @@ const MenuCategoryItems: React.FC = () => {
   const [menuItems, setMenuItems] = useState<MenuCategoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-  const { category } = router.query; 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newItem, setNewItem] = useState<Partial<MenuCategoryItem>>({});
+  const pathname = usePathname() || '';
+  const establishmentId = pathname.split('/')[pathname.split('/').length - 2] || '';
+  const userId = auth.currentUser?.uid;
+  const categoryName = pathname.split('/').pop();
 
   useEffect(() => {
-    if (!category) return; // Wait until the category is available from the router
+    const fetchMenuItems = async () => {``
+      if (userId && establishmentId) {
+        try {
+          const menuDocRef = doc(db, 'users', userId, 'establishments', establishmentId, 'menu', 'items');
+          const docSnap = await getDoc(menuDocRef);
 
-    const url = `https://menubyqr-default-rtdb.firebaseio.com/MENUBYQR/${category}.json`;
+          if (docSnap.exists()) {
+            const data = docSnap.data().items;
+            const parsedItems: MenuCategoryItem[] = Object.entries(data || {}).map(([id, item]) => {
+              const menuItem = item as Omit<MenuCategoryItem, 'id'>;
+              return {
+                id,
+                ...menuItem,
+              };
+            }).filter((item) => item.category === categoryName);
 
-    axios
-      .get(url)
-      .then((response) => {
-        const data = response.data;
+            if (parsedItems.length > 0) {
+              setMenuItems(parsedItems);
+            } else {
+              setError(`No items found for category "${categoryName}"`);
+            }
+          } else {
+            setError('Menu document does not exist');
+          }
+        } catch (error) {
+          console.error('Error fetching menu items:', error);
+          setError('Error fetching menu items');
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    fetchMenuItems();
+  }, [userId, establishmentId, categoryName]);
 
-        const isValidItem = (item: any) => item?.name && item?.price && item?.currency && item?.img;
+  const handleNewItemSubmit = async () => {
+    if (userId && establishmentId && newItem.name && newItem.price && newItem.category) {
+      try {
+        const newItemId = new Date().toISOString();
+        const menuDocRef = doc(db, 'users', userId, 'establishments', establishmentId, 'menu', 'items');
+        const menuDocSnap = await getDoc(menuDocRef);
 
-        const parsedItems = Array.isArray(data)
-          ? data
-              .map((item: any, index: number) => ({
-                id: index,
-                name: item?.name || '',
-                price: item?.price || 0,
-                currency: item?.currency || '$',
-                img: item?.img || '',
-                category: category as string,
-              }))
-              .filter(isValidItem)
-          : Object.keys(data)
-              .map((key: string, index: number) => ({
-                id: index,
-                name: data[key]?.name || '',
-                price: data[key]?.price || 0,
-                currency: data[key]?.currency || '$',
-                img: data[key]?.img || '',
-                category: category as string,
-              }))
-              .filter(isValidItem);
+        const existingItems = menuDocSnap.exists() ? menuDocSnap.data().items || {} : {};
 
-        setMenuItems(parsedItems);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError('Failed to fetch menu items');
-        setLoading(false);
-      });
-  }, [category]);
+        await setDoc(menuDocRef, {
+          items: {
+            ...existingItems,
+            [newItemId]: newItem
+          }
+        });
 
+        setMenuItems((prev) => [...prev, { id: newItemId, ...newItem } as MenuCategoryItem]);
+        setModalVisible(false);
+        message.success('New item created successfully!');
+      } catch (error) {
+        console.error('Error creating new item:', error);
+        setError('Error creating new item');
+      }
+    } else {
+      setError('Please fill in all required fields');
+      message.error('Please fill in all required fields');
+    }
+  };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div style={{ marginTop: '200px' }}>Error: {error}</div>;
 
   return (
     <div className={styles.menuCategoryItems}>
@@ -75,7 +101,7 @@ const MenuCategoryItems: React.FC = () => {
             <div key={item.id} className={styles.menuCategoryItem}>
               <div className={styles.menuCategoryItemCart}>
                 <div className={styles.up}>
-                  <a href={`/MENUBYQR/menu/${category}/${item.id}`}>
+                  <a href={`/MENUBYQR/menu/salad/${item.id}`}>
                     <div className={styles.itemImg}>
                       <Image
                         src={item.img}
@@ -100,6 +126,42 @@ const MenuCategoryItems: React.FC = () => {
           <div>No items available</div>
         )}
       </div>
+      <Button type="primary" onClick={() => setModalVisible(true)}>
+        Create New Item
+      </Button>
+
+      <Modal
+        title="Create New Item"
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        onOk={handleNewItemSubmit}
+      >
+        <Input
+          placeholder="Item Name"
+          value={newItem.name || ''}
+          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          style={{ marginBottom: '10px' }}
+        />
+        <Input
+          type="number"
+          placeholder="Price"
+          value={newItem.price || ''}
+          onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) })}
+          style={{ marginBottom: '10px' }}
+        />
+        <Input
+          placeholder="Currency"
+          value={newItem.currency || ''}
+          onChange={(e) => setNewItem({ ...newItem, currency: e.target.value })}
+          style={{ marginBottom: '10px' }}
+        />
+        <Input
+          placeholder="Image URL"
+          value={newItem.img || ''}
+          onChange={(e) => setNewItem({ ...newItem, img: e.target.value })}
+          style={{ marginBottom: '10px' }}
+        />
+      </Modal>
     </div>
   );
 };
