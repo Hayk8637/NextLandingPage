@@ -8,7 +8,8 @@ import styles from './style.module.css';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-
+import Item from 'antd/es/list/Item';
+import defimg from './pngwi.png'
 interface MenuCategoryItem {
   id: string;
   name: string;
@@ -80,10 +81,14 @@ const MenuCategoryItems: React.FC = () => {
     try {
       let imageUrl = null;
       if (imageFile) {
-        const storageRef = ref(storage, `establishments/${establishmentId}/items/${imageFile.name}`);
+        const imgId = Date.now().toString();
+        const storageRef = ref(storage, `establishments/${establishmentId}/items/${imgId}`);
         const uploadTask = uploadBytesResumable(storageRef, imageFile);
         await uploadTask; // Wait for the upload to complete
         imageUrl = await getDownloadURL(storageRef); // Get the download URL
+      }
+      if(imageUrl == ""){
+        imageUrl = './pngwing 1.png'
       }
       const uniqueId = Date.now().toString();
       const docRef = doc(db, 'users' , userId , 'establishments', establishmentId);
@@ -120,10 +125,14 @@ const MenuCategoryItems: React.FC = () => {
       };
       let imageUrl = '';
       if (imageFile) {
-        const storageRef = ref(storage, `establishments/${establishmentId}/items/${imageFile.name}`);
+        const imgId = Date.now().toString();
+        const storageRef = ref(storage, `establishments/${establishmentId}/items/${imgId}`);
         const uploadTask = uploadBytesResumable(storageRef, imageFile);
         await uploadTask;
         imageUrl = await getDownloadURL(storageRef);
+        if(imageUrl == ""){
+          imageUrl = './pngwing 1.png'
+        }
       }
       const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
       await updateDoc(docRef, {
@@ -172,14 +181,37 @@ const MenuCategoryItems: React.FC = () => {
   };
   const popoverContent = (item: MenuCategoryItem) => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Button onClick={(e) => { e.stopPropagation(); setEditModalVisible(true); }} style={{ marginBottom: 8 }}>Edit</Button>
+      <Button 
+        onClick={(e) => { 
+          e.stopPropagation(); 
+          setCurrentEditingId(item.id); 
+          setNewItem({
+            name: item.name,
+            price: item.price,
+            img: item.img
+          }); // Set the item data to the state
+          setEditModalVisible(true); 
+        }} 
+        style={{ marginBottom: 8 }}>
+        Edit
+      </Button>
       <div style={{ marginBottom: 8 }}>
         <span>Visibility:</span>
-        <Switch checked={item.isVisible} onChange={(checked) => handleToggleVisibility(item.id, checked)} />
+        <Switch 
+          checked={item.isVisible} 
+          onChange={(checked) => handleToggleVisibility(item.id, checked)} 
+        />
       </div>
-      <Button onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}>Delete</Button>
+      <Button 
+        onClick={(e) => { 
+          e.stopPropagation(); 
+          handleDelete(item.id); 
+        }}>
+        Delete
+      </Button>
     </div>
   );
+  
   return (
     <div className={styles.menuCategoryItems}>
       <div className={styles.menuCategoryItemsList}>
@@ -191,7 +223,7 @@ const MenuCategoryItems: React.FC = () => {
                     {/* <a href={`/MENUBYQR/menu/salad/${item.id}`}> */}
                       <div className={styles.itemImg}>
                         <Image
-                          src={item.img || ''}
+                          src={item.img || defimg}
                           alt={item.name}
                           width={150}
                           height={150}
@@ -214,18 +246,6 @@ const MenuCategoryItems: React.FC = () => {
                       <SmallDashOutlined />
                     </button>
                   </Popover>
-                  {/* <div className={styles.actions}>
-                    <Switch
-                      checked={item.isVisible}
-                      onChange={(checked) => handleToggleVisibility(item.id, checked)}
-                    />
-                    <Button onClick={() => { 
-                      setNewItem(item); 
-                      setCurrentEditingId(item.id); 
-                      setEditModalVisible(true); 
-                    }}>Edit</Button>
-                    <Button danger onClick={() => handleDelete(item.id)}>Delete</Button>
-                  </div> */}
                 </div>
               </div>
             ))
@@ -272,14 +292,14 @@ const MenuCategoryItems: React.FC = () => {
       >
         <Input
           placeholder="Item Name"
-          value={newItem.name || ''}
+          value={newItem.name}
           onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
           style={{ marginBottom: '10px' }}
         />
         <Input
           type="number"
           placeholder="Price"
-          value={newItem.price || ''}
+          value={newItem.price}
           onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) })}
           style={{ marginBottom: '10px' }}
         />
