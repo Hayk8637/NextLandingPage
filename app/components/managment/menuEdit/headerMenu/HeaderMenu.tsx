@@ -5,7 +5,6 @@ import { Button, Form, notification, Popover } from 'antd';
 import { usePathname } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
-import { auth } from '@/firebaseConfig';
 import Image from 'next/image'; // Import Image from next/image
 
 interface FormValues {

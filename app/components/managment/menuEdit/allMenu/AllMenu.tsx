@@ -136,6 +136,10 @@ const AllMenu: React.FC = () => {
           isVisible: true,
         },
       });
+      await updateDoc(docRef, {
+        [`menu.items.${uniqueId}`]: {
+        },
+      });
 
       setMenuItems((prev) => [...prev, { id: uniqueId, name: newCategory.name, imgUrl, isVisible: true }]);
       message.success('Category created successfully');
@@ -212,6 +216,9 @@ const AllMenu: React.FC = () => {
         const categoryRef = doc(db, 'users', userId, 'establishments', establishmentId);
         await updateDoc(categoryRef, {
           [`menu.categories.${id}`]: deleteField(),
+        });
+        await updateDoc(categoryRef, {
+          [`menu.items.${id}`]: deleteField(),
         });
 
         message.success(`Category ${id} deleted successfully`);

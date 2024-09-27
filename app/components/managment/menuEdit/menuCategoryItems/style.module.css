@@ -26,9 +26,10 @@
 .menuCategoryItems > .menuCategoryItemsList > .menuCategoryItem > .menuCategoryItemCart {
     width: calc(100% - 5px);
     padding: 8px;
+    position: relative;
 }
 .menuCategoryItems > .menuCategoryItemsList > .menuCategoryItem > .menuCategoryItemCart > .up {
-    /* height: 229px; */
+    height: 229px;
 }
 .menuCategoryItems > .menuCategoryItemsList > .menuCategoryItem > .menuCategoryItemCart > .up >a {
     width: 100%;
@@ -102,4 +103,17 @@
 }
 .menuCategoryItems > .menuCategoryItemsList > .menuCategoryItem > .menuCategoryItemCart > .down > .heart > img {
     width: 10px;
+}
+.functions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 10px;
+    margin-top: 0;
+    color: black;
+    border: none;
+    background:none;
+    z-index: 5;
+    font-size: 24px;
+    cursor: pointer;
 }

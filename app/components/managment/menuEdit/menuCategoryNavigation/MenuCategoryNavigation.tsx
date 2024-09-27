@@ -30,16 +30,13 @@ const MenuCategoryNavigation: React.FC = () => {
     const fetchCategories = async () => {
       if (userId && establishmentId) {
         try {
-          // Reference to the categories document
           const categoriesDocRef = doc(db, 'users', userId, 'establishments', establishmentId);
           const docSnap = await getDoc(categoriesDocRef);
           if (docSnap.exists()) {
             const data = docSnap.data().menu?.categories;
             const categoriesData = data || [];
 
-            // Extracting categories from the document
             const parsedCategories: Category[] = Object.entries(categoriesData).map(([id, category]) => {
-              // Type assertion to MenuCategoryItem
               const categoryItem = category as MenuCategoryItem; 
               return {
                 id: id,
@@ -82,8 +79,7 @@ const MenuCategoryNavigation: React.FC = () => {
           key={category.id}
           href={`/profile/establishments/${establishmentId}/${category.id}`} 
           passHref
-          className={currentCategoryName === category.id ? styles.activeTab : styles.a}
-        >
+          className={currentCategoryName === category.id ? styles.activeTab : styles.a}>
           {category.name}
         </Link>
       ))}
