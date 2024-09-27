@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Upload, Button, message, Popover, Switch } from 'antd';
-import { SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
+import { OrderedListOutlined, SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
 import { doc, updateDoc, getDoc, deleteField } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { auth, db, storage } from '../../../../../firebaseConfig';
@@ -13,6 +13,7 @@ interface MenuCategoryItem {
   name: string;
   imgUrl: string | null;
   isVisible: boolean;
+  order: number;
 }
 
 const AllMenu: React.FC = () => {
@@ -21,11 +22,12 @@ const AllMenu: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [newCategory, setNewCategory] = useState<{ name: string, imgUrl: string | null }>({ name: '', imgUrl: null });
+  const [newCategory, setNewCategory] = useState<{ name: string, imgUrl: string | null , order: number }>({ name: '', imgUrl: null , order: 0});
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [currentEditingId, setCurrentEditingId] = useState<string | null>(null);
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter(); 
+  const [orderModalVisible, setOrderModalVisible] = useState(false);
 
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
@@ -45,10 +47,14 @@ const AllMenu: React.FC = () => {
             const items: MenuCategoryItem[] = Object.entries(categories).map(([id, category]: any) => ({
               id,
               name: category.name,
+              order: category.order,
               imgUrl: category.imgUrl,
               isVisible: category.isVisible ?? true,
             }));
 
+            // Sort items by order before setting the state
+            items.sort((a, b) => a.order - b.order);
+            
             setMenuItems(items);
           } else {
             setError('No categories found');
@@ -61,36 +67,34 @@ const AllMenu: React.FC = () => {
       }
     };
 
-    fetchMenuItems();
-  }, [userId, establishmentId]);
 
+    fetchMenuItems();
+  }, [userId, establishmentId ]);
   const showModal = () => {
     setIsModalVisible(true);
   };
-
+  const showOrderModal = () => {
+    setOrderModalVisible(true);
+  };
   const showEditModal = (item: MenuCategoryItem) => {
-    setNewCategory({ name: item.name, imgUrl: item.imgUrl });
+    setNewCategory({ name: item.name, imgUrl: item.imgUrl , order: item.order });
     setCurrentEditingId(item.id);
     setIsEditModalVisible(true);
   };
-
   const handleCancel = () => {
     setIsModalVisible(false);
-    setNewCategory({ name: '', imgUrl: null });
+    setNewCategory({ name: '', imgUrl: null , order: 0 });
     setImageFile(null);
   };
-
   const handleEditCancel = () => {
     setIsEditModalVisible(false);
-    setNewCategory({ name: '', imgUrl: null });
+    setNewCategory({ name: '', imgUrl: null , order: 0 });
     setCurrentEditingId(null);
   };
-
   const handleImageUpload = (file: File) => {
     setImageFile(file);
     return false;
   };
-
   const handleSubmit = async () => {
     if (!newCategory.name) {
       message.error('Category name is required');
@@ -134,6 +138,7 @@ const AllMenu: React.FC = () => {
           name: newCategory.name,
           imgUrl: imgUrl || null,
           isVisible: true,
+          order: menuItems.length
         },
       });
       await updateDoc(docRef, {
@@ -141,7 +146,7 @@ const AllMenu: React.FC = () => {
         },
       });
 
-      setMenuItems((prev) => [...prev, { id: uniqueId, name: newCategory.name, imgUrl, isVisible: true }]);
+      setMenuItems((prev) => [...prev, { id: uniqueId, name: newCategory.name, imgUrl, isVisible: true, order: menuItems.length }]);
       message.success('Category created successfully');
       handleCancel();
     } catch (error) {
@@ -150,7 +155,6 @@ const AllMenu: React.FC = () => {
       setUploading(false);
     }
   };
-
   const handleEditSubmit = async () => {
     if (!newCategory.name) {
       message.error('Category name is required');
@@ -161,6 +165,28 @@ const AllMenu: React.FC = () => {
       message.error('Missing user or establishment information');
       return;
     }
+    let imgUrl = '';
+
+    if (imageFile) {
+      const uniqueId = Date.now().toString();
+      const storageRef = ref(storage, `establishments/${establishmentId}/categories/${uniqueId}`);
+      const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+      await new Promise<void>((resolve, reject) => {
+        uploadTask.on(
+          'state_changed',
+          () => {},
+          (error) => {
+            message.error(`Upload failed: ${error.message}`);
+            reject(error);
+          },
+          async () => {
+            imgUrl = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve();
+          }
+        );
+      });
+    }
 
     setUploading(true);
     try {
@@ -168,13 +194,14 @@ const AllMenu: React.FC = () => {
       await updateDoc(docRef, {
         [`menu.categories.${currentEditingId}`]: {
           name: newCategory.name,
-          imgUrl: newCategory.imgUrl,
+          imgUrl: imgUrl,
+          order: newCategory.order,
           isVisible: true,
         },
       });
 
       const updatedItems = menuItems.map(item => 
-        item.id === currentEditingId ? { ...item, name: newCategory.name, imgUrl: newCategory.imgUrl } : item
+        item.id === currentEditingId ? { ...item, name: newCategory.name, imgUrl: newCategory.imgUrl , order: item.order } : item
       );
       setMenuItems(updatedItems);
       message.success('Category updated successfully');
@@ -185,7 +212,6 @@ const AllMenu: React.FC = () => {
       setUploading(false);
     }
   };
-
   const handleToggleVisibility = async (id: string, isVisible: boolean) => {
     if (userId && establishmentId) {
       try {
@@ -206,7 +232,6 @@ const AllMenu: React.FC = () => {
       message.error('User ID or establishment ID is missing');
     }
   };
-
   const handleDelete = async (id: string) => {
     if (userId && establishmentId) {
       try {
@@ -229,7 +254,6 @@ const AllMenu: React.FC = () => {
       message.error('User ID or establishment ID is missing');
     }
   };
-
   const popoverContent = (item: MenuCategoryItem) => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <Button onClick={(e) => { e.stopPropagation(); showEditModal(item); }} style={{ marginBottom: 8 }}>Edit</Button>
@@ -240,10 +264,60 @@ const AllMenu: React.FC = () => {
       <Button onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}>Delete</Button>
     </div>
   );
+  const handleMoveUp = (id: string) => {
+    setMenuItems(prev => {
+      const index = prev.findIndex(item => item.id === id);
+      if (index > 0) {
+        const newItems = [...prev];
+        const [movedItem] = newItems.splice(index, 1);
+        newItems.splice(index - 1, 0, movedItem);
+        return newItems;
+      }
+      return prev;
+    });
+  };
+  
+  const handleMoveDown = (id: string) => {
+    setMenuItems(prev => {
+      const index = prev.findIndex(item => item.id === id);
+      if (index < prev.length - 1) {
+        const newItems = [...prev];
+        const [movedItem] = newItems.splice(index, 1);
+        newItems.splice(index + 1, 0, movedItem);
+        return newItems;
+      }
+      return prev;
+    });
+  };
+  
+  const handleSaveOrder = async () => {
+    if (!userId || !establishmentId) {
+      message.error('Missing user or establishment information');
+      return;
+    }
+  
+    const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
+    
+    menuItems.forEach((item, index) => {
+      updateDoc(docRef, {
+        [`menu.categories.${item.id}.order`]: index
+      });
+      });
+  
+    try {
+      message.success('Order updated successfully');
+      setOrderModalVisible(false);
+    } catch (error) {
+      message.error(`Error updating order: ${error}`);
+    }
+  };
 
   return (
     <div className={style.allMenu}>
       <div className={style.menuCategories}>
+      <div className={style.ordering}>
+        <Button type="link" className={style.orderButton} onClick={showOrderModal}><OrderedListOutlined /></Button>
+      </div>
       {menuItems.map(item => (
       <button
         key={item.id}
@@ -299,7 +373,6 @@ const AllMenu: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
-
       <Modal
         title="Edit Category"
         visible={isEditModalVisible}
@@ -325,6 +398,38 @@ const AllMenu: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+      <Modal
+  title="Change Menu Item Order"
+  visible={orderModalVisible}
+  onCancel={() => setOrderModalVisible(false)}
+  footer={null}
+>
+  <div>
+    {menuItems.map(item => (
+      <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span>{item.name}</span>
+        <div>
+          <Button 
+            disabled={menuItems[0].id === item.id} 
+            onClick={() => handleMoveUp(item.id)}
+          >
+            Up
+          </Button>
+          <Button 
+            disabled={menuItems[menuItems.length - 1].id === item.id} 
+            onClick={() => handleMoveDown(item.id)}
+          >
+            Down
+          </Button>
+        </div>
+      </div>
+    ))}
+    <Button type="primary" onClick={handleSaveOrder}>
+      Save Order
+    </Button>
+  </div>
+</Modal>
+
     </div>
   );
 };

@@ -15,6 +15,7 @@ interface MenuCategoryItem {
   name: string;
   imgUrl: string | null;
   isVisible: boolean;
+  order: number;
 }
 
 const MenuCategoryNavigation: React.FC = () => {
@@ -25,41 +26,40 @@ const MenuCategoryNavigation: React.FC = () => {
   const currentCategoryName = pathname.split('/').filter(Boolean).pop() || '';
   const establishmentId = pathname.split('/')[pathname.split('/').length - 2] || '';
   const userId = auth.currentUser?.uid;
-
+  
   useEffect(() => {
     const fetchCategories = async () => {
-      if (userId && establishmentId) {
-        try {
-          const categoriesDocRef = doc(db, 'users', userId, 'establishments', establishmentId);
-          const docSnap = await getDoc(categoriesDocRef);
-          if (docSnap.exists()) {
-            const data = docSnap.data().menu?.categories;
-            const categoriesData = data || [];
-
-            const parsedCategories: Category[] = Object.entries(categoriesData).map(([id, category]) => {
-              const categoryItem = category as MenuCategoryItem; 
-              return {
-                id: id,
-                name: categoryItem.name,
-              };
-            });
-            
-            if (parsedCategories.length > 0) {
-              setCategories(parsedCategories);
+        if (userId && establishmentId) {
+          try {
+            const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
+            const docSnap = await getDoc(docRef);
+  
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              const categories = data.menu?.categories || {};
+  
+              const items: MenuCategoryItem[] = Object.entries(categories).map(([id, category]: any) => ({
+                id,
+                name: category.name,
+                order: category.order,
+                imgUrl: category.imgUrl,
+                isVisible: category.isVisible ?? true,
+              }));
+  
+              // Sort items by order before setting the state
+              items.sort((a, b) => a.order - b.order);
+              
+              setCategories(items);
             } else {
               setError('No categories found');
             }
-          } else {
-            setError('Categories document does not exist');
+          } catch (error) {
+            setError('Error fetching menu items');
+          } finally {
+            setLoading(false);
           }
-        } catch (error) {
-          console.error('Error fetching categories:', error);
-          setError('Error fetching categories');
-        } finally {
-          setLoading(false);
         }
-      }
-    };
+      };
 
     fetchCategories();
   }, [userId, establishmentId]);

@@ -68,3 +68,13 @@
     position: relative;
     z-index: 2;
 }
+.ordering {
+    text-align: right;
+}
+.ordering > .orderButton {
+    color: #ff7700;
+    font-size:  24px;
+}
+ .orderButton:focus , .orderButton:active , .orderButton:hover {
+    color: #e65c00 !important;
+} 
