@@ -9,10 +9,10 @@
     margin: auto;
     width: 95%;
     padding-left: 2.5%;
+    padding-bottom: 10px;
 }
 
 .menuCategoryItems > .menuCategoryItemsList > .menuCategoryItem {
-    /* height: 271px;     */
     width: calc(46% - 2px);
     margin-top: 10px;
     margin-left: 2%;
