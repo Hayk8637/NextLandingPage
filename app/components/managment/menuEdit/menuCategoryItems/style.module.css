@@ -1,8 +1,9 @@
 .menuCategoryItems {
     width: 100%;
     max-width: 400px;
-    margin-top: 140px;
+    margin-top: 160px;
     padding-bottom: 84px;
+    margin-bottom: 20px;
 }
 .menuCategoryItems > .menuCategoryItemsList {
     margin: auto;
@@ -115,3 +116,13 @@
     font-size: 24px;
     cursor: pointer;
 }
+.ordering {
+    text-align: right;
+}
+.ordering > .orderButton {
+    color: #ff7700;
+    font-size:  24px;
+}
+ .orderButton:focus , .orderButton:active , .orderButton:hover {
+    color: #e65c00 !important;
+} 

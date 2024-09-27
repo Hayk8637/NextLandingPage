@@ -45,9 +45,7 @@ const MenuCategoryNavigation: React.FC = () => {
                 imgUrl: category.imgUrl,
                 isVisible: category.isVisible ?? true,
               }));
-  
-              // Sort items by order before setting the state
-              items.sort((a, b) => a.order - b.order);
+                items.sort((a, b) => a.order - b.order);
               
               setCategories(items);
             } else {

@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Upload, Button, message, Popover, Switch } from 'antd';
-import { SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
-import { doc, updateDoc, getDoc, deleteField, deleteDoc } from 'firebase/firestore';
+import { OrderedListOutlined, SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
+import { doc, updateDoc, getDoc, deleteField, deleteDoc, orderBy } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { auth, db, storage } from '../../../../../firebaseConfig';
 import styles from './style.module.css';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/router';
 import Image from 'next/image';
-import Item from 'antd/es/list/Item';
 import defimg from './pngwi.png'
 interface MenuCategoryItem {
   id: string;
@@ -16,6 +14,7 @@ interface MenuCategoryItem {
   img: string | null;
   price: number;
   isVisible: boolean;
+  order: number
 }
 
 const MenuCategoryItems: React.FC = () => {
@@ -28,7 +27,8 @@ const MenuCategoryItems: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [currentEditingId, setCurrentEditingId] = useState<string | null>(null);
-  
+  const [orderModalVisible, setOrderModalVisible] = useState(false);
+
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/')[pathname.split('/').length - 2];
   const categoryId = pathname.split('/')[pathname.split('/').length - 1];
@@ -40,21 +40,29 @@ const MenuCategoryItems: React.FC = () => {
         try {
           const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
           const docSnap = await getDoc(docRef);
-
+    
           if (docSnap.exists()) {
             const data = docSnap.data();
-            const menuItems = data.menu?.items ;
-            const a = menuItems[categoryId];
-            const items: MenuCategoryItem[] = Object.entries(a).map(([id , menuItem]: any) => ({
-              id,
-              name: menuItem.name,
-              img: menuItem.img,
-              price: menuItem.price,
-              isVisible: menuItem.isVisible ?? true,
-            }));
+            const menuItems = data.menu?.items || {};
+            const categoryItems = menuItems[categoryId] || {};
+    
+            const items: MenuCategoryItem[] = Object.entries(categoryItems).map(
+              ([id, menuItem]: any) => ({
+                id,
+                name: menuItem.name,
+                img: menuItem.img,
+                order: menuItem.order,
+                price: menuItem.price,
+                isVisible: menuItem.isVisible ?? true,
+              })
+            );
+    
+            // Sort items by order before setting the state
+            items.sort((a, b) => a.order - b.order);
+    
             setMenuItems(items);
           } else {
-            setError('No categories found');
+            setError('No menu items found for this category');
           }
         } catch (error) {
           setError('Error fetching menu items');
@@ -63,6 +71,7 @@ const MenuCategoryItems: React.FC = () => {
         }
       }
     };
+    
       
     fetchMenuItems();
   }, [userId, establishmentId, categoryId]);
@@ -97,6 +106,7 @@ const MenuCategoryItems: React.FC = () => {
         name: newItem.name,
         price: newItem.price,
         img: imageUrl,
+        order: menuItems.length,
         isVisible: true}
       });
       message.success('New item added successfully');
@@ -211,16 +221,67 @@ const MenuCategoryItems: React.FC = () => {
       </Button>
     </div>
   );
+  const handleMoveUp = (id: string) => {
+    setMenuItems(prev => {
+      const index = prev.findIndex(item => item.id === id);
+      if (index > 0) {
+        const newItems = [...prev];
+        const [movedItem] = newItems.splice(index, 1);
+        newItems.splice(index - 1, 0, movedItem);
+        return newItems;
+      }
+      return prev;
+    });
+  };
+  
+  const handleMoveDown = (id: string) => {
+    setMenuItems(prev => {
+      const index = prev.findIndex(item => item.id === id);
+      if (index < prev.length - 1) {
+        const newItems = [...prev];
+        const [movedItem] = newItems.splice(index, 1);
+        newItems.splice(index + 1, 0, movedItem);
+        return newItems;
+      }
+      return prev;
+    });
+  };
+  const handleSaveOrder = async () => {
+    if (!userId || !establishmentId) {
+      message.error('Missing user or establishment information');
+      return;
+    }
+  
+    const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
+    
+    menuItems.forEach((item, index) => {
+      updateDoc(docRef, {
+        [`menu.items.${item.id}.order`]: index
+      });
+      });
+  
+    try {
+      message.success('Order updated successfully');
+      setOrderModalVisible(false);
+    } catch (error) {
+      message.error(`Error updating order: ${error}`);
+    }
+  };
+  const showOrderModal = () => {
+    setOrderModalVisible(true);
+  };
   
   return (
     <div className={styles.menuCategoryItems}>
+      <div className={styles.ordering}>
+        <Button type="link" className={styles.orderButton} onClick={showOrderModal}><OrderedListOutlined /></Button>
+      </div>
       <div className={styles.menuCategoryItemsList}>
         {menuItems.length > 0 ? (
             menuItems.map((item) => (
               <div key={item.id} className={styles.menuCategoryItem}>
                 <div className={styles.menuCategoryItemCart}>
                   <div className={styles.up}>
-                    {/* <a href={`/MENUBYQR/menu/salad/${item.id}`}> */}
                       <div className={styles.itemImg}>
                         <Image
                           src={item.img || defimg}
@@ -235,7 +296,6 @@ const MenuCategoryItems: React.FC = () => {
                       <div className={styles.itemPrice}>
                         <span>{item.price}</span>
                       </div>
-                    {/* </a> */}
                   </div>
                   <Popover
                     content={popoverContent(item)}
@@ -310,6 +370,38 @@ const MenuCategoryItems: React.FC = () => {
           style={{ marginBottom: '10px' }}
         />
       </Modal>
+      <Modal
+  title="Change Menu Item Order"
+  visible={orderModalVisible}
+  onCancel={() => setOrderModalVisible(false)}
+  footer={null}
+>
+  <div>
+    {menuItems.map(item => (
+      <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span>{item.name}</span>
+        <div>
+          <Button 
+            disabled={menuItems[0].id === item.id} 
+            onClick={() => handleMoveUp(item.id)}
+          >
+            Up
+          </Button>
+          <Button 
+            disabled={menuItems[menuItems.length - 1].id === item.id} 
+            onClick={() => handleMoveDown(item.id)}
+          >
+            Down
+          </Button>
+        </div>
+      </div>
+    ))}
+    <Button type="primary" onClick={handleSaveOrder}>
+      Save Order
+    </Button>
+  </div>
+</Modal>
+
     </div>
   );
 };
