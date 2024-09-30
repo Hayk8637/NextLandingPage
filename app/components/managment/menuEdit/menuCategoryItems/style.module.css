@@ -126,3 +126,20 @@
  .orderButton:focus , .orderButton:active , .orderButton:hover {
     color: #e65c00 !important;
 } 
+
+.functions:hover  {
+    /* background-color: black; */
+    color:#e65c00 ;
+}  
+.functions {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-right: 10px;
+    margin-top: 0;
+    color: #ff7700;
+    border: none;
+    background:none;
+    font-size: 24px;
+    cursor: pointer;
+}

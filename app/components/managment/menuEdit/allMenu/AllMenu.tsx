@@ -34,7 +34,13 @@ const AllMenu: React.FC = () => {
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
   const userId = auth.currentUser?.uid;
+  const inputRef = useRef<InputRef | null>(null); // Using Ant Design's Input ref
 
+  useEffect(() => {
+    if (isModalVisible && inputRef.current) {
+      inputRef.current.focus(); // Focus the input when the modal opens
+    }
+  }, [isModalVisible]);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -55,7 +61,6 @@ const AllMenu: React.FC = () => {
               isVisible: category.isVisible ?? true,
             }));
 
-            // Sort items by order before setting the state
             items.sort((a, b) => a.order - b.order);
             
             setMenuItems(items);
@@ -70,7 +75,7 @@ const AllMenu: React.FC = () => {
       }
     };
     fetchMenuItems();
-  }, [userId, establishmentId ]);
+  }, [userId, establishmentId , menuItems]);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -111,7 +116,7 @@ const AllMenu: React.FC = () => {
     try {
       let imgUrl = '';
 
-      if (imageFile) {
+      if (imageFile?.name) {
         const uniqueId = Date.now().toString();
         const storageRef = ref(storage, `establishments/${establishmentId}/categories/${uniqueId}`);
         const uploadTask = uploadBytesResumable(storageRef, imageFile);
@@ -333,7 +338,7 @@ const AllMenu: React.FC = () => {
           }
         }}
       >
-        <span>{item.name}</span>
+        <a href={`/profile/establishments/${establishmentId}/${item.id}`}>{item.name}</a>
         <Popover
           content={popoverContent(item)}
           trigger="hover"
@@ -361,6 +366,7 @@ const AllMenu: React.FC = () => {
         <Form layout="vertical">
           <Form.Item label="Category Name" required>
             <Input
+              ref = {inputRef}
               value={newCategory.name}
               onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
             />

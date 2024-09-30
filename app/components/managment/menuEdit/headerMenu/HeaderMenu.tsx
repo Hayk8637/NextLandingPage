@@ -37,7 +37,7 @@ interface Establishment {
 const HeaderMenu: React.FC = () => {
     const currentPath = window.location.pathname;
     const centerText = currentPath.split('/')[currentPath.split('/').length - 1];
-    var returnBack = currentPath.split('/').slice(0, -1).join('/');
+    var returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-1).join('/');
     const [form] = Form.useForm();
     const [logoUrl, setLogoUrl] = useState<string | null>(null);
     const pathname = usePathname() || '';

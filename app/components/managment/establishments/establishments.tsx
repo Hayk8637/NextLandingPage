@@ -154,7 +154,7 @@ const Establishments: React.FC = () => {
       <div className={styles.items}>
         {establishments.map((establishment) => (
           <div className={styles.establishmentContainer} key={establishment.id}>
-            <Link href={`/profile/establishments/${establishment.id}`}>
+            <Link className={styles.link} href={`/profile/establishments/${establishment.id}`}>
               <Button className={styles.establishmentButton}>
                 <span>
                   <Image

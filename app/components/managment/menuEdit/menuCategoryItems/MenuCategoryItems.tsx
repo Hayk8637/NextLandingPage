@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Upload, Button, message, Popover, Switch } from 'antd';
-import { DeleteOutlined, OrderedListOutlined, SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, OrderedListOutlined, SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
 import { doc, updateDoc, getDoc, deleteField, deleteDoc, orderBy } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { auth, db, storage } from '../../../../../firebaseConfig';
@@ -74,7 +74,7 @@ const MenuCategoryItems: React.FC = () => {
     
       
     fetchMenuItems();
-  }, [userId, establishmentId, categoryId]);
+  }, [userId, establishmentId, categoryId , newItem]);
 
   const handleNewItemSubmit = async () => {
     if (!newItem.name || !newItem.price ) {
@@ -306,7 +306,7 @@ const MenuCategoryItems: React.FC = () => {
                     placement="topRight"
                   >
                     <button className={styles.functions} onClick={(e) => e.stopPropagation()}>
-                      <SmallDashOutlined />
+                      <EditOutlined />
                     </button>
                   </Popover>
                 </div>
@@ -314,7 +314,7 @@ const MenuCategoryItems: React.FC = () => {
             ))
           ) : null}
       </div>
-      <Button type="primary" onClick={() => setModalVisible(true)}>
+      <Button type="primary" className='addItem'  onClick={() => setModalVisible(true)}>
         Create New Item
       </Button>
 
