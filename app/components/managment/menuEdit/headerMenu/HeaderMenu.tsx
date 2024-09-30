@@ -35,7 +35,7 @@ interface Establishment {
 }
 
 const HeaderMenu: React.FC = () => {
-    const currentPath = window.location.pathname;
+    var currentPath = usePathname() || '';
     const centerText = currentPath.split('/')[currentPath.split('/').length - 1];
     var returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-1).join('/');
     const [form] = Form.useForm();
@@ -132,7 +132,6 @@ const HeaderMenu: React.FC = () => {
                 <a href={returnBack}><LeftOutlined style={{ color: 'black' }} /></a>
             </div>
             <div className={styles.center}>
-                {/* Display the logo using next/image */}
                 {logoUrl && (
                     <Image
                         src={logoUrl} // Use the fetched logo URL

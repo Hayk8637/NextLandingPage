@@ -64,11 +64,15 @@
     border-radius: 10px;
 }
  
+.allMenu > .menuCategories > .menuCategoryItem span {
+    position: relative;
+    z-index: 2;
+}
 .allMenu > .menuCategories > .menuCategoryItem a {
     position: relative;
+    z-index: 2;
     text-decoration: none;
     color: white;
-    z-index: 1;
 }
 .ordering {
     text-align: right;

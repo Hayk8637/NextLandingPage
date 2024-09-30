@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { InfoCircleOutlined, EditOutlined, UploadOutlined, CopyOutlined, WifiOutlined, PhoneOutlined, LockOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import { Button, Modal, Form, Input, Upload, notification, Popover } from 'antd';
+import { InfoCircleOutlined, EditOutlined, UploadOutlined, CopyOutlined, WifiOutlined, PhoneOutlined, LockOutlined, EnvironmentOutlined, PlusCircleTwoTone, LeftOutlined } from '@ant-design/icons';
+import { Button, Modal, Form, Input, Upload, notification, Popover, FloatButton } from 'antd';
 import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
@@ -38,6 +38,8 @@ interface Establishment {
 const Header: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  var currentPath = usePathname() || '';
+  var returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-1).join('/');
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const pathname = usePathname() || '';
@@ -233,6 +235,7 @@ const Header: React.FC = () => {
 
   return (
     <>
+      <FloatButton   style={{ top: 30, left: 40 }} icon={<LeftOutlined />} href={returnBack}/>
       <div className={styles.header}>
         <div className={styles.leftRight}>
           <div className={styles.left}>

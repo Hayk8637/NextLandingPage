@@ -334,11 +334,15 @@ const AllMenu: React.FC = () => {
         style={{ backgroundImage: `url(${item.imgUrl || ''})` }}
         onClick={(e) => {
           if (e.currentTarget === e.target) {
-            router.push(`/profile/establishments/${establishmentId}/${item.id}`); 
+            router.push(`./${establishmentId}/${item.id}`); 
           }
         }}
       >
-        <a href={`/profile/establishments/${establishmentId}/${item.id}`}>{item.name}</a>
+        <a  onClick={(e) => {
+          if (e.currentTarget === e.target) {
+            router.push(`./${establishmentId}/${item.id}`); 
+          }
+        }}>{item.name}</a>
         <Popover
           content={popoverContent(item)}
           trigger="hover"

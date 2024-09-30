@@ -314,7 +314,7 @@ const MenuCategoryItems: React.FC = () => {
             ))
           ) : null}
       </div>
-      <Button type="primary" className='addItem'  onClick={() => setModalVisible(true)}>
+      <Button type="primary" className={styles.addItem}  onClick={() => setModalVisible(true)}>
         Create New Item
       </Button>
 
