@@ -39,7 +39,7 @@ const Header: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   var currentPath = usePathname() || '';
-  var returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-1).join('/');
+  const returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-2).join('/');
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const pathname = usePathname() || '';
@@ -232,7 +232,7 @@ const Header: React.FC = () => {
       ))}
     </div>
   );
-
+  console.log(returnBack)
   return (
     <>
       <FloatButton   style={{ top: 30, left: 40 }} icon={<LeftOutlined />} href={returnBack}/>
