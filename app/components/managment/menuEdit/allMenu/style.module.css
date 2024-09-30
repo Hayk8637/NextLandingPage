@@ -41,16 +41,16 @@
     top: 0;
     margin-right: 10px;
     margin-top: 0;
-    color: white;
+    color: #ff7700;
     border: none;
     background:none;
     z-index: 5;
     font-size: 24px;
     cursor: pointer;
 }
-.allMenu > .menuCategories > .menuCategoryItem > .functions:hover {
+.allMenu > .menuCategories > .menuCategoryItem > .functions:hover  {
     /* background-color: black; */
-    color:#ff7700 ;
+    color:#e65c00 ;
 }   
 .allMenu > .menuCategories > .menuCategoryItem::before {
     content: "";

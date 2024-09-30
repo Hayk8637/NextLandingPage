@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Upload, Button, message, Popover, Switch } from 'antd';
-import { OrderedListOutlined, SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
+import { DeleteOutlined, OrderedListOutlined, SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
 import { doc, updateDoc, getDoc, deleteField, deleteDoc, orderBy } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { auth, db, storage } from '../../../../../firebaseConfig';
@@ -270,6 +270,9 @@ const MenuCategoryItems: React.FC = () => {
   const showOrderModal = () => {
     setOrderModalVisible(true);
   };
+  const handleRemoveImage = () => {
+    setNewItem({ ...newItem, img: '' }); 
+  };
   
   return (
     <div className={styles.menuCategoryItems}>
@@ -316,61 +319,108 @@ const MenuCategoryItems: React.FC = () => {
       </Button>
 
       <Modal
-        title="Create New Item"
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        onOk={handleNewItemSubmit}
-        confirmLoading={uploading}
+  title="Create New Item"
+  open={modalVisible}
+  onCancel={() => setModalVisible(false)}
+  footer={null}
+>
+  <Form layout="vertical">
+    <Form.Item label="Item Name" required>
+      <Input
+        placeholder="Item Name"
+        value={newItem.name || ''}
+        onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+      />
+    </Form.Item>
+    <Form.Item label="Price" required>
+      <Input
+        type="number"
+        placeholder="Price"
+        value={newItem.price || ''}
+        onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) })}
+      />
+    </Form.Item>
+    <Form.Item label="Image Upload">
+      <Upload
+        beforeUpload={(file) => {
+          setImageFile(file);
+          return false; // Prevent auto upload
+        }}
+        maxCount={1}
+        listType='picture'
       >
-        <Input
-          placeholder="Item Name"
-          value={newItem.name || ''}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-          style={{ marginBottom: '10px' }}
-        />
-        <Input
-          type="number"
-          placeholder="Price"
-          value={newItem.price || ''}
-          onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) })}
-          style={{ marginBottom: '10px' }}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-          style={{ marginBottom: '10px' }}
-        />
-      </Modal>
+        <Button icon={<UploadOutlined />}>Upload</Button>
+      </Upload>
+    </Form.Item>
+    <Form.Item>
+      <Button type="primary" loading={uploading} onClick={handleNewItemSubmit}>
+        Create
+      </Button>
+    </Form.Item>
+  </Form>
+</Modal>
+<Modal
+  title="Edit Item"
+  open={editModalVisible}
+  onCancel={() => setEditModalVisible(false)}
+  footer={null}
+>
+  <Form layout="vertical">
+    <Form.Item label="Item Name" required>
+      <Input
+        placeholder="Item Name"
+        value={newItem.name}
+        onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+      />
+    </Form.Item>
+    <Form.Item label="Price" required>
+      <Input
+        type="number"
+        placeholder="Price"
+        value={newItem.price}
+        onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) })}
+      />
+    </Form.Item>
+    <Form.Item label="Image Upload">
+      <Upload
+        beforeUpload={(file) => {
+          setImageFile(file);
+          return false; // Prevent auto upload
+        }}
+        maxCount={1}
+        listType='picture'
+      >
+        <Button icon={<UploadOutlined />}>Upload</Button>
+      </Upload>
+      {newItem.img && (
+        <div style={{ marginTop: 10 }}>
+          <Image
+            src={newItem.img}
+            alt="Uploaded"
+            width={100}
+            height={100}
+            style={{ objectFit: 'cover', marginTop: 10 }}
+          />
+          <Button
+            icon={<DeleteOutlined />}
+            type="link"
+            onClick={handleRemoveImage}
+            style={{ marginLeft: 10 }}
+          >
+            Remove
+          </Button>
+        </div>
+      )}
+    </Form.Item>
+    <Form.Item>
+      <Button type="primary" loading={uploading} onClick={handleEditItemSubmit}>
+        Update
+      </Button>
+    </Form.Item>
+  </Form>
+</Modal>
 
-      <Modal
-        title="Edit Item"
-        open={editModalVisible}
-        onCancel={() => setEditModalVisible(false)}
-        onOk={handleEditItemSubmit}
-        confirmLoading={uploading}
-      >
-        <Input
-          placeholder="Item Name"
-          value={newItem.name}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-          style={{ marginBottom: '10px' }}
-        />
-        <Input
-          type="number"
-          placeholder="Price"
-          value={newItem.price}
-          onChange={(e) => setNewItem({ ...newItem, price: parseFloat(e.target.value) })}
-          style={{ marginBottom: '10px' }}
-        />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImageFile(e.target.files?.[0] || null)}
-          style={{ marginBottom: '10px' }}
-        />
-      </Modal>
-      <Modal
+     <Modal
   title="Change Menu Item Order"
   visible={orderModalVisible}
   onCancel={() => setOrderModalVisible(false)}

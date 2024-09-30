@@ -114,7 +114,6 @@ const Establishments: React.FC = () => {
       });
     }
   };
-
   const handleDeleteEstablishment = async (id: string) => {
     try {
       const user = auth.currentUser;
@@ -137,16 +136,13 @@ const Establishments: React.FC = () => {
       });
     }
   };
-
   const handleModalOpen = () => {
     form.resetFields();
     setIsModalVisible(true);
   };
-
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
-
   const handleBannerChange = (info: any) => {
     if (info.fileList) {
       setBannerFiles(info.fileList.map((file: any) => file.originFileObj));

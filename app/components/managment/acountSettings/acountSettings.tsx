@@ -36,7 +36,6 @@ const AccountSettings: React.FC = () => {
       setEmailVerified(user.emailVerified);
     }
   };
-
   const handleVerifyEmail = async () => {
     setLoading(true);
     try {
@@ -64,7 +63,6 @@ const AccountSettings: React.FC = () => {
       setLoading(false);
     }
   };
-
   const handleChangePassword = async (values: any) => {
     setLoading(true);
     try {
@@ -86,7 +84,6 @@ const AccountSettings: React.FC = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className={style.accountSettings}>
       <Row gutter={16}>

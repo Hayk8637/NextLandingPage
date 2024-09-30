@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, Form, Input, Upload, Button, message, Popover, Switch } from 'antd';
-import { OrderedListOutlined, SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
+import React, { useEffect, useRef, useState } from 'react';
+import { Modal, Form, Input, Upload, Button, message, Popover, Switch, InputRef } from 'antd';
+import { DeleteOutlined, EditFilled, EditOutlined, OrderedListOutlined, SmallDashOutlined, UploadOutlined } from '@ant-design/icons';
 import { doc, updateDoc, getDoc, deleteField } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { auth, db, storage } from '../../../../../firebaseConfig';
 import style from './style.module.css';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
+import CategoryItems from '@/pages/profile/establishments/[id]/[categoryName]';
+import Image from 'next/image';
 
 interface MenuCategoryItem {
   id: string;
@@ -32,6 +34,7 @@ const AllMenu: React.FC = () => {
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
   const userId = auth.currentUser?.uid;
+
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -66,8 +69,6 @@ const AllMenu: React.FC = () => {
         }
       }
     };
-
-
     fetchMenuItems();
   }, [userId, establishmentId ]);
   const showModal = () => {
@@ -254,13 +255,16 @@ const AllMenu: React.FC = () => {
       message.error('User ID or establishment ID is missing');
     }
   };
+  const handleRemoveImage = () => {
+    setNewCategory({ ...newCategory, imgUrl: '' }); 
+  };
   const popoverContent = (item: MenuCategoryItem) => (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <Button onClick={(e) => { e.stopPropagation(); showEditModal(item); }} style={{ marginBottom: 8 }}>Edit</Button>
+    <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
       <div style={{ marginBottom: 8 }}>
-        <span>Visibility:</span>
-        <Switch checked={item.isVisible} onChange={(checked) => handleToggleVisibility(item.id, checked)} />
+        <Switch checkedChildren="show" unCheckedChildren="don't show" checked={item.isVisible} onChange={(checked) => handleToggleVisibility(item.id, checked)} />
       </div>
+      <Button onClick={(e) => { e.stopPropagation(); showEditModal(item); }} style={{ marginBottom: 8 }}>Edit</Button>
+      
       <Button onClick={(e) => { e.stopPropagation(); handleDelete(item.id); }}>Delete</Button>
     </div>
   );
@@ -336,7 +340,7 @@ const AllMenu: React.FC = () => {
           placement="topRight"
         >
           <button className={style.functions} onClick={(e) => e.stopPropagation()}>
-            <SmallDashOutlined />
+            <EditOutlined />
           </button>
         </Popover>
       </button>
@@ -362,7 +366,7 @@ const AllMenu: React.FC = () => {
             />
           </Form.Item>
           <Form.Item label="Image Upload">
-            <Upload beforeUpload={handleImageUpload} showUploadList={false}>
+            <Upload beforeUpload={handleImageUpload}  maxCount={1} listType='picture'>
               <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload>
           </Form.Item>
@@ -387,10 +391,33 @@ const AllMenu: React.FC = () => {
             />
           </Form.Item>
           <Form.Item label="Image Upload">
-            <Upload beforeUpload={handleImageUpload} showUploadList={false}>
-              <Button icon={<UploadOutlined />}>Upload</Button>
-            </Upload>
-          </Form.Item>
+          <Upload
+            beforeUpload={handleImageUpload}
+            maxCount={1}
+          >
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
+
+          {newCategory.imgUrl && (
+            <div style={{ marginTop: 10 }}>
+                <Image
+                  src={newCategory.imgUrl}
+                  alt="Uploaded"
+                  width={100}
+                  height={100}
+                  style={{ objectFit: 'cover', marginTop: 10 }}
+                />
+              <Button
+                icon={<DeleteOutlined />}
+                type="link"
+                onClick={handleRemoveImage}
+                style={{ marginLeft: 10 }}
+              >
+                Remove
+              </Button>
+            </div>
+          )}
+        </Form.Item>
           <Form.Item>
             <Button type="primary" loading={uploading} onClick={handleEditSubmit}>
               Update
