@@ -1,10 +1,11 @@
 module.exports = {
-  output: 'export',
+  output: 'export', 
   images: {
-    unoptimized: true,
+    unoptimized: true, 
   },
-  reactStrictMode: true,
+  reactStrictMode: true, 
+  trailingSlash: true, // Add trailingSlash to handle directory-based routing
   env: {
-    CUSTOM_ENV_VARIABLE: 'value',
-  }
+    CUSTOM_ENV_VARIABLE: 'value', 
+  },
 };

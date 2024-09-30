@@ -1,37 +1,37 @@
-// pages/index.tsx
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { auth } from '../../../firebaseConfig'; 
 import { onAuthStateChanged } from 'firebase/auth';
 import Establishments from '@/app/pages/Establishments/Establishments';
 
-const Index: React.FC = () => {
+const Estiblishments: React.FC = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(true); 
-  const [user, setUser] = useState<any>(null); // User state
+  const [loading, setLoading] = useState<boolean>(true); // Loading state to delay render
+  const [user, setUser] = useState<any>(null); // User state to store the auth user
 
   useEffect(() => {
+    // Set up the Firebase authentication listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log(user)
       if (user) {
-        setUser(user); // Set the user object if authenticated
+        // If user is authenticated
+        setUser(user);
         setLoading(false); // Stop loading
       } else {
+        // If user is not authenticated, redirect to the login page (or any desired route)
         setLoading(false); // Stop loading
-        router.push('/'); // Redirect to homepage if not authenticated
+        router.push('/profile/establishments'); // Ensure this path exists in your app
       }
     });
 
-    return () => unsubscribe(); // Cleanup listener on component unmount
+    return () => unsubscribe(); // Cleanup the listener on component unmount
   }, [router]);
 
   if (loading) {
-    // Show loading spinner while checking auth state
-    return (null
-    );
+    // While Firebase checks auth state, render nothing or a loading spinner
+    return null; // Or return a loading indicator like a spinner
   }
 
-  // If the user is authenticated, render the Establishments component
+  // If user is authenticated, render the Establishments component
   return (
     <div>
       <Establishments />
@@ -39,4 +39,4 @@ const Index: React.FC = () => {
   );
 };
 
-export default Index;
+export default Estiblishments;

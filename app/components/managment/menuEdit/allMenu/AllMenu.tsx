@@ -7,7 +7,6 @@ import { auth, db, storage } from '../../../../../firebaseConfig';
 import style from './style.module.css';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
-import CategoryItems from '@/pages/profile/establishments/[id]/[categoryName]';
 import Image from 'next/image';
 
 interface MenuCategoryItem {
