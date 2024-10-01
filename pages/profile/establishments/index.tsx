@@ -12,7 +12,6 @@ const Estiblishments: React.FC = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("ok")
         setUser(user);
         setLoading(false); 
       } else {

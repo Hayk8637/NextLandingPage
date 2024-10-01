@@ -182,7 +182,7 @@ const Establishments: React.FC = () => {
               />
             </Popconfirm>
           </div>
-        ))}
+        ))} 
 
         <Button className={styles.addEstablishments} onClick={handleModalOpen}>
           <div className={styles.content}>
