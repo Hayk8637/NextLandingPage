@@ -24,9 +24,8 @@ const MenuCategoryNavigation: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const pathname = usePathname() || '';
   const currentCategoryName = pathname.split('/').filter(Boolean).pop() || '';
-  const establishmentId = pathname.split('/')[pathname.split('/').length - 2] || '';
+  const establishmentId = pathname.split('/')[pathname.split('/').length - 3] || '';
   const userId = auth.currentUser?.uid;
-  
   useEffect(() => {
     const fetchCategories = async () => {
         if (userId && establishmentId) {

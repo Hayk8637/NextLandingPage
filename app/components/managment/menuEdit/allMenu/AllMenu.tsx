@@ -362,7 +362,7 @@ const AllMenu: React.FC = () => {
 
       <Modal
         title="Create New Category"
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
       >
@@ -388,7 +388,7 @@ const AllMenu: React.FC = () => {
       </Modal>
       <Modal
         title="Edit Category"
-        visible={isEditModalVisible}
+        open={isEditModalVisible}
         onCancel={handleEditCancel}
         footer={null}
       >
@@ -436,7 +436,7 @@ const AllMenu: React.FC = () => {
       </Modal>
       <Modal
   title="Change Menu Item Order"
-  visible={orderModalVisible}
+  open={orderModalVisible}
   onCancel={() => setOrderModalVisible(false)}
   footer={null}
 >

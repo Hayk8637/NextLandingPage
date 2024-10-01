@@ -30,8 +30,8 @@ const MenuCategoryItems: React.FC = () => {
   const [orderModalVisible, setOrderModalVisible] = useState(false);
 
   const pathname = usePathname() || '';
-  const establishmentId = pathname.split('/')[pathname.split('/').length - 2];
-  const categoryId = pathname.split('/')[pathname.split('/').length - 1];
+  const establishmentId = pathname.split('/')[pathname.split('/').length - 3];
+  const categoryId = pathname.split('/')[pathname.split('/').length - 2];
   const userId = auth.currentUser?.uid;
 
   useEffect(() => {
@@ -57,7 +57,6 @@ const MenuCategoryItems: React.FC = () => {
               })
             );
     
-            // Sort items by order before setting the state
             items.sort((a, b) => a.order - b.order);
     
             setMenuItems(items);
@@ -191,6 +190,14 @@ const MenuCategoryItems: React.FC = () => {
   };
   const popoverContent = (item: MenuCategoryItem) => (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ marginBottom: 8 }}>
+        <span>Visibility:</span>
+        <Switch 
+          checkedChildren="show" unCheckedChildren="don't show"
+          checked={item.isVisible} 
+          onChange={(checked) => handleToggleVisibility(item.id, checked)} 
+        />
+      </div>
       <Button 
         onClick={(e) => { 
           e.stopPropagation(); 
@@ -205,13 +212,7 @@ const MenuCategoryItems: React.FC = () => {
         style={{ marginBottom: 8 }}>
         Edit
       </Button>
-      <div style={{ marginBottom: 8 }}>
-        <span>Visibility:</span>
-        <Switch 
-          checked={item.isVisible} 
-          onChange={(checked) => handleToggleVisibility(item.id, checked)} 
-        />
-      </div>
+      
       <Button 
         onClick={(e) => { 
           e.stopPropagation(); 
@@ -286,12 +287,14 @@ const MenuCategoryItems: React.FC = () => {
                 <div className={styles.menuCategoryItemCart}>
                   <div className={styles.up}>
                       <div className={styles.itemImg}>
-                        <Image
-                          src={item.img || defimg}
-                          alt={item.name}
-                          width={150}
-                          height={150}
-                        />
+                      <Image
+                        src={item.img || defimg}
+                        alt={item.name}
+                        width={150}
+                        height={150}
+                        priority // Add this line
+                      />
+
                       </div>
                       <div className={styles.itemName}>
                         <span>{item.name}</span>
@@ -422,7 +425,7 @@ const MenuCategoryItems: React.FC = () => {
 
      <Modal
   title="Change Menu Item Order"
-  visible={orderModalVisible}
+  open={orderModalVisible}
   onCancel={() => setOrderModalVisible(false)}
   footer={null}
 >

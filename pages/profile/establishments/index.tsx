@@ -10,16 +10,14 @@ const Estiblishments: React.FC = () => {
   const [user, setUser] = useState<any>(null); // User state to store the auth user
 
   useEffect(() => {
-    // Set up the Firebase authentication listener
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // If user is authenticated
+        console.log("ok")
         setUser(user);
-        setLoading(false); // Stop loading
+        setLoading(false); 
       } else {
-        // If user is not authenticated, redirect to the login page (or any desired route)
-        setLoading(false); // Stop loading
-        router.push('/profile/establishments'); // Ensure this path exists in your app
+        setLoading(false); 
+        router.push('/'); 
       }
     });
 

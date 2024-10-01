@@ -161,7 +161,14 @@ const Banner: React.FC = () => {
             {bannerImages.map((image) => (
               <div key={image.id}>
                 <div style={contentStyle}>
-                  <Image src={image.url} alt={`Banner image ${image.id}`} layout="fill" objectFit="cover" className={styles.carouselImage} />
+                  <Image
+                    src={image.url || ''}
+                    alt={`Banner image ${image.id}`}
+                    fill // Use fill for layout
+                    style={{ objectFit: 'cover' }} // Set objectFit in style
+                    className={styles.carouselImage} // Add your custom class
+                    priority // Add priority to improve LCP performance
+                  />
                 </div>
               </div>
             ))}
@@ -172,7 +179,7 @@ const Banner: React.FC = () => {
         </div>
       )}
 
-      <Modal title="Manage Banners" visible={isModalVisible} onCancel={handleCancel} footer={null}>
+      <Modal title="Manage Banners" open={isModalVisible} onCancel={handleCancel} footer={null}>
         <List
           itemLayout="horizontal"
           dataSource={bannerImages}

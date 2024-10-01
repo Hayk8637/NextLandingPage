@@ -36,13 +36,13 @@ interface Establishment {
 
 const HeaderMenu: React.FC = () => {
     var currentPath = usePathname() || '';
-    const centerText = currentPath.split('/')[currentPath.split('/').length - 1];
-    var returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-1).join('/');
+    const centerText = currentPath.split('/')[currentPath.split('/').length - 2];
+    var returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-3).join('/');
     const [form] = Form.useForm();
     const [logoUrl, setLogoUrl] = useState<string | null>(null);
     const pathname = usePathname() || '';
     const pathArray = pathname.split('/');
-    const establishmentId = pathArray[pathArray.length - 2];
+    const establishmentId = pathArray[pathArray.length - 3];
     const [popoverData, setPopoverData] = useState<FormValues>({
         wifiname: '',
         wifipass: '',

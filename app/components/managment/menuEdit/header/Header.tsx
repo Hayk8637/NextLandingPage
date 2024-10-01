@@ -38,12 +38,11 @@ interface Establishment {
 const Header: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
-  var currentPath = usePathname() || '';
-  const returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-2).join('/');
+  const currentPath = usePathname() || '';
+  const returnBack = currentPath.split('/').slice(0, currentPath.split('/').length - 2).join('/');
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const pathname = usePathname() || '';
-  const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
+  const establishmentId = currentPath.split('/').filter(Boolean).pop() || '';
   const [popoverData, setPopoverData] = useState<FormValues>({
     wifiname: '',
     wifipass: '',
@@ -59,61 +58,6 @@ const Header: React.FC = () => {
     }
 
     const fetchEstablishmentData = async () => {
-      try {
-        const auth = getAuth();
-        const user = auth.currentUser;
-
-        if (!user) {
-          notification.error({ message: 'Error', description: 'User is not authenticated' });
-          return;
-        }
-
-        const db = getFirestore();
-        const docRef = doc(db, 'users', user.uid, 'establishments', establishmentId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const data = docSnap.data() as Establishment;
-
-          setLogoUrl(data.info?.logoUrl || './MBQR Label-03.png');
-          setPopoverData({
-            wifiname: data.info?.wifiname || '',
-            wifipass: data.info?.wifipass || '',
-            address: data.info?.address || '',
-            phone: data.info?.phone || '',
-            currency: data.info?.currency || '',
-          });
-          form.setFieldsValue({
-            wifiname: data.info?.wifiname || '',
-            wifipass: data.info?.wifipass || '',
-            address: data.info?.address || '',
-            currency: data.info?.currency || '',
-            phone: data.info?.phone || '',
-          });
-        } else {
-          notification.error({ message: 'Error', description: 'Document does not exist' });
-        }
-      } catch (error) {
-        notification.error({ message: 'Error', description: 'Failed to fetch establishment data' });
-      }
-    };
-
-    fetchEstablishmentData();
-  }, [establishmentId, form]);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    setIsModalOpen(false);
-    form.resetFields();
-  };
-
-  const handleFormSubmit = async (values: FormValues) => {
-    if (!establishmentId) {
-      notification.error({ message: 'Error', description: 'Establishment ID is not set' });
-      return;
-    }
-
-    try {
       const auth = getAuth();
       const user = auth.currentUser;
 
@@ -124,27 +68,76 @@ const Header: React.FC = () => {
 
       const db = getFirestore();
       const docRef = doc(db, 'users', user.uid, 'establishments', establishmentId);
+      const docSnap = await getDoc(docRef);
 
-      await updateDoc(docRef, {
-        'info.wifiname': values.wifiname,
-        'info.wifipass': values.wifipass,
-        'info.address': values.address,
-        'info.currency': values.currency,
-        'info.phone': values.phone,
-        'info.logoUrl': logoUrl || '',
-      });
+      if (docSnap.exists()) {
+        const data = docSnap.data() as Establishment;
 
-      notification.success({ message: 'Success', description: 'Details updated successfully' });
-      closeModal();
-    } catch (error) {
-      notification.error({ message: 'Error', description: 'Failed to update establishment details' });
+        setLogoUrl(data.info?.logoUrl || './MBQR Label-03.png');
+        setPopoverData({
+          wifiname: data.info?.wifiname || '',
+          wifipass: data.info?.wifipass || '',
+          address: data.info?.address || '',
+          phone: data.info?.phone || '',
+          currency: data.info?.currency || '',
+        });
+      } else {
+        notification.error({ message: 'Error', description: 'Document does not exist' });
+      }
+    };
+
+    fetchEstablishmentData();
+  }, [establishmentId, form]);
+
+  const openModal = () => {
+    
+        form.setFieldsValue({
+          wifiname: popoverData.wifiname || '',
+          wifipass: popoverData.wifipass || '',
+          address: popoverData.address || '',
+          currency: popoverData.currency || '',
+          phone: popoverData.phone || '',
+        });
+    setIsModalOpen(true)};
+  const closeModal = () => {
+    setIsModalOpen(false);
+    form.resetFields(); // Reset the form fields when closing the modal
+  };
+
+  const handleFormSubmit = async (values: FormValues) => {
+    if (!establishmentId) {
+      notification.error({ message: 'Error', description: 'Establishment ID is not set' });
+      return;
     }
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      notification.error({ message: 'Error', description: 'User is not authenticated' });
+      return;
+    }
+
+    const db = getFirestore();
+    const docRef = doc(db, 'users', user.uid, 'establishments', establishmentId);
+
+    await updateDoc(docRef, {
+      'info.wifiname': values.wifiname,
+      'info.wifipass': values.wifipass,
+      'info.address': values.address,
+      'info.currency': values.currency,
+      'info.phone': values.phone,
+      'info.logoUrl': logoUrl || '',
+    });
+
+    notification.success({ message: 'Success', description: 'Details updated successfully' });
+    closeModal();
   };
 
   const handleLogoUpload = (file: File) => {
     if (!file) {
       notification.error({ message: 'Error', description: 'No file selected for upload' });
-      return;
+      return false; // Prevent the default upload behavior
     }
 
     setUploading(true);
@@ -164,49 +157,37 @@ const Header: React.FC = () => {
         try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
+          // Delete old logo if applicable
           if (logoUrl && logoUrl !== './MBQR Label-03.png') {
             const oldLogoRef = ref(storage, logoUrl);
-            try {
-              await deleteObject(oldLogoRef);
-            } catch (error) {
-              if (error === 'storage/object-not-found') {
-              } else {
-                notification.error({
-                  message: 'Deletion Failed',
-                  description: 'Failed to delete old logo.',
-                });
+            await deleteObject(oldLogoRef).catch((error) => {
+              if (error.code !== 'storage/object-not-found') {
+                notification.error({ message: 'Deletion Failed', description: 'Failed to delete old logo.' });
               }
-            }
+            });
           }
 
           setLogoUrl(downloadURL);
 
           const auth = getAuth();
-          const db = getFirestore();
           const user = auth.currentUser;
-
+          const db = getFirestore();
           if (user) {
             const docRef = doc(db, 'users', user.uid, 'establishments', establishmentId);
-
             await updateDoc(docRef, {
               'info.logoUrl': downloadURL,
             });
 
-            notification.success({
-              message: 'Logo Uploaded',
-              description: 'Your logo has been successfully uploaded.',
-            });
+            notification.success({ message: 'Logo Uploaded', description: 'Your logo has been successfully uploaded.' });
           }
         } catch (error) {
-          notification.error({
-            message: 'Update Failed',
-            description: 'Failed to update logo URL in Firestore.',
-          });
+          notification.error({ message: 'Update Failed', description: 'Failed to update logo URL in Firestore.' });
         } finally {
           setUploading(false);
         }
       }
     );
+    return false; // Prevent the default upload behavior
   };
 
   const copyToClipboard = (text: string) => {
@@ -223,7 +204,7 @@ const Header: React.FC = () => {
         { icon: <WifiOutlined size={32} />, label: 'WiFi Name', value: popoverData.wifiname },
         { icon: <LockOutlined />, label: 'WiFi Password', value: popoverData.wifipass },
         { icon: <EnvironmentOutlined />, label: 'Address', value: popoverData.address },
-        { icon: <PhoneOutlined />, label: 'Phone', value: popoverData.phone }
+        { icon: <PhoneOutlined />, label: 'Phone', value: popoverData.phone },
       ].map(({ icon, label, value }) => (
         <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <p><strong>{icon}: </strong> {value}</p>
@@ -232,21 +213,21 @@ const Header: React.FC = () => {
       ))}
     </div>
   );
-  console.log(returnBack)
+
   return (
     <>
-      <FloatButton   style={{ top: 30, left: 40 }} icon={<LeftOutlined />} href={returnBack}/>
+      <FloatButton style={{ top: 30, left: 40 }} icon={<LeftOutlined />} href={returnBack} />
       <div className={styles.header}>
         <div className={styles.leftRight}>
           <div className={styles.left}>
             <div className={styles.logoWrapper}>
-              <Image
-                src={logoUrl || './MBQR Label-03.png'}
-                alt="logo"
-                layout="fill"
-                objectFit="contain"
-                priority
-              />
+            <Image
+              src={logoUrl || './MBQR Label-03.png'}
+              alt="logo"
+              style={{ objectFit: 'contain' }} // Set the style directly
+              priority
+              fill // This prop enables the fill layout
+            />
             </div>
           </div>
           <div className={styles.right}>
@@ -262,35 +243,34 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      <Modal
-        title="Edit Establishment Details"
-        open={isModalOpen}
-        onCancel={closeModal}
-        footer={null}
-      >
-        <Form form={form} onFinish={handleFormSubmit} layout="vertical" initialValues={popoverData}>
-          <Form.Item name="wifiname" label="WiFi Name" rules={[{ required: true, message: 'Please input the WiFi name!' }]}>
+      <Modal title="Edit Establishment Info" open={isModalOpen} onCancel={closeModal} footer={null}>
+        <Form form={form} onFinish={handleFormSubmit} layout="vertical">
+          <Form.Item label="WiFi Name" name="wifiname" rules={[{ required: true, message: 'Please input WiFi name!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="wifipass" label="WiFi Password" rules={[{ required: true, message: 'Please input the WiFi password!' }]}>
+          <Form.Item label="WiFi Password" name="wifipass" rules={[{ required: true, message: 'Please input WiFi password!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="address" label="Address" rules={[{ required: true, message: 'Please input the address!' }]}>
+          <Form.Item label="Address" name="address" rules={[{ required: true, message: 'Please input address!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="currency" label="Currency" rules={[{ required: true, message: 'Please select a currency!' }]}>
+          <Form.Item label="Currency" name="currency" rules={[{ required: true, message: 'Please input currency!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="phone" label="Phone" rules={[{ required: true, message: 'Please input the phone number!' }]}>
+          <Form.Item label="Phone" name="phone" rules={[{ required: true, message: 'Please input phone number!' }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Logo Upload">
+          <Form.Item label="Upload Logo">
             <Upload beforeUpload={handleLogoUpload} showUploadList={false}>
-              <Button icon={<UploadOutlined />} loading={uploading}>Upload Logo</Button>
+              <Button icon={<UploadOutlined />} loading={uploading}>
+                Click to upload
+              </Button>
             </Upload>
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">Submit</Button>
+            <Button type="primary" htmlType="submit" loading={uploading}>
+              Submit
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
