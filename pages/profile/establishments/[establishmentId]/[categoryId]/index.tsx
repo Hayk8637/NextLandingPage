@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth } from '../../../../../firebaseConfig';
+import { auth, db } from '../../../../../firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
 import Menu from "@/app/pages/menu/Menu";
+import { collection, doc, getDoc, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 const CategoryItems: React.FC = () => {
   const router = useRouter();
@@ -16,10 +17,11 @@ const CategoryItems: React.FC = () => {
         setUser(user);
         if (establishmentId && categoryId) {
           setLoading(false);
+          getStaticPaths(user.uid);
         }
       } else {
         setLoading(false);
-        router.push('/'); // Redirect to home if user is not authenticated
+        router.push('/');
       }
     });
 
@@ -28,7 +30,7 @@ const CategoryItems: React.FC = () => {
 
   useEffect(() => {
     if (establishmentId && categoryId) {
-      setLoading(false); // Set loading to false if IDs are available
+      setLoading(false);
     }
   }, [establishmentId, categoryId]);
 
@@ -43,79 +45,55 @@ const CategoryItems: React.FC = () => {
   );
 };
 
-export async function getStaticPaths() {
-  const establishmentIds = await fetchEstablishmentIds(); // Fetch establishment IDs
+async function getStaticPaths(userId: string) {
+  const establishmentIds = await fetchEstablishmentIds(userId);
   const paths: any = [];
 
   for (const establishmentId of establishmentIds) {
-    const categoryIds = await fetchCategoryIds(establishmentId); // Fetch category IDs for each establishment
+    const categoryIds = await fetchCategoryIds(establishmentId, userId);
     categoryIds.forEach((categoryId: string) => {
-      paths.push({ params: { establishmentId, categoryId } }); // Generate paths
+      paths.push({ params: { establishmentId, categoryId } });
     });
   }
 
-  console.log("Generated paths:", paths); // Debugging line
-
   return {
     paths,
-    fallback: 'blocking', // Handle dynamic generation on demand
+    fallback: 'blocking',
   };
 }
 
-export async function getStaticProps({ params }: { params: { establishmentId: string; categoryId: string } }) {
-  console.log("getStaticProps params:", params); // Debugging line
-
-  const establishmentData = await fetchEstablishmentData(params.establishmentId); // Fetch establishment data
-  const categoryData = await fetchCategoryData(params.categoryId); // Fetch category data
-
-  if (!establishmentData || !categoryData) {
-    return {
-      notFound: true, // Trigger a 404 if data is missing
-    };
+async function fetchEstablishmentIds(userId: string) {
+  const db = getFirestore();
+  let ids: string[] = [];
+  if (userId) {
+    const q = query(collection(db, 'users', userId, 'establishments'), where('uid', '==', userId));
+    try {
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        ids.push(doc.id);
+      });
+    } catch (error) {
+      console.error('Error fetching establishment IDs:', error);
+    }
   }
-
-  return {
-    props: {
-      establishmentData,
-      categoryData,
-    },
-    revalidate: 60, // Set revalidation interval (optional)
-  };
+  return ids;
 }
 
-async function fetchEstablishmentIds() {
-  // Replace this with actual logic to fetch establishment IDs
-  return ['6DX3a7MtJXeKeuq26N9v', 'anotherId']; // Example IDs
-}
+async function fetchCategoryIds(establishmentId: string, userId: string) {
+  const ids: string[] = [];
+  if (userId && establishmentId) {
+    const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
+    const docSnap = await getDoc(docRef);
 
-async function fetchCategoryIds(establishmentId: string) {
-  console.log(`Fetching categories for establishmentId: ${establishmentId}`); // Debugging line
-
-  // Fetch category IDs based on the establishment ID
-  if (establishmentId === '6DX3a7MtJXeKeuq26N9v') {
-    return ['1727426713022', '1727870416269']; // Example category IDs
-  } else {
-    return ['anotherCategoryId']; // Logic for other establishments
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const categories = data.menu?.categories || {};
+      Object.keys(categories).forEach((categoryId) => {
+        ids.push(categoryId);
+      });
+    }
   }
-}
-
-async function fetchEstablishmentData(establishmentId: string) {
-  // Simulate fetching establishment data - replace with actual logic
-  if (establishmentId) {
-    return { id: establishmentId, name: 'Main Establishment' }; // Example establishment data
-  } else {
-    return null; // Return null if establishment ID is not found
-  }
-}
-
-async function fetchCategoryData(categoryId: string) {
-  // Simulate fetching category data - replace with actual logic
-  const categoryMap: any = {
-    '1727426713022': { id: '1727426713022', name: 'Appetizers' },
-    '1727870416269': { id: '1727870416269', name: 'Beverages' },
-  };
-
-  return categoryMap[categoryId] || null; // Return category data or null
+  return ids;
 }
 
 export default CategoryItems;

@@ -39,30 +39,28 @@ const Banner: React.FC = () => {
   };
 
   useEffect(() => {
+    
     const fetchBanners = async () => {
-      if (!userId || !establishmentId) {
-        notification.error({ message: 'Error', description: 'User ID or Establishment ID is missing.' });
-        return;
-      }
-
-      try {
-        const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data?.info?.bannerUrls) {
-            const parsedItems = Object.keys(data.info.bannerUrls).map((key) => ({
-              id: key,
-              url: data.info.bannerUrls[key] as string,
-            }));
-            setBannerImages(parsedItems);
+      if (userId && establishmentId) {
+        try {
+          const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
+          const docSnap = await getDoc(docRef);
+  
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data?.info?.bannerUrls) {
+              const parsedItems = Object.keys(data.info.bannerUrls).map((key) => ({
+                id: key,
+                url: data.info.bannerUrls[key] as string,
+              }));
+              setBannerImages(parsedItems);
+            }
+          } else {
+            notification.error({ message: 'Error', description: 'Failed to fetch banners.' });
           }
-        } else {
-          notification.error({ message: 'Error', description: 'Failed to fetch banners.' });
+        } catch (error) {
+          notification.error({ message: 'Error', description: `Error fetching banner images: ${error}` });
         }
-      } catch (error) {
-        notification.error({ message: 'Error', description: `Error fetching banner images: ${error}` });
       }
     };
 

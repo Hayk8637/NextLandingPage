@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import Image from 'next/image';
 import { InfoCircleOutlined, EditOutlined, UploadOutlined, CopyOutlined, WifiOutlined, PhoneOutlined, LockOutlined, EnvironmentOutlined, PlusCircleTwoTone, LeftOutlined } from '@ant-design/icons';
 import { Button, Modal, Form, Input, Upload, notification, Popover, FloatButton } from 'antd';
@@ -7,7 +7,8 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } f
 import { getAuth } from 'firebase/auth';
 import styles from './style.module.css';
 import { usePathname } from 'next/navigation';
-
+import { auth } from '@/firebaseConfig';
+import defLogo from './MBQR Label-03.png'
 interface FormValues {
   wifiname: string;
   wifipass: string;
@@ -43,6 +44,7 @@ const Header: React.FC = () => {
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const establishmentId = currentPath.split('/').filter(Boolean).pop() || '';
+  const userId = auth.currentUser?.uid;
   const [popoverData, setPopoverData] = useState<FormValues>({
     wifiname: '',
     wifipass: '',
@@ -52,42 +54,47 @@ const Header: React.FC = () => {
   });
 
   useEffect(() => {
-    if (!establishmentId) {
-      notification.error({ message: 'Error', description: 'Establishment ID is not set' });
-      return;
-    }
+        if (userId && establishmentId) {
+          const fetchEstablishmentData = async () => {
+            try {
 
-    const fetchEstablishmentData = async () => {
-      const auth = getAuth();
-      const user = auth.currentUser;
+                if (!userId) {
+                    notification.error({ message: 'Error', description: 'User is not authenticated' });
+                    return;
+                }
 
-      if (!user) {
-        notification.error({ message: 'Error', description: 'User is not authenticated' });
-        return;
-      }
+                const db = getFirestore();
+                const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
+                const docSnap = await getDoc(docRef);
 
-      const db = getFirestore();
-      const docRef = doc(db, 'users', user.uid, 'establishments', establishmentId);
-      const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data() as Establishment;
+                    setLogoUrl(data.info?.logoUrl || '/default-logo.png'); // Use a fallback logo here
+                    setPopoverData({
+                        wifiname: data.info?.wifiname || '',
+                        wifipass: data.info?.wifipass || '',
+                        address: data.info?.address || '',
+                        phone: data.info?.phone || '',
+                        currency: data.info?.currency || '',
+                    });
+                    form.setFieldsValue({
+                        wifiname: data.info?.wifiname || '',
+                        wifipass: data.info?.wifipass || '',
+                        address: data.info?.address || '',
+                        currency: data.info?.currency || '',
+                        phone: data.info?.phone || '',
+                    });
+                } else {
+                    notification.error({ message: 'Error', description: 'Document does not exist' });
+                }
+            } catch (error) {
+                notification.error({ message: 'Error', description: 'Failed to fetch establishment data' });
+            }
+        }
+        fetchEstablishmentData();
+        };
 
-      if (docSnap.exists()) {
-        const data = docSnap.data() as Establishment;
-
-        setLogoUrl(data.info?.logoUrl || './MBQR Label-03.png');
-        setPopoverData({
-          wifiname: data.info?.wifiname || '',
-          wifipass: data.info?.wifipass || '',
-          address: data.info?.address || '',
-          phone: data.info?.phone || '',
-          currency: data.info?.currency || '',
-        });
-      } else {
-        notification.error({ message: 'Error', description: 'Document does not exist' });
-      }
-    };
-
-    fetchEstablishmentData();
-  }, [establishmentId, form]);
+    }, [establishmentId, form, userId]);
 
   const openModal = () => {
     
@@ -127,7 +134,7 @@ const Header: React.FC = () => {
       'info.address': values.address,
       'info.currency': values.currency,
       'info.phone': values.phone,
-      'info.logoUrl': logoUrl || '',
+      'info.logoUrl': logoUrl || null,
     });
 
     notification.success({ message: 'Success', description: 'Details updated successfully' });
@@ -157,7 +164,6 @@ const Header: React.FC = () => {
         try {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-          // Delete old logo if applicable
           if (logoUrl && logoUrl !== './MBQR Label-03.png') {
             const oldLogoRef = ref(storage, logoUrl);
             await deleteObject(oldLogoRef).catch((error) => {

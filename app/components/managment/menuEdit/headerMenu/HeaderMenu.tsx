@@ -37,7 +37,7 @@ interface Establishment {
 const HeaderMenu: React.FC = () => {
     var currentPath = usePathname() || '';
     const centerText = currentPath.split('/')[currentPath.split('/').length - 2];
-    var returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-3).join('/');
+    var returnBack = currentPath.split('/').slice(0, currentPath.split('/').length-2).join('/');
     const [form] = Form.useForm();
     const [logoUrl, setLogoUrl] = useState<string | null>(null);
     const pathname = usePathname() || '';
@@ -99,7 +99,7 @@ const HeaderMenu: React.FC = () => {
     }, [establishmentId, form]);
 
     if (centerText === 'cart') {
-        returnBack = '/MENUBYQR';
+        returnBack ;
     }
 
     const copyToClipboard = (text: string) => {

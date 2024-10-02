@@ -4,46 +4,43 @@ import { useRouter } from 'next/router';
 import { auth } from '../../../../firebaseConfig'; 
 import { onAuthStateChanged } from 'firebase/auth';
 import HomeMenu from "@/app/pages/HomeMenu/HomeMenu";
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
-// Define the shape of your establishment data
 interface EstablishmentData {
   id: string;
   name: string;
 }
 
-// Define the props for the component
 interface EstablishmentDetailsProps {
   establishmentData: EstablishmentData;
 }
 
 const EstablishmentDetails: React.FC<EstablishmentDetailsProps> = ({ establishmentData }) => {
   const router = useRouter();
-  const { establishmentId } = router.query; // Get establishmentId from the route
+  const { establishmentId } = router.query; 
   const [loading, setLoading] = useState<boolean>(true); 
-  const [user, setUser] = useState<any>(null); // User state
-
+  const [user, setUser] = useState<any>(null); 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user); // Set user object if authenticated
-        setLoading(false); // Stop loading
+        setUser(user); 
+        setLoading(false); 
       } else {
-        setLoading(false); // Stop loading
-        router.push('/'); // Redirect to homepage if not authenticated
+        setLoading(false); 
+        router.push('/'); 
       }
     });
 
-    return () => unsubscribe(); // Cleanup listener on component unmount
+    return () => unsubscribe(); 
   }, [router]);
 
   useEffect(() => {
-    // Check if the establishmentId is available
+    if(user){
+      getStaticPaths(user.uid)
+    }
     if (!establishmentId) return;
-    
-    // If you need to fetch additional data based on establishmentId, do it here
-    console.log("Establishment ID:", establishmentId);
-    setLoading(false); // Set loading to false after fetching data
-  }, [establishmentId]);
+    setLoading(false); 
+  }, [establishmentId, user]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -56,35 +53,33 @@ const EstablishmentDetails: React.FC<EstablishmentDetailsProps> = ({ establishme
   );
 };
 
-// Fetch the paths for dynamic routes
-export async function getStaticPaths() {
-  const paths = await fetchEstablishmentIds(); // Assume this function is implemented
-  return {
+async function getStaticPaths(userId: string) {
+  if(userId){
+    const paths = await fetchEstablishmentIds(userId); 
+  console.log(paths)
+    return {
     paths: paths.map(id => ({ params: { establishmentId: id } })),
-    fallback: 'blocking', // Use 'blocking' to ensure SSR for not-yet-generated pages
+    fallback: 'blocking', 
   };
+  }
 }
 
-// Fetch establishment data for a specific ID
-export async function getStaticProps({ params }: { params: { establishmentId: string } }) {
-  const establishmentData = await fetchEstablishmentData(params.establishmentId); // Assume this function is implemented
-  return {
-    props: {
-      establishmentData,
-    },
-  };
-}
+async function fetchEstablishmentIds(userId: string) {
+  const db = getFirestore();
+  let ids: string[] = []; 
+  if (userId) {
+    const q = query(collection(db, 'users', userId, 'establishments'), where('uid', '==', userId));
+    try {
+      const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+        ids.push(doc.id); 
+      });
+    } catch (error) {
+      console.error('Error fetching establishment IDs:', error); 
+    }
+  }
 
-// Example function to fetch establishment IDs (mock implementation)
-async function fetchEstablishmentIds() {
-  // Replace with your logic to fetch IDs from your database or API
-  return ['6DX3a7MtJXeKeuq26N9v', 'anotherId']; // Example IDs
-}
-
-// Example function to fetch establishment details by ID (mock implementation)
-async function fetchEstablishmentData(establishmentId: string) {
-  // Replace with your logic to fetch establishment data from your database or API
-  return { id: establishmentId, name: 'Example Establishment' }; // Example data
+  return ids; 
 }
 
 export default EstablishmentDetails;

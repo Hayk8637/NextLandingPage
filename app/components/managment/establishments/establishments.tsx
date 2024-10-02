@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, notification, Modal, Popconfirm } from 'antd';
-import { FileAddOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Form, Input, Button, notification, Modal, Popconfirm, Popover } from 'antd';
+import { FileAddOutlined, DeleteOutlined, EditOutlined, LinkOutlined, QrcodeOutlined, SkinOutlined } from '@ant-design/icons';
 import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -30,6 +30,8 @@ interface Establishment {
 const Establishments: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isStylesModalVisible, setIsStylesModalVisible] = useState(false);
+  const [isQrLinkModalVisible, setIsQrLinkModalVisible] = useState(false);
   const [establishments, setEstablishments] = useState<Establishment[]>([]);
   const [bannerFiles, setBannerFiles] = useState<File[]>([]);
   const router = useRouter();
@@ -114,7 +116,11 @@ const Establishments: React.FC = () => {
       });
     }
   };
+
   const handleDeleteEstablishment = async (id: string) => {
+    setIsQrLinkModalVisible(false)
+    setIsStylesModalVisible(false);
+
     try {
       const user = auth.currentUser;
       if (user) {
@@ -136,13 +142,34 @@ const Establishments: React.FC = () => {
       });
     }
   };
+
   const handleModalOpen = () => {
     form.resetFields();
     setIsModalVisible(true);
   };
+
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
+
+  const handleStylesModalOpen = () => {
+    setIsQrLinkModalVisible(false)
+    setIsStylesModalVisible(true);
+  };
+
+  const handleStylesModalClose = () => {
+    setIsStylesModalVisible(false);
+  };
+
+  const handleQrLinkModalOpen = () => {
+    setIsStylesModalVisible(false);
+    setIsQrLinkModalVisible(true);
+  };
+
+  const handleQrLinkModalClose = () => {
+    setIsQrLinkModalVisible(false);
+  };
+
   const handleBannerChange = (info: any) => {
     if (info.fileList) {
       setBannerFiles(info.fileList.map((file: any) => file.originFileObj));
@@ -168,21 +195,39 @@ const Establishments: React.FC = () => {
                 </span>
               </Button>
             </Link>
-            <Popconfirm
-              title="Are you sure you want to delete this establishment?"
-              onConfirm={() => handleDeleteEstablishment(establishment.id!)}
-              okText="Yes"
-              cancelText="No"
+
+            {/* Popover for Styles, QR or Link, and Delete */}
+            <Popover
+              content={
+                <div>
+                  <Button className={styles.editButtons}  onClick={handleStylesModalOpen}>
+                    Menu Styles
+                  </Button>
+                  <Button className={styles.editButtons} icon={<QrcodeOutlined />} onClick={handleQrLinkModalOpen}>
+                    QR or Link
+                  </Button>
+                  <Popconfirm
+                    title="Are you sure you want to delete this establishment?"
+                    onConfirm={() => handleDeleteEstablishment(establishment.id!)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button className={styles.editButtons} danger icon={<DeleteOutlined />}>
+                      Delete
+                    </Button>
+                  </Popconfirm>
+                </div>
+              }
+              trigger="click"
             >
               <Button
-                danger
                 type="link"
-                icon={<DeleteOutlined />}
+                icon={<EditOutlined />}
                 className={styles.editButton}
               />
-            </Popconfirm>
+            </Popover>
           </div>
-        ))} 
+        ))}
 
         <Button className={styles.addEstablishments} onClick={handleModalOpen}>
           <div className={styles.content}>
@@ -192,6 +237,7 @@ const Establishments: React.FC = () => {
         </Button>
       </div>
 
+      {/* Modal for adding establishment */}
       <Modal
         title="Add Establishment"
         open={isModalVisible}
@@ -222,6 +268,28 @@ const Establishments: React.FC = () => {
             Cancel
           </Button>
         </Form>
+      </Modal>
+
+      {/* Modal for Styles */}
+      <Modal
+        title="Edit Styles"
+        open={isStylesModalVisible}
+        onCancel={handleStylesModalClose}
+        footer={null}
+      >
+        {/* Styles form content */}
+        <p>Styles modal content goes here...</p>
+      </Modal>
+
+      {/* Modal for QR or Link */}
+      <Modal
+        title="QR or Link"
+        open={isQrLinkModalVisible}
+        onCancel={handleQrLinkModalClose}
+        footer={null}
+      >
+        {/* QR or Link form content */}
+        <p>QR or Link modal content goes here...</p>
       </Modal>
     </div>
   );

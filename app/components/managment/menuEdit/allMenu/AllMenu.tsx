@@ -75,6 +75,8 @@ const AllMenu: React.FC = () => {
     };
     fetchMenuItems();
   }, [userId, establishmentId , menuItems]);
+
+  
   const showModal = () => {
     setIsModalVisible(true);
   };

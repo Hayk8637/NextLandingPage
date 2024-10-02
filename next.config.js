@@ -3,6 +3,7 @@ module.exports = {
   images: {
     unoptimized: true,
   },
+  swcMinify: true,
   reactStrictMode: true,
   trailingSlash: true,
   env: {
