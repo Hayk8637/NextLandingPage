@@ -94,7 +94,6 @@ const Establishments: React.FC = () => {
           },
           uid: user.uid,
         };
-
         const docRef = await addDoc(collection(db, 'users', user.uid, 'establishments'), establishmentData);
         notification.success({
           message: 'Establishment Added',
