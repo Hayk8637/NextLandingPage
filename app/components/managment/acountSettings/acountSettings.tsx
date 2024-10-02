@@ -119,7 +119,7 @@ const AccountSettings: React.FC = () => {
                 name="newPassword"
                 rules={[{ required: true, message: `${t(('Enternewpassword'))}` }]}
               >
-                <Input.Password placeholder={`6+ ${t(('symbols'))}`} className={style.input} />
+                <Input.Password placeholder={`6+ ${t(('symbols'))}`} autoComplete='' className={style.input} />
               </Form.Item>
               <Form.Item
                 label={t(('comfirmPassword'))}
@@ -137,7 +137,7 @@ const AccountSettings: React.FC = () => {
                   }),
                 ]}
               >
-                <Input.Password placeholder={`6+ ${t(('symbols'))}`} className={style.input} />
+                <Input.Password placeholder={`6+ ${t(('symbols'))}`} autoComplete='' className={style.input} />
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit" loading={loading} className={style.changeButton}>
