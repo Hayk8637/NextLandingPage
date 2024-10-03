@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { getAuth } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import Image from 'next/image'; // Import Image from next/image
+import { auth } from '@/firebaseConfig';
 
 interface FormValues {
     wifiname: string;
@@ -43,6 +44,7 @@ const HeaderMenu: React.FC = () => {
     const pathname = usePathname() || '';
     const pathArray = pathname.split('/');
     const establishmentId = pathArray[pathArray.length - 3];
+    const userId = auth.currentUser?.uid;
     const [popoverData, setPopoverData] = useState<FormValues>({
         wifiname: '',
         wifipass: '',
@@ -52,27 +54,15 @@ const HeaderMenu: React.FC = () => {
     });
 
     useEffect(() => {
-        if (!establishmentId) {
-            notification.error({ message: 'Error', description: 'Establishment ID is not set' });
-            return;
-        }
         const fetchEstablishmentData = async () => {
-            try {
-                const auth = getAuth();
-                const user = auth.currentUser;
-
-                if (!user) {
-                    notification.error({ message: 'Error', description: 'User is not authenticated' });
-                    return;
-                }
-
+            if(userId && establishmentId){
                 const db = getFirestore();
-                const docRef = doc(db, 'users', user.uid, 'establishments', establishmentId);
+                const docRef = doc (db, 'users', userId, 'establishments', establishmentId);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
                     const data = docSnap.data() as Establishment;
-                    setLogoUrl(data.info?.logoUrl || '/default-logo.png'); // Use a fallback logo here
+                    setLogoUrl(data.info?.logoUrl || '/default-logo.png');
                     setPopoverData({
                         wifiname: data.info?.wifiname || '',
                         wifipass: data.info?.wifipass || '',
@@ -80,23 +70,13 @@ const HeaderMenu: React.FC = () => {
                         phone: data.info?.phone || '',
                         currency: data.info?.currency || '',
                     });
-                    form.setFieldsValue({
-                        wifiname: data.info?.wifiname || '',
-                        wifipass: data.info?.wifipass || '',
-                        address: data.info?.address || '',
-                        currency: data.info?.currency || '',
-                        phone: data.info?.phone || '',
-                    });
-                } else {
-                    notification.error({ message: 'Error', description: 'Document does not exist' });
                 }
-            } catch (error) {
-                notification.error({ message: 'Error', description: 'Failed to fetch establishment data' });
+            };
             }
-        };
+                
 
         fetchEstablishmentData();
-    }, [establishmentId, form]);
+    }, [establishmentId, form , userId]);
 
     if (centerText === 'cart') {
         returnBack ;
@@ -134,11 +114,12 @@ const HeaderMenu: React.FC = () => {
             <div className={styles.center}>
                 {logoUrl && (
                     <Image
-                        src={logoUrl} // Use the fetched logo URL
+                        src={logoUrl}
                         alt="Logo"
-                        width={120} // Set a suitable width
-                        height={50} // Set a suitable height
-                        objectFit="contain" // Ensure the image fits within the bounds
+                        width={120} 
+                        height={50} 
+                        style={{ objectFit: 'contain' }} 
+                        priority 
                     />
                 )}
             </div>

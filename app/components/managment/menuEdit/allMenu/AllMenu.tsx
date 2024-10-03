@@ -47,7 +47,6 @@ const AllMenu: React.FC = () => {
         try {
           const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
           const docSnap = await getDoc(docRef);
-
           if (docSnap.exists()) {
             const data = docSnap.data();
             const categories = data.menu?.categories || {};
@@ -349,9 +348,9 @@ const AllMenu: React.FC = () => {
           trigger="hover"
           placement="topRight"
         >
-          <button className={style.functions} onClick={(e) => e.stopPropagation()}>
+          <a className={style.functions} onClick={(e) => e.stopPropagation()} >
             <EditOutlined />
-          </button>
+          </a>
         </Popover>
       </button>
     ))}
