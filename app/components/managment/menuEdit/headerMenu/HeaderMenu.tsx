@@ -3,7 +3,6 @@ import styles from './style.module.css';
 import { CopyOutlined, EnvironmentOutlined, InfoCircleOutlined, LeftOutlined, LockOutlined, PhoneOutlined, WifiOutlined } from '@ant-design/icons';
 import { Button, Form, notification, Popover } from 'antd';
 import { usePathname } from 'next/navigation';
-import { getAuth } from 'firebase/auth';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
 import Image from 'next/image'; // Import Image from next/image
 import { auth } from '@/firebaseConfig';
