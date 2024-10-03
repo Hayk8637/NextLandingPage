@@ -7,7 +7,7 @@ import SettingsP from '@/app/pages/Settings/Settings';
 
 const Settings: React.FC = () => {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null); // User state
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
