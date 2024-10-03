@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
-import { Button, Dropdown, Menu } from 'antd';
+import { Button, Dropdown, MenuProps } from 'antd';
 import SignIn from './signIn/SignIn';
 import SignUp from './signUp/SignUp';
 import ForgotPassword from './forgotPassword/ForgotPassword';
@@ -17,6 +17,7 @@ const Nav: React.FC = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
   const [isForgotPasswordModalVisible, setIsForgotPasswordModalVisible] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage && i18n.changeLanguage) {
@@ -70,19 +71,20 @@ const Nav: React.FC = () => {
     }
   };
 
-  const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="personal-account">
-        <Link href="/profile/establishments">{t('institutions')}</Link>
-      </Menu.Item>
-      <Menu.Item key="settings">
-        <Link href="/profile/settings">{t('settings')}</Link>
-      </Menu.Item>
-      <Menu.Item key="logout">
-        {t('logout')}
-      </Menu.Item>
-    </Menu>
-  );
+  const menuItems: MenuProps['items'] = [
+    {
+      key: 'personal-account',
+      label: <Link href="/profile/establishments">{t('institutions')}</Link>,
+    },
+    {
+      key: 'settings',
+      label: <Link href="/profile/settings">{t('settings')}</Link>,
+    },
+    {
+      key: 'logout',
+      label: t('logout'),
+    },
+  ];
 
   return (
     <>
@@ -95,12 +97,12 @@ const Nav: React.FC = () => {
         <div className={style.right}>
           {user ? (
             <>
-              <Dropdown overlay={menu} trigger={['click']}>
+              <Dropdown menu={{ items: menuItems }} trigger={['click']}>
                 <Button type="primary" className={style.userEmail}>
                   {user.email}
                 </Button>
               </Dropdown>
-              <Dropdown overlay={menu} trigger={['click']}>
+              <Dropdown menu={{ items: menuItems }} trigger={['click']}>
                 <Button type="link" className={style.userIcon}>
                   <UserOutlined />
                 </Button>

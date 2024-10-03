@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Form, Input, Button, notification, Modal, Popconfirm, Popover } from 'antd';
 import { FileAddOutlined, DeleteOutlined, EditOutlined, LinkOutlined, QrcodeOutlined, SkinOutlined } from '@ant-design/icons';
 import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
@@ -39,12 +39,13 @@ const Establishments: React.FC = () => {
   const auth = getAuth();
   const db = getFirestore();
   const storage = getStorage();
+  const user = auth.currentUser;
 
   useEffect(() => {
     const fetchEstablishments = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const q = query(collection(db, 'users', user.uid, 'establishments'), where('uid', '==', user.uid));
+      const userId = user?.uid; 
+      if (userId) {
+        const q = query(collection(db, 'users', userId, 'establishments'), where('uid', '==', userId));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const items: Establishment[] = [];
           querySnapshot.forEach((doc) => {
@@ -55,14 +56,14 @@ const Establishments: React.FC = () => {
         });
         return () => unsubscribe();
       } else {
-        notification.error({
-          message: 'Error',
-          description: 'User is not authenticated.',
-        });
+        // notification.error({
+        //   message: 'Error',
+        //   description: 'User is not authenticated.',
+        // });
       }
     };
     fetchEstablishments();
-  }, [auth, db]);
+  }, [user]);
 
   const handleAddEstablishment = async (values: any) => {
     try {
@@ -84,7 +85,7 @@ const Establishments: React.FC = () => {
             wifiname: values.wifiname || '',
             wifipass: values.wifipass || '',
             address: values.address || '',
-            logoUrl: values.logoUrl || 'default-logo.png',
+            logoUrl: values.logoUrl || null,
             bannerUrls: bannerUrls,
             currency: values.currency || '',
           },
@@ -184,7 +185,7 @@ const Establishments: React.FC = () => {
               <Button className={styles.establishmentButton}>
                 <span>
                   <Image
-                    src={establishment.info.logoUrl || '/default-logo.png'}
+                    src={establishment.info.logoUrl || './MBQR Label-03.png'}
                     alt="Establishment Logo"
                     className={styles.logoImage}
                     width={100}
