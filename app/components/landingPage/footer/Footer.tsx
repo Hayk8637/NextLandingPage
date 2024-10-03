@@ -8,7 +8,7 @@ import { InstagramOutlined, TikTokOutlined } from '@ant-design/icons';
 const logoSrc = '/logo/logo.png';
 
 const Footer: React.FC = () => {
-  const { i18n, t } = useTranslation("global");
+  const { i18n } = useTranslation("global");
   const [socialLinks, setSocialLinks] = useState<{ [key: string]: string }>({});
   
   const changeLanguage = (language: string) => {
@@ -42,7 +42,14 @@ const Footer: React.FC = () => {
       <div className={style.footer0}>
         <div className={style.up}>
           <div className={style.left}>
-            <Image src={logoSrc} alt='logo' width={150} height={50} />
+            <Image
+              src={logoSrc}
+              alt='logo'
+              priority
+              width={150}
+              height={50}
+              style={{ width: 'auto', height: 'auto' }} // Added for clarity
+            />
           </div>
           <div className={style.right}>
             <ul>

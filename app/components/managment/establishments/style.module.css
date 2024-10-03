@@ -92,3 +92,9 @@
   margin-top: 10px;
   width: 100px;
 }
+.logoImage {
+  width: 100%;
+  height: auto; /* Adjusts height to maintain aspect ratio */
+  display: block; /* Prevents extra space below the image */
+}
+

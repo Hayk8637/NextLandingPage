@@ -8,7 +8,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from './style.module.css';
-
 interface Establishment {
   id?: string;
   info: {
@@ -26,7 +25,6 @@ interface Establishment {
   };
   uid: string;
 }
-
 const Establishments: React.FC = () => {
   const [form] = Form.useForm();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -42,29 +40,25 @@ const Establishments: React.FC = () => {
   const user = auth.currentUser;
 
   useEffect(() => {
-    const fetchEstablishments = async () => {
-      const userId = user?.uid; 
-      if (userId) {
-        const q = query(collection(db, 'users', userId, 'establishments'), where('uid', '==', userId));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          const items: Establishment[] = [];
-          querySnapshot.forEach((doc) => {
-            const data = doc.data() as Establishment;
-            items.push({ ...data, id: doc.id });
+    if(user) {
+      const fetchEstablishments = async () => {
+        const userId = user?.uid; 
+        if (userId) {
+          const q = query(collection(db, 'users', userId, 'establishments'), where('uid', '==', userId));
+          const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const items: Establishment[] = [];
+            querySnapshot.forEach((doc) => {
+              const data = doc.data() as Establishment;
+              items.push({ ...data, id: doc.id });
+            });
+            setEstablishments(items);
           });
-          setEstablishments(items);
-        });
-        return () => unsubscribe();
-      } else {
-        // notification.error({
-        //   message: 'Error',
-        //   description: 'User is not authenticated.',
-        // });
-      }
-    };
-    fetchEstablishments();
-  }, [user]);
-
+          return () => unsubscribe();
+        }
+      };
+      fetchEstablishments();
+    }  
+  }, [user , db]);
   const handleAddEstablishment = async (values: any) => {
     try {
       const user = auth.currentUser;
@@ -102,45 +96,20 @@ const Establishments: React.FC = () => {
         form.resetFields();
         setBannerFiles([]);
         handleModalClose();
-        router.push(`/profile/establishments/${docRef.id}`); // Redirect to the newly created establishment
-      } else {
-        notification.error({
-          message: 'Error',
-          description: 'User is not authenticated.',
-        });
+        router.push(`/profile/establishments/${docRef.id}`); 
       }
     } catch (error: any) {
-      notification.error({
-        message: 'Error Adding Establishment',
-        description: error.message || 'An unexpected error occurred.',
-      });
     }
   };
 
   const handleDeleteEstablishment = async (id: string) => {
     setIsQrLinkModalVisible(false)
     setIsStylesModalVisible(false);
-
-    try {
       const user = auth.currentUser;
       if (user) {
         const docRef = doc(db, 'users', user.uid, 'establishments', id);
         await deleteDoc(docRef);
-        notification.success({
-          message: 'Establishment Deleted',
-        });
-      } else {
-        notification.error({
-          message: 'Error',
-          description: 'User is not authenticated.',
-        });
       }
-    } catch (error: any) {
-      notification.error({
-        message: 'Error Deleting Establishment',
-        description: error.message || 'An unexpected error occurred.',
-      });
-    }
   };
 
   const handleModalOpen = () => {
@@ -182,21 +151,20 @@ const Establishments: React.FC = () => {
         {establishments.map((establishment) => (
           <div className={styles.establishmentContainer} key={establishment.id}>
             <Link className={styles.link} href={`/profile/establishments/${establishment.id}`}>
-              <Button className={styles.establishmentButton}>
-                <span>
-                  <Image
-                    src={establishment.info.logoUrl || './MBQR Label-03.png'}
-                    alt="Establishment Logo"
-                    className={styles.logoImage}
-                    width={100}
-                    height={100}
-                    objectFit="contain"
-                  />
-                </span>
-              </Button>
+            <Button className={styles.establishmentButton}>
+              <span>
+                <Image
+                  src={establishment.info.logoUrl || './MBQR Label-03.png'}
+                  alt="Establishment Logo"
+                  className={styles.logoImage}
+                  priority
+                  width={100}
+                  height={100}
+                  style={{ objectFit: 'contain' }} // Inline style for object fit
+                />
+              </span>
+            </Button>
             </Link>
-
-            {/* Popover for Styles, QR or Link, and Delete */}
             <Popover
               content={
                 <div>

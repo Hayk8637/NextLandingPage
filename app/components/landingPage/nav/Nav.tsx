@@ -17,7 +17,7 @@ const Nav: React.FC = () => {
   const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
   const [isForgotPasswordModalVisible, setIsForgotPasswordModalVisible] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  
+
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language');
     if (savedLanguage && i18n.changeLanguage) {
@@ -27,9 +27,9 @@ const Nav: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); 
+      setUser(currentUser);
     });
-    return () => unsubscribe(); 
+    return () => unsubscribe();
   }, []);
 
   const showSignInModal = () => {
@@ -59,7 +59,7 @@ const Nav: React.FC = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      setUser(null); 
+      setUser(null);
     } catch (error) {
       console.error('Sign out error:', error);
     }
@@ -91,7 +91,7 @@ const Nav: React.FC = () => {
       <nav className={style.nav}>
         <div className={style.left}>
           <Link href='/'>
-            <Image src="/logo/logo.png" alt={t('logo')} width={150} height={50} />
+            <Image src="/logo/logo.png" alt={t('logo')} width={150} height={50} style={{ width: "auto", height: "auto" }} />
           </Link>
         </div>
         <div className={style.right}>
