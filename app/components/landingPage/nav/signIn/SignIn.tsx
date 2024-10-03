@@ -49,7 +49,7 @@ const SignIn: React.FC<SignInProps> = ({ isModalVisible, onClose, onForgotPasswo
 
   return (
     <Modal
-      visible={isModalVisible}
+      open={isModalVisible}
       onCancel={onClose}
       footer={null}
       className={style.modal}

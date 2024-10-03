@@ -37,7 +37,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isModalVisible, onClose
 
   return (
     <Modal
-      visible={isModalVisible}
+      open={isModalVisible}
       onCancel={onClose}
       footer={null}
       className={style.modal}

@@ -54,7 +54,7 @@ const SignUp: React.FC<SignUpProps> = ({ isModalVisible, onClose }) => {
 
   return (
     <Modal
-      visible={isModalVisible}
+      open={isModalVisible}
       onCancel={onClose}
       footer={null}
       className={style.modal}

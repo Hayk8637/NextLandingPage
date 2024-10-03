@@ -28,7 +28,6 @@ const Nav: React.FC = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser); 
     });
-
     return () => unsubscribe(); 
   }, []);
 

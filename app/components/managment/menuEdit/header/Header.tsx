@@ -8,7 +8,6 @@ import { getAuth } from 'firebase/auth';
 import styles from './style.module.css';
 import { usePathname } from 'next/navigation';
 import { auth } from '@/firebaseConfig';
-import defLogo from './MBQR Label-03.png'
 interface FormValues {
   wifiname: string;
   wifipass: string;
@@ -134,7 +133,7 @@ const Header: React.FC = () => {
       'info.address': values.address,
       'info.currency': values.currency,
       'info.phone': values.phone,
-      'info.logoUrl': logoUrl || null,
+      'info.logoUrl': null,
     });
 
     notification.success({ message: 'Success', description: 'Details updated successfully' });
@@ -144,7 +143,7 @@ const Header: React.FC = () => {
   const handleLogoUpload = (file: File) => {
     if (!file) {
       notification.error({ message: 'Error', description: 'No file selected for upload' });
-      return false; // Prevent the default upload behavior
+      return false;
     }
 
     setUploading(true);
