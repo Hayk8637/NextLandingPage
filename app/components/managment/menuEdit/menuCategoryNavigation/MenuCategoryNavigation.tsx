@@ -17,11 +17,18 @@ interface MenuCategoryItem {
   isVisible: boolean;
   order: number;
 }
+interface EstablishmentStyles {
+  color1: string;
+  color2: string;
+  color3: string;
+  color4: string;
+  color5: string;
+}
 
 const MenuCategoryNavigation: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [establishmentStyles, setEstablishmentStyles] = useState<EstablishmentStyles>();
   const pathname = usePathname() || '';
   const currentCategoryName = pathname.split('/').filter(Boolean).pop() || '';
   const establishmentId = pathname.split('/')[pathname.split('/').length - 3] || '';
@@ -45,7 +52,7 @@ const MenuCategoryNavigation: React.FC = () => {
                 isVisible: category.isVisible ?? true,
               }));
                 items.sort((a, b) => a.order - b.order);
-              
+              setEstablishmentStyles(data.styles)
               setCategories(items);
             } else {
               setError('No categories found');
@@ -53,7 +60,6 @@ const MenuCategoryNavigation: React.FC = () => {
           } catch (error) {
             setError('Error fetching menu items');
           } finally {
-            setLoading(false);
           }
         }
       };
@@ -61,22 +67,19 @@ const MenuCategoryNavigation: React.FC = () => {
     fetchCategories();
   }, [userId, establishmentId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
 
   return (
-    <div className={styles.menuCategoryNavigation}>
-      {categories.map((category) => (
+    <div className={styles.menuCategoryNavigation} style={{backgroundColor: `#${establishmentStyles?.color1}`}}>
+      {categories.map((category) => ( 
         <Link
           key={category.id}
           href={`/profile/establishments/${establishmentId}/${category.id}`} 
           passHref
-          className={currentCategoryName === category.id ? styles.activeTab : styles.a}>
+          className={currentCategoryName === category.id ? styles.activeTab : styles.a} 
+          style={{ color: currentCategoryName === category.id ? `#${establishmentStyles?.color2}` : `#${establishmentStyles?.color3}`,
+                   backgroundColor: currentCategoryName === category.id ? `#${establishmentStyles?.color5}` : ``,
+                   borderColor: currentCategoryName === category.id ? `` : `#${establishmentStyles?.color2}`,
+                }}>
           {category.name}
         </Link>
       ))}

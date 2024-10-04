@@ -16,9 +16,23 @@ interface FormValues {
   currency: string;
   phone: string;
 }
+interface EstablishmentStyles {
+  color1: string;
+  color2: string;
+  color3: string;
+  color4: string;
+  color5: string;
+}
 
 interface Establishment {
   id?: string;
+  styles: {
+    color1: string;
+    color2: string;
+    color3: string;
+    color4: string;
+    color5: string;
+  },
   info: {
     name: string;
     wifiname?: string;
@@ -45,6 +59,8 @@ const Header: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const establishmentId = currentPath.split('/').filter(Boolean).pop() || '';
   const userId = auth.currentUser?.uid;
+  const [establishmentStyles, setEstablishmentStyles] = useState<EstablishmentStyles>();
+  const [textColor, setTextColor] = useState(`#${establishmentStyles?.color2 || 'white'}`);
   const [popoverData, setPopoverData] = useState<FormValues>({
     wifiname: '',
     wifipass: '',
@@ -74,6 +90,10 @@ const Header: React.FC = () => {
               phone: data.info?.phone || '',
               currency: data.info?.currency || '',
             });
+           await setEstablishmentStyles(data.styles);
+            
+  
+            // Uncomment if you need to set form fields
             // form.setFieldsValue({
             //   wifiname: data.info?.wifiname || '',
             //   wifipass: data.info?.wifipass || '',
@@ -91,7 +111,7 @@ const Header: React.FC = () => {
       fetchEstablishmentData();
     }
   }, [establishmentId, form, userId]);
-
+  
   const openModal = () => {
     form.setFieldsValue({
       wifiname: popoverData.wifiname || '',
@@ -204,11 +224,10 @@ const Header: React.FC = () => {
       ))}
     </div>
   );
-
   return (
     <>
       <FloatButton style={{ top: 30, left: 40 }} icon={<LeftOutlined />} href={returnBack} />
-      <div className={styles.header}>
+      <div className={styles.header} style={{backgroundColor: `#${establishmentStyles?.color1}` , borderBottomColor: `#${establishmentStyles?.color2}`}} >
         <div className={styles.leftRight}>
           <div className={styles.left}>
             <div className={styles.logoWrapper}>
@@ -223,7 +242,15 @@ const Header: React.FC = () => {
           </div>
           <div className={styles.right}>
             <Popover placement="bottomRight" title="Establishment Info" content={popoverContent} arrow>
-              <Button type="link" className={styles.info}>
+              <Button type="link" className={styles.info} 
+               style={{ color: textColor }}
+                  onMouseEnter={() => setTextColor(`#${establishmentStyles?.color3}`)}
+                  onMouseLeave={() => setTextColor(`#${establishmentStyles?.color2}`)}
+                  onFocus={() => setTextColor(`#${establishmentStyles?.color3}`)}
+                  onBlur={() => setTextColor(`#${establishmentStyles?.color2}`)} 
+                  onMouseDown={() => setTextColor(`#${establishmentStyles?.color3}`)} 
+                  onMouseUp={() => setTextColor(`#${establishmentStyles?.color3}`)} 
+               >
                 <InfoCircleOutlined />
               </Button>
             </Popover>

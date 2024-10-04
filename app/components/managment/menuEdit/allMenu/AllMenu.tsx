@@ -16,6 +16,13 @@ interface MenuCategoryItem {
   isVisible: boolean;
   order: number;
 }
+interface EstablishmentStyles {
+  color1: string;
+  color2: string;
+  color3: string;
+  color4: string;
+  color5: string;
+}
 
 const AllMenu: React.FC = () => {
   const [menuItems, setMenuItems] = useState<MenuCategoryItem[]>([]);
@@ -29,6 +36,7 @@ const AllMenu: React.FC = () => {
   const [currentEditingId, setCurrentEditingId] = useState<string | null>(null);
   const router = useRouter(); 
   const [orderModalVisible, setOrderModalVisible] = useState(false);
+  const [establishmentStyles, setEstablishmentStyles] = useState<EstablishmentStyles>();
 
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
@@ -58,6 +66,8 @@ const AllMenu: React.FC = () => {
               imgUrl: category.imgUrl,
               isVisible: category.isVisible ?? true,
             }));
+            await setEstablishmentStyles(data.styles);
+
 
             items.sort((a, b) => a.order - b.order);
             
@@ -322,7 +332,7 @@ const AllMenu: React.FC = () => {
   };
 
   return (
-    <div className={style.allMenu}>
+    <div className={style.allMenu} style={{backgroundColor: `#${establishmentStyles?.color1}`}}>
       <div className={style.menuCategories}>
       <div className={style.ordering}>
         <Button type="link" className={style.orderButton} onClick={showOrderModal}><OrderedListOutlined /></Button>
@@ -331,7 +341,7 @@ const AllMenu: React.FC = () => {
       <button
         key={item.id}
         className={style.menuCategoryItem}
-        style={{ backgroundImage: `url(${item.imgUrl || ''})` }}
+        style={{backgroundColor: `#${establishmentStyles?.color4}` ,  backgroundImage: `url(${item.imgUrl || ''})` }}
         onClick={(e) => {
           if (e.currentTarget === e.target) {
             router.push(`./${establishmentId}/${item.id}`); 
@@ -354,9 +364,7 @@ const AllMenu: React.FC = () => {
         </Popover>
       </button>
     ))}
-
-
-        <button className={style.menuCategoryItem} onClick={showModal}>
+        <button className={style.menuCategoryItem}  style={{backgroundColor: `#${establishmentStyles?.color2}`}} onClick={showModal}>
           <span>+</span>
         </button>
       </div>

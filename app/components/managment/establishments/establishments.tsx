@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, notification, Modal, Popconfirm, Popover, QRCode } from 'antd';
+import { Form, Input, Button, notification, Modal, Popconfirm, Popover, QRCode, ColorPicker } from 'antd';
 import { FileAddOutlined, DeleteOutlined, EditOutlined, QrcodeOutlined } from '@ant-design/icons';
-import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Image from 'next/image';
@@ -11,6 +11,13 @@ import styles from './style.module.css';
 
 interface Establishment {
   id?: string;
+  styles: {
+    color1: string;
+    color2: string;
+    color3: string;
+    color4: string;
+    color5: string;
+  };
   info: {
     name: string;
     wifiname?: string;
@@ -35,6 +42,13 @@ const Establishments: React.FC = () => {
   const [establishments, setEstablishments] = useState<Establishment[]>([]);
   const [bannerFiles, setBannerFiles] = useState<File[]>([]);
   const [selectedEstablishmentId, setSelectedEstablishmentId] = useState<string | null>(null);
+  const [selectedColors, setSelectedColors] = useState({
+    color1: '#ffffff',
+    color2: '#ffffff',
+    color3: '#ffffff',
+    color4: '#ffffff',
+    color5: '#ffffff',
+  });
   const router = useRouter();
   const auth = getAuth();
   const db = getFirestore();
@@ -47,6 +61,7 @@ const Establishments: React.FC = () => {
         const userId = user?.uid;
         if (userId) {
           const q = query(collection(db, 'users', userId, 'establishments'), where('uid', '==', userId));
+          
           const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const items: Establishment[] = [];
             querySnapshot.forEach((doc) => {
@@ -74,7 +89,14 @@ const Establishments: React.FC = () => {
           bannerUrls.push(url);
         });
         await Promise.all(uploadPromises);
-        const establishmentData: Establishment = {
+        const establishment: Establishment = {
+          styles: {
+            color1: '1',
+            color2: '2',
+            color3: '3',
+            color4: '4',
+            color5: '5'
+          },
           info: {
             name: values.name,
             wifiname: values.wifiname || '',
@@ -90,7 +112,7 @@ const Establishments: React.FC = () => {
           },
           uid: user.uid,
         };
-        const docRef = await addDoc(collection(db, 'users', user.uid, 'establishments'), establishmentData);
+        const docRef = await addDoc(collection(db, 'users', user.uid, 'establishments'), establishment);
         notification.success({ message: 'Establishment Added' });
         form.resetFields();
         setBannerFiles([]);
@@ -132,10 +154,6 @@ const Establishments: React.FC = () => {
     setIsModalVisible(false);
   };
 
-  const handleStylesModalOpen = () => {
-    setIsQrLinkModalVisible(false);
-    setIsStylesModalVisible(true);
-  };
 
   const handleStylesModalClose = () => {
     setIsStylesModalVisible(false);
@@ -151,12 +169,45 @@ const Establishments: React.FC = () => {
     setIsQrLinkModalVisible(false);
   };
 
+  const handleColorChange = (color: string, colorKey: keyof Establishment['styles']) => {
+    setSelectedColors((prevColors) => ({ ...prevColors, [colorKey]: color }));
+  };
+  
+  const handleSaveStyles = async () => {
+    const user = auth.currentUser;
+
+    if (user && selectedEstablishmentId) {
+
+      const docRef = doc(db, 'users', user.uid, 'establishments', selectedEstablishmentId);
+      await updateDoc(docRef, { styles: selectedColors });
+      notification.success({ message: 'Styles Updated' });
+      handleStylesModalClose();
+    }
+  };
   const handleBannerChange = (info: any) => {
     if (info.fileList) {
       setBannerFiles(info.fileList.map((file: any) => file.originFileObj));
     }
   };
 
+  const handleStylesModalOpen = (id: string) => {
+    setIsQrLinkModalVisible(false);
+    setIsStylesModalVisible(true);
+    setSelectedEstablishmentId(id);
+  
+    const selectedEstablishment = establishments.find((est) => est.id === id);
+  
+    if (selectedEstablishment) {
+      const { color1, color2, color3, color4, color5 } = selectedEstablishment.styles;
+      setSelectedColors({
+        color1: color1 || '#ffffff',
+        color2: color2 || '#ffffff',
+        color3: color3 || '#ffffff',
+        color4: color4 || '#ffffff',
+        color5: color5 || '#ffffff',
+      });
+    }
+  };
   return (
     <div className={styles.main}>
       <div className={styles.items}>
@@ -180,7 +231,7 @@ const Establishments: React.FC = () => {
             <Popover
               content={
                 <div>
-                  <Button className={styles.editButtons} onClick={handleStylesModalOpen}>
+                  <Button className={styles.editButtons} onClick={() => handleStylesModalOpen(establishment.id!)}>
                     Menu Styles
                   </Button>
                   <Button className={styles.editButtons} icon={<QrcodeOutlined />} onClick={() => handleQrLinkModalOpen(establishment.id!)}>
@@ -222,11 +273,9 @@ const Establishments: React.FC = () => {
           >
             <Input placeholder="Enter establishment name" />
           </Form.Item>
-
           <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
             Add Establishment
           </Button>
-
           <Button style={{ marginTop: '10px', width: '100%' }} onClick={handleModalClose}>
             Cancel
           </Button>
@@ -234,7 +283,26 @@ const Establishments: React.FC = () => {
       </Modal>
 
       <Modal title="Edit Styles" open={isStylesModalVisible} onCancel={handleStylesModalClose} footer={null}>
-          here i must edit my styles 
+        <Form layout="vertical" onFinish={handleSaveStyles}>
+          <Form.Item label="Background color for your menu.">
+            <ColorPicker value={selectedColors.color1} onChange={(color) => handleColorChange(color.toHex(), 'color1')} />
+          </Form.Item>
+          <Form.Item label="Text color">
+            <ColorPicker value={selectedColors.color2} onChange={(color) => handleColorChange(color.toHex(), 'color2')} />
+          </Form.Item>
+          <Form.Item label="Text color when active">
+            <ColorPicker value={selectedColors.color3} onChange={(color) => handleColorChange(color.toHex(), 'color3')} />
+          </Form.Item>
+          <Form.Item label="If you haven't image for your items it's background color for it">
+            <ColorPicker value={selectedColors.color4} onChange={(color) => handleColorChange(color.toHex(), 'color4')} />
+          </Form.Item>
+          <Form.Item label="Color 5">
+            <ColorPicker value={selectedColors.color5} onChange={(color) => handleColorChange(color.toHex(), 'color5')} />
+          </Form.Item>
+          <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+            Save Styles
+          </Button>
+        </Form>
       </Modal>
 
    <Modal title="QR or Link" open={isQrLinkModalVisible} onCancel={handleQrLinkModalClose} footer={null}>

@@ -15,8 +15,17 @@ interface FormValues {
     phone: string;
 }
 
+interface EstablishmentStyles {
+    color1: string;
+    color2: string;
+    color3: string;
+    color4: string;
+    color5: string;
+  }
+
 interface Establishment {
     id?: string;
+    styles: EstablishmentStyles;
     info: {
         name: string;
         wifiname?: string;
@@ -44,6 +53,10 @@ const HeaderMenu: React.FC = () => {
     const pathArray = pathname.split('/');
     const establishmentId = pathArray[pathArray.length - 3];
     const userId = auth.currentUser?.uid;
+    const [establishmentStyles, setEstablishmentStyles] = useState<EstablishmentStyles>();
+    const [textColor, setTextColor] = useState(`#${establishmentStyles?.color2 || 'white'}`);
+
+
     const [popoverData, setPopoverData] = useState<FormValues>({
         wifiname: '',
         wifipass: '',
@@ -69,6 +82,7 @@ const HeaderMenu: React.FC = () => {
                         phone: data.info?.phone || '',
                         currency: data.info?.currency || '',
                     });
+                    await setEstablishmentStyles(data.styles);
                 }
             };
             }
@@ -106,9 +120,9 @@ const HeaderMenu: React.FC = () => {
     );
 
     return (
-        <div className={styles.headerMenu}>
+        <div className={styles.headerMenu} style={{backgroundColor: `#${establishmentStyles?.color1}`}}>
             <div className={styles.left}>
-                <a href={returnBack}><LeftOutlined style={{ color: 'black' }} /></a>
+                <a href={returnBack}><LeftOutlined  style={{color: `#${establishmentStyles?.color2}`}} /></a>
             </div>
             <div className={styles.center}>
                 {logoUrl && (
@@ -124,9 +138,16 @@ const HeaderMenu: React.FC = () => {
             </div>
             <div className={styles.right}>
                 <Popover placement="bottomRight" style={{padding:'15px'}} title="Establishment Info" content={popoverContent} arrow>
-                    <Button type="link" className={styles.info}>
-                        <InfoCircleOutlined />
-                    </Button>
+                <Button type="link" className={styles.info}
+                    style={{ color: textColor }}
+                    onMouseEnter={() => setTextColor(`#${establishmentStyles?.color3}`)}
+                    onMouseLeave={() => setTextColor(`#${establishmentStyles?.color2}`)}
+                    onFocus={() => setTextColor(`#${establishmentStyles?.color3}`)}
+                    onBlur={() => setTextColor(`#${establishmentStyles?.color2}`)} 
+                    onMouseDown={() => setTextColor(`#${establishmentStyles?.color3}`)} 
+                    onMouseUp={() => setTextColor(`#${establishmentStyles?.color3}`)}  >
+                <InfoCircleOutlined />
+              </Button>
                 </Popover>
             </div>
         </div>

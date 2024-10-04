@@ -13,6 +13,13 @@ interface BannerImage {
   id: string; // Unique ID
   url: string;
 }
+interface EstablishmentStyles {
+  color1: string;
+  color2: string;
+  color3: string;
+  color4: string;
+  color5: string;
+}
 
 const contentStyle: React.CSSProperties = {
   height: '200px',
@@ -29,6 +36,7 @@ const Banner: React.FC = () => {
   const pathname = usePathname() || '';
   const establishmentId = pathname.split('/').filter(Boolean).pop() || '';
   const userId = auth.currentUser?.uid;
+  const [establishmentStyles, setEstablishmentStyles] = useState<EstablishmentStyles>();
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -45,7 +53,7 @@ const Banner: React.FC = () => {
         try {
           const docRef = doc(db, 'users', userId, 'establishments', establishmentId);
           const docSnap = await getDoc(docRef);
-  
+          
           if (docSnap.exists()) {
             const data = docSnap.data();
             if (data?.info?.bannerUrls) {
@@ -54,6 +62,7 @@ const Banner: React.FC = () => {
                 url: data.info.bannerUrls[key] as string,
               }));
               setBannerImages(parsedItems);
+              setEstablishmentStyles(data.styles);
             }
           } else {
             notification.error({ message: 'Error', description: 'Failed to fetch banners.' });
@@ -146,7 +155,7 @@ const Banner: React.FC = () => {
   
 
   return (
-    <div className={styles.banner}>
+    <div className={styles.banner} style={{backgroundColor: `#${establishmentStyles?.color1}`}}>
       {bannerImages.length === 0 ? (
         <div style={{ backgroundColor: '#ffbf87', height: '200px', width: '100%', borderRadius: '22px', margin: 'auto' }}>
           <Button type="link" onClick={showModal} className={styles.editButton}>
