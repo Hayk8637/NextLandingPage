@@ -98,3 +98,25 @@
   display: block; /* Prevents extra space below the image */
 }
 
+.qrlink {
+  text-align: center;
+  margin: auto;
+}
+.qrlink > .qr {
+  margin: auto;
+}
+.qrlink > .qr > .qrcode{
+  width: 200px;
+  margin: auto;
+}
+.qrlink > .link {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}
+.qrlink > .link > .qrlinkbutton {
+  margin: auto;
+  margin-top: 10px;
+  text-align: center;
+  display: block;
+}

@@ -5,12 +5,9 @@
     white-space: nowrap; /* Prevents wrapping of items, allowing horizontal scroll */
     padding-top: 20px;
     padding-bottom: 20px;
-    padding-left: 10px; 
-    padding-right: 10px;
     position: fixed;
     top: 64.8px;
     z-index: 1;
-    background-color: white;
     margin: auto;
 }
 
@@ -22,10 +19,12 @@
     text-decoration: none;
     margin-right: 10px;
     color: #B3B3B3;
+    margin-left: 10px;
 }
 
 .menuCategoryNavigation > .a {
     border: 1px solid #B3B3B3;
+    margin-left: 10px;
 }
 
 .menuCategoryNavigation > .activeTab {
