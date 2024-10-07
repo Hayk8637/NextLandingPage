@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { auth, db } from '../../../../../firebaseConfig';
+import { auth, db } from '../../../../firebaseConfig';
 import { onAuthStateChanged } from 'firebase/auth';
-import Menu from "@/app/pages/menu/Menu";
+import HomeMenu from '@/app/pages/HomeMenu/HomeMenu';
 
-const CategoryItems: React.FC = () => {
+const EstablishmentDetails: React.FC = () => {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
 
@@ -22,8 +22,8 @@ const CategoryItems: React.FC = () => {
 
   return (
     <div>
-      <Menu />
+      <HomeMenu />
     </div>
   );
 };
-export default CategoryItems;
+export default EstablishmentDetails;
