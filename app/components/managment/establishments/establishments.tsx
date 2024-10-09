@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, notification, Modal, Popconfirm, Popover, QRCode, ColorPicker } from 'antd';
 import { FileAddOutlined, DeleteOutlined, EditOutlined, QrcodeOutlined } from '@ant-design/icons';
-import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc, updateDoc, setDoc, getDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Image from 'next/image';
@@ -76,7 +76,6 @@ const Establishments: React.FC = () => {
       fetchEstablishments();
     }
   }, [user, db]);
-
   const handleAddEstablishment = async (values: any) => {
     try {
       const user = auth.currentUser;
@@ -88,14 +87,17 @@ const Establishments: React.FC = () => {
           const url = await getDownloadURL(snapshot.ref);
           bannerUrls.push(url);
         });
+  
+        // Wait for all files to be uploaded
         await Promise.all(uploadPromises);
+  
         const establishment: Establishment = {
           styles: {
             color1: '1',
             color2: '2',
             color3: '3',
             color4: '4',
-            color5: '5'
+            color5: '5',
           },
           info: {
             name: values.name,
@@ -112,7 +114,28 @@ const Establishments: React.FC = () => {
           },
           uid: user.uid,
         };
+  
+        // Add establishment to the user's sub-collection
         const docRef = await addDoc(collection(db, 'users', user.uid, 'establishments'), establishment);
+        
+        // Create or update the global establishments collection with an array of IDs
+        const globalEstablishmentId = docRef.id;
+  
+        // Check if the global collection already exists
+        const globalEstablishmentsRef = doc(db, 'paths', 'establishments'); // Single document for global collection
+        const globalSnap = await getDoc(globalEstablishmentsRef);
+  
+        if (globalSnap.exists()) {
+          // If it exists, update the array with the new ID
+          const existingIds: string[] = globalSnap.data().ids || [];
+          existingIds.push(globalEstablishmentId);  
+          
+          await updateDoc(globalEstablishmentsRef, { ids: existingIds });
+        } else {
+          // If it doesn't exist, create it with the new ID in an array
+          await setDoc(globalEstablishmentsRef, { ids: [globalEstablishmentId] });
+        }
+  
         notification.success({ message: 'Establishment Added' });
         form.resetFields();
         setBannerFiles([]);
@@ -123,6 +146,7 @@ const Establishments: React.FC = () => {
       console.error('Error adding establishment:', error);
     }
   };
+  
 
   const handleCopyLink = () => {
     const linkToCopy = `https://menu.menubyqr.com/${user?.uid}/${selectedEstablishmentId}`;
@@ -217,7 +241,7 @@ const Establishments: React.FC = () => {
               <Button className={styles.establishmentButton}>
                 <span>
                   <Image
-                    src={establishment.info.logoUrl || './MBQR Label-03.png'}
+                    src={establishment.info.logoUrl || '/MBQR Label-03.png'}
                     alt="Establishment Logo"
                     className={styles.logoImage}
                     priority

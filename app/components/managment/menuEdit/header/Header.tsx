@@ -82,7 +82,7 @@ const Header: React.FC = () => {
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
             const data = docSnap.data() as Establishment;
-            setLogoUrl(data.info?.logoUrl || '/default-logo.png');
+            setLogoUrl(data.info?.logoUrl || './MBQR Label-03.png');
             setPopoverData({
               wifiname: data.info?.wifiname || '',
               wifipass: data.info?.wifipass || '',
